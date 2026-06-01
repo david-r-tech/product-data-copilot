@@ -292,6 +292,7 @@ Readiness status logic:
 
 * Date: TODO
 * Change: Expanded the sample dataset to 25 realistic demo products across apparel, electronics, home and kitchen, sports, office, toys, beauty, and pet supplies. Improved the README for portfolio use, added a portfolio case study draft, added a demo script, and refreshed the demo test checklist.
+* Changed files: `data/sample_products.csv`, `README.md`, `docs/portfolio_case_study.md`, `docs/demo_script.md`, `docs/demo_test_checklist.md`, `docs/commerce_readiness_ai_project_log.md`, `.gitignore`.
 * Why it matters: Makes the project easier to understand for GitHub visitors, recruiters, and interview walkthroughs while keeping the app focused on the existing MVP workflow.
 * How to test: Run `python -m streamlit run app.py`, confirm the sample data loads, walk through `docs/demo_script.md`, and use `docs/demo_test_checklist.md` for a manual smoke test.
 * Next recommended step: Capture screenshots for the README or portfolio case study after one full local demo pass.

@@ -124,3 +124,17 @@
 - Manual Review Status Override screenshot
 - Management Export screenshot
 - AI Suggestions missing-key or generated-suggestion screenshot
+
+## 14. GitHub readiness checklist
+
+- README explains the problem, target users, features, tech stack, local setup, demo workflow, status, scope, and roadmap
+- `.env.example` exists and contains only placeholder values
+- `.env` is ignored and not committed
+- `.gitignore` ignores `__pycache__/`, `*.pyc`, `.env`, `.venv/`, `venv/`, `.streamlit/secrets.toml`, and `*.log`
+- Demo docs are present:
+  - `docs/demo_test_checklist.md`
+  - `docs/demo_script.md`
+  - `docs/portfolio_case_study.md`
+- No hardcoded API keys or secrets are present
+- Sample data uses fictional brands and demo-safe product examples
+- Run `python -m py_compile app.py` before committing
