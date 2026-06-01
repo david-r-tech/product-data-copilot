@@ -103,6 +103,8 @@ The Excel Management Export is generated in memory with `BytesIO`, Pandas, and O
 - Management Export tab
 - AI Suggestions tab with missing-key fallback or generated suggestion
 
+Detailed screenshot planning is tracked in `docs/screenshots_to_capture.md`.
+
 ## Results / Current MVP Status
 
 The current MVP demonstrates a complete local product-data audit workflow:

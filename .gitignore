@@ -5,3 +5,8 @@ venv/
 .env
 .streamlit/secrets.toml
 *.log
+commerce_readiness_ai_management_export.xlsx
+product_readiness_scores.csv
+data_quality_issues.csv
+review_tasks.csv
+ai_suggestions.csv

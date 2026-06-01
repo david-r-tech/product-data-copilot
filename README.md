@@ -33,6 +33,12 @@ Commerce Readiness AI turns a product file into a clear audit workflow with scor
 - Excel Management Export with summary, scores, issues, tasks, AI suggestions, and source products
 - Optional AI Suggestions for one selected product at a time
 
+## Sample Data
+
+The app loads `data/sample_products.csv` when no file is uploaded. The demo dataset contains 25 fictional products across categories such as Apparel, Electronics, Home & Kitchen, Sports & Outdoors, Office, Toys, Beauty / Personal Care, and Pet Supplies.
+
+The sample data intentionally includes realistic product data issues so the checks, scores, review tasks, and exports can be demonstrated immediately.
+
 ## Product Data Checks
 
 Product Data Checks v2 currently checks for practical audit issues such as:
@@ -131,6 +137,8 @@ Sheets included:
 
 The export does not require an OpenAI API key. If no AI suggestions have been generated, the AI Suggestions sheet is still included but empty.
 
+Generated export files are intended as local outputs and should not be committed to the repository.
+
 ## Demo Workflow
 
 1. Start the app.
@@ -187,6 +195,8 @@ Then double-click `start_app.bat` again.
 
 This is a local MVP and portfolio demo. It is designed to show a practical product-data audit workflow, not to publish products automatically or replace legal/compliance review.
 
+The current GitHub-ready state focuses on a clean local demo, understandable documentation, sample data, manual test guidance, and portfolio preparation.
+
 ## Intentionally Out of Scope
 
 - Production deployment
@@ -218,8 +228,11 @@ This is a local MVP and portfolio demo. It is designed to show a practical produ
 - `docs/demo_test_checklist.md` - manual demo and smoke-test checklist
 - `docs/demo_script.md` - demo walkthrough script
 - `docs/portfolio_case_study.md` - portfolio case study draft
+- `docs/screenshots_to_capture.md` - screenshot planning list for GitHub and portfolio use
 - `.env.example` - local environment variable template
 - `start_app.bat` - Windows launcher
+
+The repository intentionally stays small: app code in the project root, sample data in `data/`, and portfolio/demo documentation in `docs/`.
 
 ## Documentation
 

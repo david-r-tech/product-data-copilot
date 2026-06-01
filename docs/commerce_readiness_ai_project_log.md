@@ -30,6 +30,21 @@ Currently implemented:
 * Review workflow with task filters, overview metrics, manual status overrides, and CSV export
 * Excel management export
 * Optional AI suggestions for one selected product
+* GitHub-ready README and demo documentation
+* Screenshot planning document
+
+Completed major blocks:
+
+* Initial Streamlit setup
+* CSV and Excel upload
+* Product Data Checks v2 - Step 1
+* Multiple Readiness Scores v1
+* Review Workflow v1
+* AI Suggestions v1
+* Excel Management Export v1
+* Demo Dataset & Portfolio Polish v1
+* Streamlit Compatibility & DataFrame Type Cleanup v1
+* Final GitHub Readiness v1
 
 ## 3. Current File Structure
 
@@ -45,6 +60,7 @@ Important current files:
 * `docs/demo_test_checklist.md` - Manual demo and smoke-test checklist.
 * `docs/demo_script.md` - Step-by-step demo walkthrough script.
 * `docs/portfolio_case_study.md` - Portfolio case study draft.
+* `docs/screenshots_to_capture.md` - Screenshot planning list for GitHub and portfolio use.
 
 ## 4. Current Data Columns
 
@@ -306,6 +322,16 @@ Readiness status logic:
 * How to test: Run `python -m streamlit run app.py`, open the main tabs, and confirm the previous `use_container_width` and mixed `value` column warnings no longer appear.
 * Next recommended step: Do one browser-based walkthrough before recording screenshots.
 
+### Final GitHub Readiness v1
+
+* Date: TODO
+* Change: Finalized README clarity, strengthened the demo test checklist, added `docs/screenshots_to_capture.md`, clarified the project log as the current source of truth, and extended `.gitignore` for local generated exports.
+* Changed files: `README.md`, `.gitignore`, `docs/demo_test_checklist.md`, `docs/screenshots_to_capture.md`, `docs/portfolio_case_study.md`, `docs/commerce_readiness_ai_project_log.md`.
+* Why it matters: Makes the repository easier to review on GitHub and more reliable for portfolio or interview walkthroughs.
+* How to test: Run `python -m py_compile app.py`, confirm `data/sample_products.csv` loads with pandas, start the app locally, and walk through `docs/demo_test_checklist.md`.
+* Next recommended step: Portfolio Case Study v1 Finalization.
+* Intentionally not added: No new product features, database, login, roles, marketplace integrations, marketplace presets, architecture rewrite, bulk AI generation, automatic write-back, or legal compliance guarantees.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -326,18 +352,20 @@ Current known limitations:
 * No login
 * No marketplace-specific rule presets yet
 * No real legal compliance check
+* Manual review overrides are session-only
+* Portfolio screenshots still need to be captured
 
 ## 10. Next Recommended Steps
 
-1. Validate Review Workflow v1 with a realistic merchant CSV
-2. Add accept/reject workflow for AI suggestions
-3. Improve Excel export formatting and column widths
-4. Plan Rule Engine v2 follow-up checks only after real-data validation
-5. Capture screenshots and finalize the portfolio case study
+1. Finalize Portfolio Case Study v1
+2. Capture screenshots using `docs/screenshots_to_capture.md`
+3. Do one full demo walkthrough using `docs/demo_test_checklist.md`
+4. Improve Excel export formatting and column widths later
+5. Add accept/reject tracking for AI suggestions later
 
 ## 11. Copy Context for Future Codex Prompts
 
-Commerce Readiness AI is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. The AI Suggestions tab selects the product with the lowest readiness score by default and supports selectable suggestion types. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering.
+Commerce Readiness AI is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. The AI Suggestions tab selects the product with the lowest readiness score by default and supports selectable suggestion types. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering. Final GitHub Readiness v1 is complete, with README, demo checklist, demo script, portfolio draft, screenshot planning, and project log prepared for review.
 
 The current data columns are `sku`, `product_name`, `category`, `description`, `brand`, `manufacturer`, `attributes`, `ean`, `language`, `price`, `image_url`, `warning_notes`, `translation_de`, and `translation_en`.
 
