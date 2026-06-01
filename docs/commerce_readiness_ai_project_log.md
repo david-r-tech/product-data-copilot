@@ -297,6 +297,14 @@ Readiness status logic:
 * Next recommended step: Capture screenshots for the README or portfolio case study after one full local demo pass.
 * Intentionally not added: No new rule engine, marketplace presets, database, login, deployment, integrations, bulk AI generation, automatic write-back, legal compliance guarantees, or major UI redesign.
 
+### Streamlit Compatibility & DataFrame Type Cleanup v1
+
+* Date: TODO
+* Change: Replaced deprecated `use_container_width` dataframe parameters with `width="stretch"` and added a small display-safety helper for Streamlit dataframe rendering.
+* Why it matters: Removes noisy compatibility and Arrow serialization warnings so the local MVP feels cleaner and more professional during demos.
+* How to test: Run `python -m streamlit run app.py`, open the main tabs, and confirm the previous `use_container_width` and mixed `value` column warnings no longer appear.
+* Next recommended step: Do one browser-based walkthrough before recording screenshots.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

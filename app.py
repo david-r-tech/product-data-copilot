@@ -99,6 +99,16 @@ def has_useful_attributes(value):
     return attributes not in ["none", "n/a", "unknown", "-"]
 
 
+def make_display_safe(dataframe):
+    display_dataframe = dataframe.copy()
+
+    for column in display_dataframe.columns:
+        if display_dataframe[column].dtype == "object":
+            display_dataframe[column] = display_dataframe[column].fillna("").astype(str)
+
+    return display_dataframe
+
+
 def add_issue(issues, sku, issue_type, field_name, severity, message, recommended_action):
     issues.append(
         {
@@ -985,11 +995,11 @@ with tabs[0]:
 with tabs[1]:
     st.subheader("Product Data")
     st.caption(f"Rows: {row_count} | Columns: {column_count}")
-    st.dataframe(products, use_container_width=True)
+    st.dataframe(make_display_safe(products), width="stretch")
 
 with tabs[2]:
     st.subheader("Product Readiness Scores")
-    st.dataframe(readiness_scores, use_container_width=True)
+    st.dataframe(make_display_safe(readiness_scores), width="stretch")
     st.download_button(
         "Download Product Readiness Scores",
         readiness_scores.to_csv(index=False),
@@ -1002,7 +1012,7 @@ with tabs[3]:
     st.caption(f"Total issues: {len(issues)} | Displayed issues: {len(filtered_issues)}")
 
     if len(filtered_issues) > 0:
-        st.dataframe(filtered_issues, use_container_width=True)
+        st.dataframe(make_display_safe(filtered_issues), width="stretch")
     elif len(issues) > 0:
         st.info("No issues match the selected severity filter.")
     else:
@@ -1060,11 +1070,11 @@ with tabs[4]:
 
     summary_columns = st.columns(3)
     summary_columns[0].write("Products by review status")
-    summary_columns[0].dataframe(status_counts, use_container_width=True)
+    summary_columns[0].dataframe(make_display_safe(status_counts), width="stretch")
     summary_columns[1].write("Tasks by priority")
-    summary_columns[1].dataframe(priority_counts, use_container_width=True)
+    summary_columns[1].dataframe(make_display_safe(priority_counts), width="stretch")
     summary_columns[2].write("Top task types")
-    summary_columns[2].dataframe(task_type_counts, use_container_width=True)
+    summary_columns[2].dataframe(make_display_safe(task_type_counts), width="stretch")
 
     st.write("Manual Review Status Override")
     product_options = {
@@ -1132,7 +1142,7 @@ with tabs[4]:
     )
 
     if len(filtered_review_tasks) > 0:
-        st.dataframe(filtered_review_tasks, use_container_width=True)
+        st.dataframe(make_display_safe(filtered_review_tasks), width="stretch")
     elif len(review_tasks) > 0:
         st.info("No review tasks match the selected filters.")
     else:
@@ -1162,7 +1172,7 @@ with tabs[5]:
     )
 
     st.write("Management Summary Preview")
-    st.dataframe(management_summary, use_container_width=True)
+    st.dataframe(make_display_safe(management_summary), width="stretch")
 
     st.download_button(
         "Download Excel Management Export",
@@ -1224,11 +1234,11 @@ with tabs[6]:
     )
 
     st.write("Selected product context")
-    st.dataframe(pd.DataFrame([selected_product_context]), use_container_width=True)
+    st.dataframe(make_display_safe(pd.DataFrame([selected_product_context])), width="stretch")
 
     st.write("Current issues for this product")
     if len(selected_issues) > 0:
-        st.dataframe(selected_issues, use_container_width=True)
+        st.dataframe(make_display_safe(selected_issues), width="stretch")
     else:
         st.success("No issues found for this product.")
 
