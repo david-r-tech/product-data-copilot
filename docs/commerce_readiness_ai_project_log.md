@@ -60,6 +60,8 @@ Important current files:
 * `docs/demo_test_checklist.md` - Manual demo and smoke-test checklist.
 * `docs/demo_script.md` - Step-by-step demo walkthrough script.
 * `docs/portfolio_case_study.md` - Portfolio case study draft.
+* `docs/product_requirements.md` - Current product requirements, scope, and acceptance criteria.
+* `docs/testing_notes.md` - Technical and manual verification notes.
 * `docs/screenshots_to_capture.md` - Screenshot planning list for GitHub and portfolio use.
 
 ## 4. Current Data Columns
@@ -332,6 +334,30 @@ Readiness status logic:
 * Next recommended step: Portfolio Case Study v1 Finalization.
 * Intentionally not added: No new product features, database, login, roles, marketplace integrations, marketplace presets, architecture rewrite, bulk AI generation, automatic write-back, or legal compliance guarantees.
 
+### Requirements Documentation v1
+
+* Date: TODO
+* Change: Added `docs/product_requirements.md` with target users, business goals, functional requirements, non-functional requirements, business rules, out-of-scope items, acceptance criteria, risks, and next recommended requirement block.
+* Why it matters: Makes the project stronger from a requirements-engineering perspective and easier to evaluate as a serious portfolio project.
+* How to test: Review `docs/product_requirements.md` and confirm it matches the current app behavior and MVP scope.
+* Next recommended step: Use the requirements document as context when finalizing the portfolio case study.
+
+### Testing Notes v1
+
+* Date: TODO
+* Change: Added `docs/testing_notes.md` with technical checks, manual smoke tests, functional acceptance checks, documentation checks, and known manual checks.
+* Why it matters: Makes verification repeatable without adding unnecessary testing infrastructure.
+* How to test: Follow `docs/testing_notes.md` before a demo or GitHub update.
+* Next recommended step: Add lightweight automated tests only if they remain simple and low-risk.
+
+### Portfolio Case Study v1
+
+* Date: TODO
+* Change: Finalized `docs/portfolio_case_study.md` as a professional portfolio case study with problem statement, target users, requirements approach, MVP scope, key features, product decisions, workflow, technical approach, quality documentation, results, screenshots to add, and next steps.
+* Why it matters: Makes the project easier to explain in applications, interviews, and portfolio reviews.
+* How to test: Read the case study and confirm it accurately reflects the current MVP and documented requirements.
+* Next recommended step: Capture screenshots and optionally add selected images to the README or portfolio page.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -357,9 +383,9 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Finalize Portfolio Case Study v1
-2. Capture screenshots using `docs/screenshots_to_capture.md`
-3. Do one full demo walkthrough using `docs/demo_test_checklist.md`
+1. Capture screenshots using `docs/screenshots_to_capture.md`
+2. Do one full demo walkthrough using `docs/demo_test_checklist.md`
+3. Add selected screenshots to the README or portfolio page
 4. Improve Excel export formatting and column widths later
 5. Add accept/reject tracking for AI suggestions later
 

@@ -18,6 +18,20 @@ E-commerce teams often manage product data across CSV files, PIM exports, market
 
 Commerce Readiness AI turns a product file into a clear audit workflow with scores, issues, review tasks, and exports.
 
+## Business Value
+
+The MVP is designed to show how product-data teams can move from an unstructured product file to a prioritized review workflow. It combines operational checks, explainable readiness scoring, review tasks, and exports that can be shared with business stakeholders.
+
+## Technical Highlights
+
+- Robust CSV/XLSX input for local product data audits
+- Graceful handling of missing optional columns
+- Rule-based issue detection with clear severity and recommended actions
+- Multiple explainable readiness scores instead of one opaque score
+- Session-based review workflow without premature database complexity
+- Optional OpenAI integration through `.env`, with a safe missing-key fallback
+- Excel Management Export as a practical business handoff artifact
+
 ## MVP Features
 
 - CSV and Excel upload
@@ -228,6 +242,8 @@ The current GitHub-ready state focuses on a clean local demo, understandable doc
 - `docs/demo_test_checklist.md` - manual demo and smoke-test checklist
 - `docs/demo_script.md` - demo walkthrough script
 - `docs/portfolio_case_study.md` - portfolio case study draft
+- `docs/product_requirements.md` - current product requirements, scope, and acceptance criteria
+- `docs/testing_notes.md` - technical and manual verification notes
 - `docs/screenshots_to_capture.md` - screenshot planning list for GitHub and portfolio use
 - `.env.example` - local environment variable template
 - `start_app.bat` - Windows launcher
@@ -237,3 +253,7 @@ The repository intentionally stays small: app code in the project root, sample d
 ## Documentation
 
 A manual demo test checklist is available at `docs/demo_test_checklist.md`.
+
+Current product requirements are documented in `docs/product_requirements.md`.
+
+Testing and verification notes are documented in `docs/testing_notes.md`.
