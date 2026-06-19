@@ -430,6 +430,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest` and `python -m py_compile app.py`.
 * Next recommended step: Extract AI prompt helpers into an import-safe module with focused tests.
 
+### Extract AI Prompt Helpers v1
+
+* Date: TODO
+* Change: Added `src/product_data_copilot/ai/prompt_helpers.py` with pure AI prompt safety, context, schema, confidence, and action-status helpers plus pytest coverage in `tests/test_prompt_helpers.py`.
+* Why it matters: Builds a tested foundation for safer human-in-the-loop AI prompt preparation without calling OpenAI or changing current AI behavior.
+* How to test: Run `python -m pytest`, `python -m py_compile app.py`, and confirm changed files contain no secrets.
+* Next recommended step: Plan `App Slimdown v1` before wiring extracted helpers into `app.py`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

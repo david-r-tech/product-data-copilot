@@ -9,8 +9,8 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 1 | Extract Scoring Helpers v1 | Done | Created small import-safe scoring helpers and pytest coverage without changing app behavior. |
 | 2 | Extract Review Helpers v1 | Done | Moved pure review mapping/status helper logic into an import-safe module with tests. |
 | 3 | Extract Export Helpers v1 | Done | Moved pure export preparation helpers into an import-safe module with tests. |
-| 4 | Extract AI Prompt Helpers v1 | NEXT | Move prompt-building and AI response parsing helpers into an import-safe module with tests. |
-| 5 | App Slimdown v1 | Planned | Make `app.py` thinner by importing tested helpers while preserving behavior. |
+| 4 | Extract AI Prompt Helpers v1 | Done | Moved pure prompt-building support helpers into an import-safe module with tests. |
+| 5 | App Slimdown v1 | NEXT | Make `app.py` thinner by importing tested helpers while preserving behavior. |
 | 6 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
 | 7 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
 
