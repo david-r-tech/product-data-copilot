@@ -390,6 +390,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest` and `python -m py_compile app.py`.
 * Next recommended step: Extract scoring helpers into an import-safe module with focused tests.
 
+### Extract Scoring Helpers v1
+
+* Date: TODO
+* Change: Added `src/product_data_copilot/scoring/scoring_helpers.py` with small pure scoring helpers and pytest coverage in `tests/test_scoring_helpers.py`.
+* Why it matters: Expands the import-safe test safety net before moving larger scoring logic out of the Streamlit monolith.
+* How to test: Run `python -m pytest` and `python -m py_compile app.py`.
+* Next recommended step: Extract review mapping helpers into an import-safe module with focused tests.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -415,8 +423,8 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Extract scoring helpers into an import-safe module
-2. Add lightweight pytest tests for scoring and review mapping
+1. Extract review mapping helpers into an import-safe module
+2. Add lightweight pytest tests for review task priority and task type mapping
 3. Capture screenshots using `docs/screenshots_to_capture.md`
 4. Do one full demo walkthrough using `docs/demo_test_checklist.md`
 5. Add selected screenshots to the README or portfolio page
