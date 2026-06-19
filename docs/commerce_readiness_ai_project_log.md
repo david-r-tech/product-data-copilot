@@ -382,6 +382,14 @@ Readiness status logic:
 * How to test: Review `docs/testing_strategy.md` and confirm no code or app behavior was changed.
 * Next recommended step: Extract pure validators into an import-safe module, then add the first pytest tests.
 
+### Extract Validators v1
+
+* Date: TODO
+* Change: Added the first import-safe package module under `src/product_data_copilot/`, extracted small pure validator helpers into `rules/validators.py`, added pytest coverage in `tests/test_validators.py`, and added `pytest` to requirements.
+* Why it matters: Creates the first real automated test safety net before larger refactoring work begins.
+* How to test: Run `python -m pytest` and `python -m py_compile app.py`.
+* Next recommended step: Extract scoring helpers into an import-safe module with focused tests.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -407,8 +415,8 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Extract pure validators into an import-safe module
-2. Add lightweight pytest tests for validators and scoring
+1. Extract scoring helpers into an import-safe module
+2. Add lightweight pytest tests for scoring and review mapping
 3. Capture screenshots using `docs/screenshots_to_capture.md`
 4. Do one full demo walkthrough using `docs/demo_test_checklist.md`
 5. Add selected screenshots to the README or portfolio page
