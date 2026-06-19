@@ -414,6 +414,14 @@ Readiness status logic:
 * How to test: Run `git log --oneline -5`, `python -m py_compile app.py`, and `python -m pytest`.
 * Next recommended step: Start `Extract Review Helpers v1` only after explicit user approval.
 
+### Extract Review Helpers v1
+
+* Date: TODO
+* Change: Added `src/product_data_copilot/review/review_helpers.py` with small pure review helpers and pytest coverage in `tests/test_review_helpers.py`.
+* Why it matters: Expands the import-safe test safety net for review task priority, task type, and review status logic before larger app slimdown work.
+* How to test: Run `python -m pytest` and `python -m py_compile app.py`.
+* Next recommended step: Extract export preparation helpers into an import-safe module with focused tests.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
