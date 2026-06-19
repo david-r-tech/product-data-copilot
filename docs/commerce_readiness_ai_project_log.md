@@ -358,6 +358,14 @@ Readiness status logic:
 * How to test: Read the case study and confirm it accurately reflects the current MVP and documented requirements.
 * Next recommended step: Capture screenshots and optionally add selected images to the README or portfolio page.
 
+### Master Product & Architecture Blueprint v1
+
+* Date: TODO
+* Change: Added `docs/master_product_architecture_blueprint.md` with the forward-looking Product Data Copilot vision, target users, core workflow, long-term capabilities, AI safety rules, AI suggestion data model, target architecture, refactor roadmap, pytest strategy, tooling strategy, UX strategy, explicit non-goals, risks, and definitions of portfolio-ready and almost sellable.
+* Why it matters: Creates a clear professional direction for evolving the current Streamlit MVP into a more modular Product Data Copilot without overengineering or prematurely rebuilding the UI.
+* How to test: Review the blueprint and confirm it does not require immediate code changes or new product features.
+* Next recommended step: Add lightweight pytest tests before extracting logic from `app.py`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -383,11 +391,11 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Capture screenshots using `docs/screenshots_to_capture.md`
-2. Do one full demo walkthrough using `docs/demo_test_checklist.md`
-3. Add selected screenshots to the README or portfolio page
-4. Improve Excel export formatting and column widths later
-5. Add accept/reject tracking for AI suggestions later
+1. Add lightweight pytest tests for validators and scoring
+2. Plan the first safe extraction from `app.py` into modules
+3. Capture screenshots using `docs/screenshots_to_capture.md`
+4. Do one full demo walkthrough using `docs/demo_test_checklist.md`
+5. Add selected screenshots to the README or portfolio page
 
 ## 11. Copy Context for Future Codex Prompts
 
