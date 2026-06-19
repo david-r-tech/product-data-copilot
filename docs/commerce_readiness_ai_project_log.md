@@ -422,6 +422,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest` and `python -m py_compile app.py`.
 * Next recommended step: Extract export preparation helpers into an import-safe module with focused tests.
 
+### Extract Export Helpers v1
+
+* Date: TODO
+* Change: Added `src/product_data_copilot/export/export_helpers.py` with small pure export preparation helpers and pytest coverage in `tests/test_export_helpers.py`.
+* Why it matters: Adds a tested foundation for export filenames, sheet validation, DataFrame checks, and column ordering before moving larger export logic out of the Streamlit app.
+* How to test: Run `python -m pytest` and `python -m py_compile app.py`.
+* Next recommended step: Extract AI prompt helpers into an import-safe module with focused tests.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
