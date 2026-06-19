@@ -366,6 +366,14 @@ Readiness status logic:
 * How to test: Review the blueprint and confirm it does not require immediate code changes or new product features.
 * Next recommended step: Add lightweight pytest tests before extracting logic from `app.py`.
 
+### Codebase Audit & Refactor Inventory v1
+
+* Date: TODO
+* Change: Added `docs/codebase_refactor_inventory.md` documenting what currently lives in `app.py`, how the logic maps to future modules, refactor risks, safe extraction order, and first test candidates.
+* Why it matters: Provides a safer bridge from the working Streamlit MVP to the future modular Product Data Copilot architecture.
+* How to test: Review the inventory and confirm no code was moved or refactored.
+* Next recommended step: Add lightweight pytest tests for pure validators and scoring helpers.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
