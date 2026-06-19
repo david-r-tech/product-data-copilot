@@ -374,6 +374,14 @@ Readiness status logic:
 * How to test: Review the inventory and confirm no code was moved or refactored.
 * Next recommended step: Add lightweight pytest tests for pure validators and scoring helpers.
 
+### Lightweight Tests v1 - Strategy
+
+* Date: TODO
+* Change: Added `docs/testing_strategy.md` documenting why direct pytest imports from the current monolithic `app.py` are unsafe, which pure functions should be extracted first, and which pytest tests should follow.
+* Why it matters: Avoids brittle tests that accidentally execute Streamlit UI code and sets up a safer test-first refactor path.
+* How to test: Review `docs/testing_strategy.md` and confirm no code or app behavior was changed.
+* Next recommended step: Extract pure validators into an import-safe module, then add the first pytest tests.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -399,8 +407,8 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Add lightweight pytest tests for validators and scoring
-2. Plan the first safe extraction from `app.py` into modules
+1. Extract pure validators into an import-safe module
+2. Add lightweight pytest tests for validators and scoring
 3. Capture screenshots using `docs/screenshots_to_capture.md`
 4. Do one full demo walkthrough using `docs/demo_test_checklist.md`
 5. Add selected screenshots to the README or portfolio page
