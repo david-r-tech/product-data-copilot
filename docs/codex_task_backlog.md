@@ -6,8 +6,8 @@ Work on one block at a time. Do not start the next block unless the user explici
 
 | Order | Block | Status | Goal |
 | --- | --- | --- | --- |
-| 1 | Extract Scoring Helpers v1 | NEXT | Create small import-safe scoring helpers and pytest coverage without changing app behavior. |
-| 2 | Extract Review Helpers v1 | Planned | Move pure review mapping/status helper logic into an import-safe module with tests. |
+| 1 | Extract Scoring Helpers v1 | Done | Created small import-safe scoring helpers and pytest coverage without changing app behavior. |
+| 2 | Extract Review Helpers v1 | NEXT | Move pure review mapping/status helper logic into an import-safe module with tests. |
 | 3 | Extract Export Helpers v1 | Planned | Move pure export preparation helpers into an import-safe module with tests. |
 | 4 | Extract AI Prompt Helpers v1 | Planned | Move prompt-building and AI response parsing helpers into an import-safe module with tests. |
 | 5 | App Slimdown v1 | Planned | Make `app.py` thinner by importing tested helpers while preserving behavior. |

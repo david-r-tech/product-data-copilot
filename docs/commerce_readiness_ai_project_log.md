@@ -406,6 +406,14 @@ Readiness status logic:
 * How to test: Review the new workflow documents and confirm forbidden files were not modified.
 * Next recommended step: Continue with the next approved backlog block only after the user requests it.
 
+### Repo State Check v1
+
+* Date: TODO
+* Change: Verified the current commit history, existing helper modules, and pytest coverage, then corrected `docs/codex_task_backlog.md` so `Extract Review Helpers v1` is the next block.
+* Why it matters: Keeps the Codex task backlog aligned with the actual repository state after `Extract Scoring Helpers v1` was already committed.
+* How to test: Run `git log --oneline -5`, `python -m py_compile app.py`, and `python -m pytest`.
+* Next recommended step: Start `Extract Review Helpers v1` only after explicit user approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
