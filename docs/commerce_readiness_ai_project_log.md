@@ -398,6 +398,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest` and `python -m py_compile app.py`.
 * Next recommended step: Extract review mapping helpers into an import-safe module with focused tests.
 
+### Codex Workflow Setup v1
+
+* Date: TODO
+* Change: Updated `AGENTS.md` for the Product Data Copilot direction and added `docs/codex_workflow.md`, `docs/codex_task_backlog.md`, and `docs/codex_report_template.md`.
+* Why it matters: Gives future Codex runs persistent instructions, a repeatable workflow, a task backlog, and a consistent report format.
+* How to test: Review the new workflow documents and confirm forbidden files were not modified.
+* Next recommended step: Continue with the next approved backlog block only after the user requests it.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
