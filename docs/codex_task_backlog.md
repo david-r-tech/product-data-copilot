@@ -26,10 +26,11 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 18 | Smart Suggestions v2 - Planning | Done | Planned a safer structured AI suggestion model without implementation or app behavior changes. |
 | 19 | Smart Suggestions v2 - Phase 1: Schema Helpers | Done | Created pure field-level suggestion schema and contract helpers with tests without changing app behavior. |
 | 20 | Smart Suggestions v2 - Phase 2: Contract & Parser Helpers | Done | Added safe response parser/normalization helpers for future field-level AI responses without runtime wiring. |
-| 21 | Smart Suggestions v2 - Phase 3: Prompt Contract Planning | NEXT | Plan how to update the AI prompt contract for field-level suggestions before runtime integration. |
-| 22 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 23 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
-| 24 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 21 | Smart Suggestions v2 - Phase 3: Prompt Contract Planning | Done | Planned how to update the AI prompt contract for field-level suggestions before runtime integration. |
+| 22 | Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter | NEXT | Add a tested prompt adapter for field-level suggestions while preserving current runtime behavior. |
+| 23 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 24 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 25 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
 
 ## Backlog Rules
 

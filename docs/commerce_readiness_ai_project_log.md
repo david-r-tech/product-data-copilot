@@ -566,6 +566,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, runtime modules, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 3: Prompt Contract Planning` only after explicit approval.
 
+### Smart Suggestions v2 - Phase 3: Prompt Contract Planning
+
+* Date: TODO
+* Change: Added a prompt contract planning document and strengthened pure contract helpers/tests for required field-level output, forbidden fact categories, review-required conditions, deterministic contract text, and human review requirements.
+* Why it matters: Defines how future prompts should request safe, auditable field-level suggestions before changing current AI runtime behavior.
+* How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, schema/parser helpers, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -591,7 +599,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Smart Suggestions v2 - Phase 3: Prompt Contract Planning`
+1. Start `Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter`
 2. Expand pytest coverage for key business rules after helper integration
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`

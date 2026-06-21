@@ -15,6 +15,25 @@ SMART_SUGGESTION_REQUIRED_KEYS = [
     "suggestion_status",
 ]
 
+FORBIDDEN_UNSUPPORTED_FACT_CATEGORIES = [
+    "EANs or GTINs",
+    "prices",
+    "dimensions",
+    "certifications",
+    "materials",
+    "compliance claims",
+    "legal or safety claims",
+    "unsupported translations",
+]
+
+REVIEW_REQUIRED_SOURCE_CONDITIONS = [
+    "source data is missing",
+    "source data is weak",
+    "source data is unknown",
+    "source data is contradictory",
+    "target field is price, EAN, GTIN, certification, legal, safety, or compliance",
+]
+
 
 def smart_suggestion_json_contract():
     """Return the expected structured output contract for future prompts."""
@@ -31,6 +50,16 @@ def smart_suggestion_json_contract():
             "blocked_insufficient_source",
         ],
     }
+
+
+def smart_suggestion_blocked_fact_categories():
+    """Return fact categories that must not be invented by AI."""
+    return FORBIDDEN_UNSUPPORTED_FACT_CATEGORIES.copy()
+
+
+def smart_suggestion_review_required_conditions():
+    """Return conditions that should force review-required suggestions."""
+    return REVIEW_REQUIRED_SOURCE_CONDITIONS.copy()
 
 
 def smart_suggestion_safety_rules():
@@ -65,5 +94,40 @@ def smart_suggestion_human_review_rules():
             "Do not auto-apply suggestions to product data.",
             "Start suggestions as needs_review or review_required unless a human changes them.",
             "Rejected or draft suggestions must not be treated as approved product data.",
+        ]
+    )
+
+
+def smart_suggestion_prompt_contract_block():
+    """Return a deterministic future prompt contract block."""
+    contract = smart_suggestion_json_contract()
+    required_keys = ", ".join(contract["required_keys"])
+    forbidden_categories = ", ".join(smart_suggestion_blocked_fact_categories())
+    review_conditions = "; ".join(smart_suggestion_review_required_conditions())
+
+    return "\n".join(
+        [
+            "Smart Suggestions v2 output contract:",
+            "Return only valid JSON.",
+            "The root object must contain a smart_suggestions array.",
+            "Each array item must be one field-level suggestion.",
+            f"Each suggestion must include these keys: {required_keys}.",
+            (
+                "Allowed confidence values are low, medium, and high. "
+                "Allowed risk_level values are low, medium, and high."
+            ),
+            (
+                "Allowed approval_status values are needs_review, approved, "
+                "and rejected, but AI-generated suggestions must not set "
+                "approval_status to approved."
+            ),
+            (
+                "Allowed suggestion_status values are draft, review_required, "
+                "and blocked_insufficient_source."
+            ),
+            smart_suggestion_safety_rules(),
+            smart_suggestion_human_review_rules(),
+            f"Never invent or infer these unsupported fact categories: {forbidden_categories}.",
+            f"Mark the suggestion as review_required when: {review_conditions}.",
         ]
     )

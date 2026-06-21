@@ -3,11 +3,11 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Last documented baseline before this package: `4a8b2d1 Add smart suggestion foundation helpers`
+- Last documented baseline before this package: `87babb0 Add smart suggestion parser helpers`
 - Current test count: `78` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 has pure schema, contract, and parser foundations; it is not wired into runtime yet.
+- Current planning focus: Smart Suggestions v2 has pure schema, contract, parser, and prompt-contract planning foundations; it is not wired into runtime yet.
 
 ## Implemented Capabilities
 
@@ -34,6 +34,7 @@
 - Pytest coverage exists for extracted helper modules.
 - Smart Suggestions v2 planning is documented in `docs/smart_suggestions_v2_plan.md`.
 - Smart Suggestions v2 schema, contract, and parser helpers exist as pure import-safe modules with tests.
+- Smart Suggestions v2 prompt contract planning is documented in `docs/smart_suggestions_v2_phase3_prompt_contract_plan.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -49,7 +50,7 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 - Phase 3: Prompt Contract Planning
+1. Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

@@ -330,11 +330,26 @@ Do not change:
 - current prompt used by the app
 - UI or exports
 
-### Phase 3: Prompt Contract Update, No Provider Change
+### Phase 3: Prompt Contract Planning
 
 Purpose:
 
-Update the prompt contract to request field-level suggestion rows while preserving the current OpenAI provider and missing-key fallback.
+Plan the prompt contract update before changing runtime behavior.
+
+Status: Completed in `Smart Suggestions v2 - Phase 3: Prompt Contract Planning`.
+
+Result:
+
+- Added `docs/smart_suggestions_v2_phase3_prompt_contract_plan.md`.
+- Strengthened pure contract helpers in `src/product_data_copilot/ai/suggestion_contract.py`.
+- Added stronger tests for required keys, deterministic contract output, forbidden fact categories, review-required conditions, human review wording, and anti-hallucination rules.
+- Kept `app.py`, current prompt runtime behavior, exports, UI, OpenAI behavior, and existing AI Suggestions v1 behavior unchanged.
+
+### Phase 4: Runtime Prompt Adapter
+
+Purpose:
+
+Create a prompt adapter that requests field-level suggestion rows while preserving the current OpenAI provider and missing-key fallback.
 
 Allowed future files:
 
@@ -348,7 +363,7 @@ Stop if:
 - prompt changes would require broad UI or export changes in the same phase
 - AI response keys become ambiguous
 
-### Phase 4: Safe AI Response Parsing
+### Phase 5: Safe AI Response Runtime Wiring
 
 Purpose:
 
@@ -362,7 +377,7 @@ Allowed future files:
 - optional `tests/test_response_parser.py`
 - `app.py` only for minimal wiring
 
-### Phase 5: Display Structured Suggestions in Existing AI Tab
+### Phase 6: Display Structured Suggestions in Existing AI Tab
 
 Purpose:
 
@@ -380,7 +395,7 @@ Behavior limits:
 - session-state only
 - no automatic product-data overwrite
 
-### Phase 6: Export Approved Suggestions Only
+### Phase 7: Export Approved Suggestions Only
 
 Purpose:
 
