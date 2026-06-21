@@ -470,6 +470,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
 * Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
 
+### App Slimdown v1 - Phase 4
+
+* Date: TODO
+* Change: Added import-safe helpers for product data summary captions, issue summary captions, issue empty states, review task intro captions, review task summary captions, and review task empty states.
+* Why it matters: Moves small presentation-only status text out of `app.py` while keeping calculations, filters, business logic, and tab flow in place.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
+* Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

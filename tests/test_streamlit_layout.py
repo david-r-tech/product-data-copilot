@@ -11,6 +11,14 @@ from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     render_app_intro,
     render_data_input_section,
     render_data_source_notice,
+    render_dataset_summary,
+    render_issues_summary,
+    render_no_data_quality_issues_notice,
+    render_no_matching_issues_notice,
+    render_no_matching_review_tasks_notice,
+    render_no_review_tasks_notice,
+    render_review_tasks_intro,
+    render_review_tasks_summary,
     render_sidebar_intro,
 )
 
@@ -35,6 +43,7 @@ class FakeStreamlit:
         self.titles = []
         self.captions = []
         self.info_messages = []
+        self.success_messages = []
         self.sidebar = FakeSidebar()
 
     def set_page_config(self, **kwargs):
@@ -49,12 +58,23 @@ class FakeStreamlit:
     def info(self, text):
         self.info_messages.append(text)
 
+    def success(self, text):
+        self.success_messages.append(text)
+
 
 def test_streamlit_layout_module_imports_safely():
     assert callable(configure_page)
     assert callable(render_app_intro)
     assert callable(render_data_input_section)
     assert callable(render_data_source_notice)
+    assert callable(render_dataset_summary)
+    assert callable(render_issues_summary)
+    assert callable(render_no_data_quality_issues_notice)
+    assert callable(render_no_matching_issues_notice)
+    assert callable(render_no_matching_review_tasks_notice)
+    assert callable(render_no_review_tasks_notice)
+    assert callable(render_review_tasks_intro)
+    assert callable(render_review_tasks_summary)
     assert callable(render_sidebar_intro)
 
 
@@ -111,3 +131,51 @@ def test_render_data_source_notice_preserves_message():
         "Using: Sample data",
         "Using: Uploaded file",
     ]
+
+
+def test_render_dataset_summary_preserves_caption():
+    fake_st = FakeStreamlit()
+
+    render_dataset_summary(fake_st, 25, 14)
+
+    assert fake_st.captions == ["Rows: 25 | Columns: 14"]
+
+
+def test_render_issues_summary_preserves_caption():
+    fake_st = FakeStreamlit()
+
+    render_issues_summary(fake_st, 12, 5)
+
+    assert fake_st.captions == ["Total issues: 12 | Displayed issues: 5"]
+
+
+def test_issue_empty_state_notices_preserve_messages():
+    fake_st = FakeStreamlit()
+
+    render_no_matching_issues_notice(fake_st)
+    render_no_data_quality_issues_notice(fake_st)
+
+    assert fake_st.info_messages == ["No issues match the selected severity filter."]
+    assert fake_st.success_messages == ["No data quality issues found."]
+
+
+def test_render_review_tasks_intro_and_summary_preserve_captions():
+    fake_st = FakeStreamlit()
+
+    render_review_tasks_intro(fake_st)
+    render_review_tasks_summary(fake_st, 20, 7)
+
+    assert fake_st.captions == [
+        "Review workflow overview, filters, manual status overrides, and task export.",
+        "Total review tasks: 20 | Displayed tasks: 7",
+    ]
+
+
+def test_review_task_empty_state_notices_preserve_messages():
+    fake_st = FakeStreamlit()
+
+    render_no_matching_review_tasks_notice(fake_st)
+    render_no_review_tasks_notice(fake_st)
+
+    assert fake_st.info_messages == ["No review tasks match the selected filters."]
+    assert fake_st.success_messages == ["No review tasks needed."]

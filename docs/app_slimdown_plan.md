@@ -243,7 +243,26 @@ Next safest recommendation:
 - Do not split Streamlit tabs into files yet.
 - Do not move data loading, product checks, scoring, review, AI, or export orchestration in the same phase.
 
-### Phase 4: Replace Duplicated Pure Helpers With Tested Imports
+### Phase 4: Extract Status Summary UI Helpers
+
+Status: Completed.
+
+Completed in Phase 4:
+
+- Added presentation helpers for product data row/column summary.
+- Added presentation helpers for issue count summary and issue empty states.
+- Added presentation helpers for review task intro, count summary, and review task empty states.
+- Updated `app.py` to call these helpers while keeping calculations, DataFrame logic, filters, review logic, AI, exports, and tab flow in `app.py`.
+- Added focused tests in `tests/test_streamlit_layout.py`.
+
+Next safest recommendation:
+
+- Continue with a small Phase 5 that replaces duplicated pure helper logic with tested imports in small groups.
+- Start with the lowest-risk helpers only.
+- Do not split Streamlit tabs into files yet.
+- Do not move data loading, product checks, scoring, review, AI, or export orchestration in the same phase.
+
+### Phase 5: Replace Duplicated Pure Helpers With Tested Imports
 
 Goal:
 
@@ -275,7 +294,7 @@ Manual checks:
 - Downloads still work.
 - AI prompt preview still renders without API key.
 
-### Phase 5: Split Tab Rendering Into Local Functions
+### Phase 6: Split Tab Rendering Into Local Functions
 
 Goal:
 
@@ -308,11 +327,11 @@ Manual checks:
 - Confirm manual review override still works.
 - Confirm AI Suggestions does not auto-apply changes.
 
-### Phase 6: Consider UI Submodules Only If Needed
+### Phase 7: Consider UI Submodules Only If Needed
 
 Goal:
 
-- Only after Phase 5 is stable, consider moving larger tab renderers into `src/product_data_copilot/ui/sections/`.
+- Only after Phase 6 is stable, consider moving larger tab renderers into `src/product_data_copilot/ui/sections/`.
 
 Default recommendation:
 

@@ -18,6 +18,14 @@ from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     render_app_intro,
     render_data_input_section,
     render_data_source_notice,
+    render_dataset_summary,
+    render_issues_summary,
+    render_no_data_quality_issues_notice,
+    render_no_matching_issues_notice,
+    render_no_matching_review_tasks_notice,
+    render_no_review_tasks_notice,
+    render_review_tasks_intro,
+    render_review_tasks_summary,
 )
 
 load_dotenv()
@@ -1004,7 +1012,7 @@ def run_app():
 
     with tabs[1]:
         st.subheader("Product Data")
-        st.caption(f"Rows: {row_count} | Columns: {column_count}")
+        render_dataset_summary(st, row_count, column_count)
         st.dataframe(make_display_safe(products), width="stretch")
 
     with tabs[2]:
@@ -1019,14 +1027,14 @@ def run_app():
 
     with tabs[3]:
         st.subheader("Data Quality Issues")
-        st.caption(f"Total issues: {len(issues)} | Displayed issues: {len(filtered_issues)}")
+        render_issues_summary(st, len(issues), len(filtered_issues))
 
         if len(filtered_issues) > 0:
             st.dataframe(make_display_safe(filtered_issues), width="stretch")
         elif len(issues) > 0:
-            st.info("No issues match the selected severity filter.")
+            render_no_matching_issues_notice(st)
         else:
-            st.success("No data quality issues found.")
+            render_no_data_quality_issues_notice(st)
 
         st.download_button(
             "Download Data Quality Issues",
@@ -1037,7 +1045,7 @@ def run_app():
 
     with tabs[4]:
         st.subheader("Review Tasks")
-        st.caption("Review workflow overview, filters, manual status overrides, and task export.")
+        render_review_tasks_intro(st)
 
         st.write("Product Review Overview")
         high_priority_tasks = len(review_tasks[review_tasks["priority"] == "High"])
@@ -1147,16 +1155,14 @@ def run_app():
             selected_review_statuses,
         )
 
-        st.caption(
-            f"Total review tasks: {len(review_tasks)} | Displayed tasks: {len(filtered_review_tasks)}"
-        )
+        render_review_tasks_summary(st, len(review_tasks), len(filtered_review_tasks))
 
         if len(filtered_review_tasks) > 0:
             st.dataframe(make_display_safe(filtered_review_tasks), width="stretch")
         elif len(review_tasks) > 0:
-            st.info("No review tasks match the selected filters.")
+            render_no_matching_review_tasks_notice(st)
         else:
-            st.success("No review tasks needed.")
+            render_no_review_tasks_notice(st)
 
         st.download_button(
             "Download Review Tasks",
