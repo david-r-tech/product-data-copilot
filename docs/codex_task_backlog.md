@@ -16,9 +16,14 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 8 | App Slimdown v1 - Phase 3 | Done | Extracted small data input/source notice UI helpers with focused tests. |
 | 9 | App Slimdown v1 - Phase 4 | Done | Extracted small status/summary UI helpers with focused tests. |
 | 10 | App Slimdown v1 - Phase 5 | Done | Finalized App Slimdown v1 as a safe stop point and documented what remains in `app.py`. |
-| 11 | Helper Integration v1 - Planning | NEXT | Plan how already extracted helpers can be wired into `app.py` safely without behavior changes. |
-| 12 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 13 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 11 | Helper Integration v1 - Planning | Done | Planned how already extracted helpers can be wired into `app.py` safely without behavior changes. |
+| 12 | Helper Integration v1 - Phase 1: Validators | NEXT | Wire tested validator helpers into `app.py` with behavior-preserving checks. |
+| 13 | Helper Integration v1 - Phase 2: Scoring | Planned | Wire tested scoring helpers into `app.py` after validator integration is stable. |
+| 14 | Helper Integration v1 - Phase 3: Review | Planned | Wire tested review helpers into `app.py` after scoring integration is stable. |
+| 15 | Helper Integration v1 - Phase 4: Export | Planned | Wire tested export constants/helpers into `app.py` after review integration is stable. |
+| 16 | Helper Integration v1 - Phase 5: AI Prompt | Planned | Plan or narrowly wire AI prompt helpers while preserving current AI behavior. |
+| 17 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 18 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
 
 ## Backlog Rules
 

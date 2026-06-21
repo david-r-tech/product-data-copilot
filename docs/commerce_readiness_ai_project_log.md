@@ -486,6 +486,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
 * Next recommended step: Plan Helper Integration v1 before wiring validators, scoring, review, export, or AI helpers into `app.py`.
 
+### Helper Integration v1 - Planning
+
+* Date: TODO
+* Change: Added `docs/helper_integration_v1_plan.md` with a current `app.py` logic map, helper-module overlap review, recommended integration phases, allowed files, test requirements, behavior-preservation strategy, rollback strategy, risks, and explicit non-goals.
+* Why it matters: Creates a safer path for wiring tested helper modules into `app.py` without accidentally changing product checks, scoring, review tasks, exports, or AI behavior.
+* How to test: Run `python -m pytest`, run `git diff --check`, and confirm only the allowed documentation files changed.
+* Next recommended step: Start `Helper Integration v1 - Phase 1: Validators` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -511,7 +519,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Plan Helper Integration v1 before wiring extracted helpers into `app.py`
+1. Start `Helper Integration v1 - Phase 1: Validators`
 2. Integrate already-tested helper modules in small behavior-preserving groups
 3. Expand pytest coverage for key business rules after helper integration
 4. Capture screenshots using `docs/screenshots_to_capture.md`
