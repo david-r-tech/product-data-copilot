@@ -510,6 +510,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the Product Readiness Scores table with sample data.
 * Next recommended step: Start `Helper Integration v1 - Phase 3: Review Helpers` only after explicit approval.
 
+### Helper Integration v1 - Phase 3: Review Helpers
+
+* Date: TODO
+* Change: Integrated tested review helpers for review status options, review status derivation, task type mapping, and task priority mapping while keeping app-specific review task assembly and session-state override logic in `app.py`.
+* Why it matters: Reduces duplicated review mapping logic while preserving review status priority, task labels, task priorities, and manual override behavior.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the Review Tasks tab and manual review status override.
+* Next recommended step: Start `Helper Integration v1 - Phase 4: Export Helpers` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -535,7 +543,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Helper Integration v1 - Phase 3: Review Helpers`
+1. Start `Helper Integration v1 - Phase 4: Export Helpers`
 2. Integrate already-tested helper modules in small behavior-preserving groups
 3. Expand pytest coverage for key business rules after helper integration
 4. Capture screenshots using `docs/screenshots_to_capture.md`

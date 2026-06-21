@@ -283,12 +283,33 @@ Stop if:
 
 ### Phase 3: Review Helpers Integration
 
+Status: Completed.
+
 Goal:
 
 - Replace task priority mapping with `severity_to_task_priority`.
 - Replace task type mapping with `issue_to_task_type`.
 - Consider replacing review status derivation with `derive_review_status` only after checking exact priority order.
 - Consider importing `ALLOWED_REVIEW_STATUSES` for manual override options.
+
+Result:
+
+- Imported `ALLOWED_REVIEW_STATUSES` into `app.py` as `REVIEW_STATUS_OPTIONS` to preserve the existing UI variable name.
+- Integrated `derive_review_status` through the existing `get_review_status(product_issues, readiness_status)` app wrapper.
+- Integrated `issue_to_task_type` through the existing `get_task_type(issue)` app wrapper.
+- Integrated `severity_to_task_priority` as `get_task_priority` to preserve existing call sites.
+- Added test coverage for the manual review status option order used by the override UI.
+- Kept `create_review_tasks` and manual review session state handling in `app.py`.
+
+Stayed inline:
+
+- `apply_manual_review_overrides`, because it depends on `st.session_state`.
+- `create_review_tasks`, because it assembles the app-specific task DataFrame and joins against readiness scores.
+- review task filtering helpers, because they are UI/dataframe filtering logic rather than pure review mapping.
+
+Mismatch found:
+
+- No mismatch found for current app usage. The helper functions match the app's review status priority, task type mapping, task priority mapping, and status option order.
 
 Allowed future files:
 

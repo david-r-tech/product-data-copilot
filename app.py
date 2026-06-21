@@ -26,6 +26,12 @@ from product_data_copilot.scoring.scoring_helpers import (  # noqa: E402
     readiness_status_from_score as get_readiness_status,
     score_from_checks,
 )
+from product_data_copilot.review.review_helpers import (  # noqa: E402
+    ALLOWED_REVIEW_STATUSES as REVIEW_STATUS_OPTIONS,
+    derive_review_status,
+    issue_to_task_type,
+    severity_to_task_priority as get_task_priority,
+)
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     configure_page,
     render_app_intro,
@@ -42,17 +48,6 @@ from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
 )
 
 load_dotenv()
-
-REVIEW_STATUS_OPTIONS = [
-    "OK",
-    "Needs Review",
-    "Missing Data",
-    "AI Suggestion Created",
-    "Translation Missing",
-    "Compliance Check Required",
-    "Ready for Export",
-    "Rejected",
-]
 
 AI_SUGGESTION_TYPES = [
     "Improved Product Title",
@@ -367,16 +362,8 @@ def find_product_issues(products):
 
 def get_review_status(product_issues, readiness_status):
     issue_types = product_issues["issue_type"].tolist()
-
-    if "Critical" in product_issues["severity"].tolist():
-        return "Missing Data"
-    if "Missing warning_notes" in issue_types:
-        return "Compliance Check Required"
-    if "Missing translation_de" in issue_types or "Missing translation_en" in issue_types:
-        return "Translation Missing"
-    if readiness_status == "Ready":
-        return "Ready for Export"
-    return "Needs Review"
+    severities = product_issues["severity"].tolist()
+    return derive_review_status(issue_types, severities, readiness_status)
 
 
 def calculate_product_scores(row):
@@ -527,35 +514,7 @@ def apply_manual_review_overrides(readiness_scores):
 
 
 def get_task_type(issue):
-    if issue["severity"] == "Critical":
-        return "Data Completion"
-    if issue["issue_type"] == "Missing manufacturer":
-        return "Data Completion"
-    if issue["issue_type"] in ["Missing price", "Invalid price"]:
-        return "Commercial Review"
-    if issue["issue_type"] == "Missing attributes":
-        return "Attribute Enrichment"
-    if issue["issue_type"] in ["Missing translation_de", "Missing translation_en"]:
-        return "Translation"
-    if issue["issue_type"] == "Missing warning_notes":
-        return "Compliance Review"
-    if issue["issue_type"] in [
-        "Short product_name",
-        "Short description",
-        "Generic product_name",
-    ]:
-        return "Content Improvement"
-    if issue["issue_type"] in ["Missing image_url", "Image URL suspicious"]:
-        return "Media Improvement"
-    return "General Review"
-
-
-def get_task_priority(severity):
-    if severity == "Critical":
-        return "High"
-    if severity == "Warning":
-        return "Medium"
-    return "Low"
+    return issue_to_task_type(issue["issue_type"], issue["severity"])
 
 
 def create_review_tasks(issues, readiness_scores):

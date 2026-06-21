@@ -7,11 +7,14 @@ SRC_PATH = PROJECT_ROOT / "src"
 sys.path.insert(0, str(SRC_PATH))
 
 from product_data_copilot.review.review_helpers import (  # noqa: E402
+    ALLOWED_REVIEW_STATUSES,
     REVIEW_STATUS_COMPLIANCE_CHECK_REQUIRED,
+    REVIEW_STATUS_AI_SUGGESTION_CREATED,
     REVIEW_STATUS_MISSING_DATA,
     REVIEW_STATUS_NEEDS_REVIEW,
     REVIEW_STATUS_OK,
     REVIEW_STATUS_READY_FOR_EXPORT,
+    REVIEW_STATUS_REJECTED,
     REVIEW_STATUS_TRANSLATION_MISSING,
     TASK_PRIORITY_HIGH,
     TASK_PRIORITY_LOW,
@@ -32,6 +35,19 @@ from product_data_copilot.review.review_helpers import (  # noqa: E402
     normalize_review_status,
     severity_to_task_priority,
 )
+
+
+def test_allowed_review_statuses_preserve_manual_override_order():
+    assert ALLOWED_REVIEW_STATUSES == [
+        REVIEW_STATUS_OK,
+        REVIEW_STATUS_NEEDS_REVIEW,
+        REVIEW_STATUS_MISSING_DATA,
+        REVIEW_STATUS_AI_SUGGESTION_CREATED,
+        REVIEW_STATUS_TRANSLATION_MISSING,
+        REVIEW_STATUS_COMPLIANCE_CHECK_REQUIRED,
+        REVIEW_STATUS_READY_FOR_EXPORT,
+        REVIEW_STATUS_REJECTED,
+    ]
 
 
 def test_severity_to_task_priority():
