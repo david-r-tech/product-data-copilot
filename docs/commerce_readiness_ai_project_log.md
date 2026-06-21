@@ -438,6 +438,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, `python -m py_compile app.py`, and confirm changed files contain no secrets.
 * Next recommended step: Plan `App Slimdown v1` before wiring extracted helpers into `app.py`.
 
+### App Slimdown v1 Planning
+
+* Date: TODO
+* Change: Added `docs/app_slimdown_plan.md` with current `app.py` responsibilities, target UI module direction, non-move areas, risk areas, rollback strategy, implementation phases, and required checks.
+* Why it matters: Reduces refactor risk before touching the monolithic Streamlit app.
+* How to test: Review `docs/app_slimdown_plan.md`, run `python -m py_compile app.py`, run `python -m pytest`, and confirm forbidden code/data paths were not modified.
+* Next recommended step: Start `App Slimdown v1 - Phase 1` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
