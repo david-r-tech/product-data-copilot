@@ -542,6 +542,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `git diff --check`, and confirm no runtime code, tests, requirements, or sample data changed.
 * Next recommended step: Plan `Smart Suggestions v2` before implementing any new AI suggestion workflow.
 
+### Smart Suggestions v2 - Planning
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_plan.md` with a field-level AI suggestion model, strict anti-hallucination rules, human approval model, review task connection, export/UI implications, tests, phases, rollback strategy, and risks.
+* Why it matters: Creates a safer path from product-level AI drafts toward auditable field-level suggestions without changing current app behavior.
+* How to test: Run `python -m pytest`, run `git diff --check`, and confirm `app.py`, `src/`, tests, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 1: Schema Helpers` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -567,7 +575,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Smart Suggestions v2 - Planning`
+1. Start `Smart Suggestions v2 - Phase 1: Schema Helpers`
 2. Expand pytest coverage for key business rules after helper integration
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`

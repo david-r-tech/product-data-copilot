@@ -3,10 +3,11 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current stable commit: `30fcab7 Integrate AI prompt helpers`
+- Current stable commit: `52cdc7a Finalize helper integration v1`
 - Current test count: `55` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
+- Current planning focus: Smart Suggestions v2 is planned as a future field-level AI suggestion workflow, not implemented yet.
 
 ## Implemented Capabilities
 
@@ -31,6 +32,7 @@
 - Import-safe helpers exist for validators, scoring, review mappings, export constants, and AI prompt safety text.
 - Helper Integration v1 is complete across Validators, Scoring, Review Helpers, Export Helpers, and AI Prompt Helpers.
 - Pytest coverage exists for extracted helper modules.
+- Smart Suggestions v2 planning is documented in `docs/smart_suggestions_v2_plan.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -41,11 +43,12 @@
 - Automatic AI mass generation
 - Automatic acceptance or write-back of AI suggestions
 - Field-level AI suggestion approval workflow
+- Smart Suggestions v2 runtime behavior
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 - Planning
+1. Smart Suggestions v2 - Phase 1: Schema Helpers
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass
