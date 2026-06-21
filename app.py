@@ -1,14 +1,24 @@
 import json
 import os
+import sys
 from io import BytesIO
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 from openai import OpenAI
 
+SRC_PATH = Path(__file__).resolve().parent / "src"
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
 
-st.set_page_config(page_title="Commerce Readiness AI", layout="wide")
+from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
+    configure_page,
+    render_app_intro,
+    render_sidebar_intro,
+)
+
 load_dotenv()
 
 REVIEW_STATUS_OPTIONS = [
@@ -916,10 +926,10 @@ def create_excel_management_export(
 
 def run_app():
     """Run the Streamlit app."""
-    st.title("Commerce Readiness AI")
-    st.caption("CSV-based product data quality checks for e-commerce readiness.")
+    configure_page(st)
+    render_app_intro(st)
 
-    st.sidebar.header("Input")
+    render_sidebar_intro(st)
     uploaded_file = st.sidebar.file_uploader(
         "Upload a CSV or Excel file", type=["csv", "xlsx"]
     )

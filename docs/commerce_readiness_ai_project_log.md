@@ -454,6 +454,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
 * Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
 
+### App Slimdown v1 - Phase 2
+
+* Date: TODO
+* Change: Added `src/product_data_copilot/ui/streamlit_layout.py` with import-safe helpers for page configuration, app intro, and sidebar input header, then wired those helpers into `app.py`.
+* Why it matters: Reduces `app.py` slightly while preserving the existing Streamlit flow and keeping the helper functions testable without launching Streamlit.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
+* Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

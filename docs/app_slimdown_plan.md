@@ -210,6 +210,21 @@ Manual checks:
 
 ### Phase 2: Replace Duplicated Pure Helpers With Tested Imports
 
+Status: Re-scoped and completed as a safer layout/setup helper extraction.
+
+Completed in Phase 2:
+
+- Added `src/product_data_copilot/ui/streamlit_layout.py`.
+- Added import-safe helpers for page configuration, app intro, and sidebar input header.
+- Updated `app.py` to call these helpers while keeping the main app flow in `app.py`.
+- Added focused tests in `tests/test_streamlit_layout.py`.
+
+Next safest recommendation:
+
+- Continue with a small Phase 3 that replaces duplicated pure helpers with tested imports in small groups.
+- Do not split Streamlit tabs into separate files yet.
+- Do not move business logic until each imported helper group has been checked against current app behavior.
+
 Goal:
 
 - Replace duplicated validator helper logic in the UI module with imports from `rules/validators.py`.

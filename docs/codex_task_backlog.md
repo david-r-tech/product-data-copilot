@@ -12,9 +12,10 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 4 | Extract AI Prompt Helpers v1 | Done | Moved pure prompt-building support helpers into an import-safe module with tests. |
 | 5 | App Slimdown v1 | Planning Done | Created a safe phased plan for making `app.py` thinner while preserving behavior. |
 | 6 | App Slimdown v1 - Phase 1 | Done | Created the Streamlit entrypoint wrapper while keeping behavior unchanged. |
-| 7 | App Slimdown v1 - Phase 2 | NEXT | Replace duplicated pure helpers with tested imports in small groups. |
-| 8 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 9 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 7 | App Slimdown v1 - Phase 2 | Done | Extracted minimal Streamlit layout/setup intro helpers with focused tests. |
+| 8 | App Slimdown v1 - Phase 3 | NEXT | Replace duplicated pure helpers with tested imports in small groups. |
+| 9 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 10 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
 
 ## Backlog Rules
 
