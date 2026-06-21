@@ -175,9 +175,36 @@ Reason:
 
 ### Phase 1: Validators Integration
 
+Status: Completed.
+
 Goal:
 
 - Replace duplicated validation helper bodies in `app.py` with imports from `rules/validators.py`.
+
+Result:
+
+- Integrated these validator helpers into `app.py`:
+  - `is_blank`
+  - `is_valid_ean`
+  - `is_valid_price`
+  - `is_suspicious_image_url`
+  - `is_generic_product_name`
+  - `has_useful_attributes`
+  - `is_safety_relevant_category`
+- Removed the corresponding duplicated inline helper implementations from `app.py`.
+- Kept issue construction, check groups, issue names, severity labels, issue messages, scoring inputs, review tasks, AI behavior, and export behavior unchanged.
+- Added validator test coverage for `pandas.NA` blank-value behavior.
+
+Stayed inline:
+
+- `get_value`, because it is app-specific row access logic.
+- `make_display_safe`, because it is Streamlit display preparation, not product validation.
+- issue generation and check-group functions, because they still belong to the current app orchestration.
+
+Mismatch found:
+
+- `app.py` treated `pandas.NA` as blank through `pandas.isna`, while the extracted validator did not.
+- This was fixed in `rules/validators.py` before integration so existing blank-value behavior stays preserved.
 
 Allowed future files:
 

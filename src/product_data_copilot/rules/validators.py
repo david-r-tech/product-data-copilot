@@ -1,5 +1,7 @@
 """Small, pure validation helpers for product data checks."""
 
+import pandas as pd
+
 GENERIC_PRODUCT_NAMES = {
     "bt",
     "headphones",
@@ -26,6 +28,12 @@ SAFETY_RELEVANT_CATEGORY_TERMS = {
 
 def is_blank(value):
     """Return True when a value is missing or empty after trimming."""
+    try:
+        if pd.isna(value):
+            return True
+    except (TypeError, ValueError):
+        pass
+
     if value is None:
         return True
 
@@ -111,4 +119,3 @@ def is_safety_relevant_category(category):
 
     category_text = str(category).lower()
     return any(term in category_text for term in SAFETY_RELEVANT_CATEGORY_TERMS)
-

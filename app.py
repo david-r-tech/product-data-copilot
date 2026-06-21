@@ -13,6 +13,15 @@ SRC_PATH = Path(__file__).resolve().parent / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
+from product_data_copilot.rules.validators import (  # noqa: E402
+    has_useful_attributes,
+    is_blank,
+    is_generic_product_name,
+    is_safety_relevant_category,
+    is_suspicious_image_url,
+    is_valid_ean,
+    is_valid_price,
+)
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     configure_page,
     render_app_intro,
@@ -52,70 +61,10 @@ AI_SUGGESTION_TYPES = [
 ]
 
 
-def is_blank(value):
-    return pd.isna(value) or str(value).strip() == ""
-
-
 def get_value(row, field_name):
     if field_name in row.index:
         return row[field_name]
     return ""
-
-
-def normalize_text(value):
-    if is_blank(value):
-        return ""
-    return str(value).strip()
-
-
-def is_valid_ean(value):
-    if is_blank(value):
-        return False
-
-    if isinstance(value, float) and value.is_integer():
-        value = int(value)
-
-    ean = str(value).strip()
-    return ean.isdigit() and len(ean) in [8, 12, 13, 14]
-
-
-def is_valid_price(value):
-    if is_blank(value):
-        return False
-
-    try:
-        return float(value) > 0
-    except (TypeError, ValueError):
-        return False
-
-
-def is_suspicious_image_url(value):
-    if is_blank(value):
-        return False
-
-    image_url = str(value).strip().lower()
-    return not image_url.startswith(("http://", "https://")) or "example.com" in image_url
-
-
-def is_generic_product_name(value):
-    if is_blank(value):
-        return False
-
-    product_name = str(value).strip()
-    generic_terms = ["bt", "headphones", "cable", "shirt", "product", "item", "unknown"]
-
-    if len(product_name) < 10:
-        return True
-
-    return product_name.lower() in generic_terms
-
-
-def has_useful_attributes(value):
-    if is_blank(value):
-        return False
-
-    attributes = str(value).strip().lower()
-    return attributes not in ["none", "n/a", "unknown", "-"]
 
 
 def make_display_safe(dataframe):
@@ -438,24 +387,6 @@ def score_from_checks(checks):
     if len(checks) == 0:
         return 100
     return round((sum(checks) / len(checks)) * 100)
-
-
-def is_safety_relevant_category(category):
-    if is_blank(category):
-        return False
-
-    category_text = str(category).lower()
-    safety_terms = [
-        "electronics",
-        "kitchen",
-        "appliance",
-        "baby",
-        "sports",
-        "fitness",
-        "toy",
-        "beauty",
-    ]
-    return any(term in category_text for term in safety_terms)
 
 
 def calculate_product_scores(row):

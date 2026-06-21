@@ -2,6 +2,8 @@ import math
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC_PATH = PROJECT_ROOT / "src"
@@ -25,6 +27,7 @@ def test_blank_values_are_detected():
     assert is_blank("")
     assert is_blank("   ")
     assert is_blank(math.nan)
+    assert is_blank(pd.NA)
     assert not is_blank("Product")
 
 
@@ -86,4 +89,3 @@ def test_safety_relevant_category_detection():
     assert is_safety_relevant_category("Beauty / Personal Care")
     assert not is_safety_relevant_category("")
     assert not is_safety_relevant_category("Office")
-
