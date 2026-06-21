@@ -16,7 +16,8 @@ if str(SRC_PATH) not in sys.path:
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     configure_page,
     render_app_intro,
-    render_sidebar_intro,
+    render_data_input_section,
+    render_data_source_notice,
 )
 
 load_dotenv()
@@ -929,10 +930,7 @@ def run_app():
     configure_page(st)
     render_app_intro(st)
 
-    render_sidebar_intro(st)
-    uploaded_file = st.sidebar.file_uploader(
-        "Upload a CSV or Excel file", type=["csv", "xlsx"]
-    )
+    uploaded_file = render_data_input_section(st)
 
     if uploaded_file is not None:
         if uploaded_file.name.endswith(".xlsx"):
@@ -965,7 +963,7 @@ def run_app():
 
     filtered_issues = issues[issues["severity"].isin(selected_severities)]
 
-    st.info(f"Using: {data_source}")
+    render_data_source_notice(st, data_source)
 
     tabs = st.tabs(
         [

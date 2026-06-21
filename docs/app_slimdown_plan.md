@@ -208,7 +208,7 @@ Manual checks:
 - Confirm AI Suggestions missing-key fallback still appears.
 - Confirm Management Export download button still renders.
 
-### Phase 2: Replace Duplicated Pure Helpers With Tested Imports
+### Phase 2: Extract Layout Setup Helpers
 
 Status: Re-scoped and completed as a safer layout/setup helper extraction.
 
@@ -221,9 +221,29 @@ Completed in Phase 2:
 
 Next safest recommendation:
 
-- Continue with a small Phase 3 that replaces duplicated pure helpers with tested imports in small groups.
+- Continue with a small Phase 3 that extracts only data input / source notice presentation helpers.
 - Do not split Streamlit tabs into separate files yet.
 - Do not move business logic until each imported helper group has been checked against current app behavior.
+
+### Phase 3: Extract Data Input UI Helpers
+
+Status: Completed.
+
+Completed in Phase 3:
+
+- Added `render_data_input_section(st)` to render the sidebar upload widget and return the uploaded file.
+- Added `render_data_source_notice(st, data_source)` to render the existing `Using: ...` data source message.
+- Updated `app.py` to call those helpers while keeping CSV/XLSX parsing, sample data loading, validation, scoring, review, AI, export, and tab flow in `app.py`.
+- Added focused tests in `tests/test_streamlit_layout.py`.
+
+Next safest recommendation:
+
+- Continue with a small Phase 4 that replaces duplicated pure helper logic with tested imports in small groups.
+- Start with the lowest-risk helpers only.
+- Do not split Streamlit tabs into files yet.
+- Do not move data loading, product checks, scoring, review, AI, or export orchestration in the same phase.
+
+### Phase 4: Replace Duplicated Pure Helpers With Tested Imports
 
 Goal:
 
@@ -255,7 +275,7 @@ Manual checks:
 - Downloads still work.
 - AI prompt preview still renders without API key.
 
-### Phase 3: Split Tab Rendering Into Local Functions
+### Phase 5: Split Tab Rendering Into Local Functions
 
 Goal:
 
@@ -288,11 +308,11 @@ Manual checks:
 - Confirm manual review override still works.
 - Confirm AI Suggestions does not auto-apply changes.
 
-### Phase 4: Consider UI Submodules Only If Needed
+### Phase 6: Consider UI Submodules Only If Needed
 
 Goal:
 
-- Only after Phase 3 is stable, consider moving larger tab renderers into `src/product_data_copilot/ui/sections/`.
+- Only after Phase 5 is stable, consider moving larger tab renderers into `src/product_data_copilot/ui/sections/`.
 
 Default recommendation:
 

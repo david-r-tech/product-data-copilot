@@ -19,3 +19,16 @@ def render_app_intro(st):
 def render_sidebar_intro(st):
     """Render the sidebar input section header."""
     st.sidebar.header("Input")
+
+
+def render_data_input_section(st):
+    """Render the sidebar data upload input and return the uploaded file."""
+    render_sidebar_intro(st)
+    return st.sidebar.file_uploader(
+        "Upload a CSV or Excel file", type=["csv", "xlsx"]
+    )
+
+
+def render_data_source_notice(st, data_source):
+    """Render the currently used data source notice."""
+    st.info(f"Using: {data_source}")

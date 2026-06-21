@@ -462,6 +462,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
 * Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
 
+### App Slimdown v1 - Phase 3
+
+* Date: TODO
+* Change: Added import-safe helpers for the sidebar upload widget and current data source notice, then wired them into `app.py` without moving data loading or business logic.
+* Why it matters: Reduces `app.py` a little more while keeping the main app flow visible and preserving current sample/upload behavior.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
+* Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
