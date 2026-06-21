@@ -267,6 +267,16 @@ Purpose:
 
 Create pure, import-safe schema and validation helpers for field-level suggestions.
 
+Status: Completed in `Smart Suggestions v2 - Phase 1: Schema Helpers`.
+
+Result:
+
+- Added pure schema helpers in `src/product_data_copilot/ai/suggestion_schema.py`.
+- Added future contract helpers in `src/product_data_copilot/ai/suggestion_contract.py`.
+- Added focused pytest coverage in `tests/test_suggestion_schema.py` and `tests/test_suggestion_contract.py`.
+- Kept `app.py`, current prompt runtime behavior, exports, UI, and OpenAI behavior unchanged.
+- Smart Suggestions v2 is still not wired into the running Streamlit app.
+
 Allowed future files:
 
 - `src/product_data_copilot/ai/suggestion_schema.py`
@@ -287,18 +297,27 @@ Required checks:
 - `python -m pytest`
 - forbidden-file diff check for `app.py`, `requirements.txt`, and sample data
 
-### Phase 2: Suggestion Validation and Normalization Helpers
+### Phase 2: Contract & Parser Helpers
 
 Purpose:
 
-Normalize AI suggestion rows, validate required fields, normalize confidence/risk/status values, and safely handle missing or malformed suggestion fields.
+Add safe parser and response-normalization helpers for future field-level AI responses. Keep contract helpers aligned with the schema, but do not change runtime prompts yet.
 
 Allowed future files:
 
 - `src/product_data_copilot/ai/suggestion_schema.py`
 - `tests/test_suggestion_schema.py`
-- optional `src/product_data_copilot/ai/suggestion_validation.py`
-- optional `tests/test_suggestion_validation.py`
+- `src/product_data_copilot/ai/suggestion_contract.py`
+- optional `src/product_data_copilot/ai/response_parser.py`
+- `tests/test_suggestion_contract.py`
+- optional `tests/test_response_parser.py`
+
+Do not change:
+
+- `app.py`
+- current OpenAI call behavior
+- current prompt used by the app
+- UI or exports
 
 ### Phase 3: Prompt Contract Update, No Provider Change
 

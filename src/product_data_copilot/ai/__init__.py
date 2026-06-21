@@ -1,1 +1,1 @@
-"""AI prompt helper utilities for Product Data Copilot."""
+"""AI helper utilities for Product Data Copilot."""

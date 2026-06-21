@@ -24,10 +24,11 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 16 | Helper Integration v1 - Phase 5: AI Prompt Helpers | Done | Wired narrow AI prompt safety helpers into `app.py` while preserving current AI behavior. |
 | 17 | Helper Integration v1 - Finalization | Done | Reviewed completed helper integration, documented final state, and prepared the next safe planning block. |
 | 18 | Smart Suggestions v2 - Planning | Done | Planned a safer structured AI suggestion model without implementation or app behavior changes. |
-| 19 | Smart Suggestions v2 - Phase 1: Schema Helpers | NEXT | Create pure field-level suggestion schema helpers and tests without changing app behavior. |
-| 20 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 21 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
-| 22 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 19 | Smart Suggestions v2 - Phase 1: Schema Helpers | Done | Created pure field-level suggestion schema and contract helpers with tests without changing app behavior. |
+| 20 | Smart Suggestions v2 - Phase 2: Contract & Parser Helpers | NEXT | Add safe response parser/normalization helpers for future field-level AI responses without runtime wiring. |
+| 21 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 22 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 23 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
 
 ## Backlog Rules
 

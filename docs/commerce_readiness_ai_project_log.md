@@ -550,6 +550,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `git diff --check`, and confirm `app.py`, `src/`, tests, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 1: Schema Helpers` only after explicit approval.
 
+### Smart Suggestions v2 - Phase 1: Schema Helpers
+
+* Date: TODO
+* Change: Added pure Smart Suggestions v2 schema and contract helpers plus focused pytest coverage for field-level suggestion records, cautious defaults, source fields, human approval, and anti-hallucination contract wording.
+* Why it matters: Creates a tested foundation for safer field-level AI suggestions before any Streamlit, prompt, OpenAI, export, or runtime behavior changes.
+* How to test: Run `python -m pytest`, run `git diff --check`, and confirm `app.py`, current prompt helpers, runtime modules, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 2: Contract & Parser Helpers` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -575,7 +583,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Smart Suggestions v2 - Phase 1: Schema Helpers`
+1. Start `Smart Suggestions v2 - Phase 2: Contract & Parser Helpers`
 2. Expand pytest coverage for key business rules after helper integration
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`
