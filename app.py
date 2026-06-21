@@ -32,6 +32,11 @@ from product_data_copilot.review.review_helpers import (  # noqa: E402
     issue_to_task_type,
     severity_to_task_priority as get_task_priority,
 )
+from product_data_copilot.export.export_helpers import (  # noqa: E402
+    AI_SUGGESTIONS_EXPORT_COLUMNS,
+    MANAGEMENT_EXPORT_FILENAME,
+    MANAGEMENT_EXPORT_SHEETS,
+)
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     configure_page,
     render_app_intro,
@@ -761,20 +766,8 @@ def create_management_summary(
 
 
 def get_ai_suggestions_export_dataframe():
-    columns = [
-        "sku",
-        "selected_suggestion_types",
-        "improved_product_title",
-        "improved_product_description",
-        "bullet_points",
-        "suggested_missing_attributes",
-        "translation",
-        "compliance_safety_review_note",
-        "human_review_notes",
-    ]
-
     if "ai_suggestions" not in st.session_state:
-        return pd.DataFrame(columns=columns)
+        return pd.DataFrame(columns=AI_SUGGESTIONS_EXPORT_COLUMNS)
 
     sku = st.session_state.get("ai_suggestions_sku", "")
     suggestions = st.session_state["ai_suggestions"]
@@ -800,14 +793,23 @@ def create_excel_management_export(
     )
 
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        (
+            management_summary_sheet,
+            product_scores_sheet,
+            issues_sheet,
+            review_tasks_sheet,
+            ai_suggestions_sheet,
+            source_products_sheet,
+        ) = MANAGEMENT_EXPORT_SHEETS
+
         management_summary.to_excel(
-            writer, sheet_name="Management Summary", index=False
+            writer, sheet_name=management_summary_sheet, index=False
         )
-        readiness_scores.to_excel(writer, sheet_name="Product Scores", index=False)
-        issues.to_excel(writer, sheet_name="Issues", index=False)
-        review_tasks.to_excel(writer, sheet_name="Review Tasks", index=False)
-        ai_suggestions.to_excel(writer, sheet_name="AI Suggestions", index=False)
-        products.to_excel(writer, sheet_name="Source Products", index=False)
+        readiness_scores.to_excel(writer, sheet_name=product_scores_sheet, index=False)
+        issues.to_excel(writer, sheet_name=issues_sheet, index=False)
+        review_tasks.to_excel(writer, sheet_name=review_tasks_sheet, index=False)
+        ai_suggestions.to_excel(writer, sheet_name=ai_suggestions_sheet, index=False)
+        products.to_excel(writer, sheet_name=source_products_sheet, index=False)
 
     output.seek(0)
     return output.getvalue()
@@ -1080,7 +1082,7 @@ def run_app():
                 review_tasks,
                 ai_suggestions_export,
             ),
-            "commerce_readiness_ai_management_export.xlsx",
+            MANAGEMENT_EXPORT_FILENAME,
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
 

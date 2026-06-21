@@ -518,6 +518,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the Review Tasks tab and manual review status override.
 * Next recommended step: Start `Helper Integration v1 - Phase 4: Export Helpers` only after explicit approval.
 
+### Helper Integration v1 - Phase 4: Export Helpers
+
+* Date: TODO
+* Change: Integrated tested export constants for the Excel management export filename, management workbook sheet names, and AI Suggestions export columns while keeping export data creation in `app.py`.
+* Why it matters: Reduces duplicated export contract values while preserving portfolio-critical filenames, sheet names, column names, and exported data.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify Management Export and CSV/Excel downloads.
+* Next recommended step: Start `Helper Integration v1 - Phase 5: AI Prompt Helpers` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -543,7 +551,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Helper Integration v1 - Phase 4: Export Helpers`
+1. Start `Helper Integration v1 - Phase 5: AI Prompt Helpers`
 2. Integrate already-tested helper modules in small behavior-preserving groups
 3. Expand pytest coverage for key business rules after helper integration
 4. Capture screenshots using `docs/screenshots_to_capture.md`

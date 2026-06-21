@@ -338,10 +338,31 @@ Stop if:
 
 ### Phase 4: Export Helpers Integration
 
+Status: Completed.
+
 Goal:
 
 - Import export constants such as management export filename, sheet names, and AI suggestion export columns where they exactly match existing app behavior.
 - Optionally use `ordered_columns` only if there is a clear existing column-ordering need.
+
+Result:
+
+- Imported `AI_SUGGESTIONS_EXPORT_COLUMNS` into `app.py` for empty AI Suggestions export DataFrame creation.
+- Imported `MANAGEMENT_EXPORT_SHEETS` into `app.py` for management workbook sheet names.
+- Imported `MANAGEMENT_EXPORT_FILENAME` into `app.py` for the Excel management download filename.
+- Added test coverage to pin the management export filename, sheet order, and AI Suggestions export columns.
+- Kept CSV download filenames, download labels, export DataFrame contents, and Excel writer orchestration unchanged.
+
+Stayed inline:
+
+- `create_management_summary`, because it calculates app-specific business metrics from current DataFrames.
+- `get_ai_suggestions_export_dataframe`, because it reads `st.session_state`.
+- `create_excel_management_export`, because it coordinates current app DataFrames and in-memory Excel bytes.
+- CSV download filenames for readiness scores, issues, review tasks, and AI suggestions, because they are not currently helper constants.
+
+Mismatch found:
+
+- No mismatch found for current app usage. The helper constants match the existing management workbook filename, sheet names, and AI Suggestions export column order.
 
 Allowed future files:
 

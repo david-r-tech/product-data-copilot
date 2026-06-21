@@ -10,6 +10,7 @@ sys.path.insert(0, str(SRC_PATH))
 
 from product_data_copilot.export.export_helpers import (  # noqa: E402
     AI_SUGGESTIONS_EXPORT_COLUMNS,
+    MANAGEMENT_EXPORT_SHEETS,
     MANAGEMENT_EXPORT_FILENAME,
     build_export_filename,
     dataframe_has_columns,
@@ -20,6 +21,35 @@ from product_data_copilot.export.export_helpers import (  # noqa: E402
     required_management_export_sheets,
     safe_sheet_name,
 )
+
+
+def test_management_export_filename_is_stable():
+    assert MANAGEMENT_EXPORT_FILENAME == "commerce_readiness_ai_management_export.xlsx"
+
+
+def test_management_export_sheet_order_is_stable():
+    assert MANAGEMENT_EXPORT_SHEETS == [
+        "Management Summary",
+        "Product Scores",
+        "Issues",
+        "Review Tasks",
+        "AI Suggestions",
+        "Source Products",
+    ]
+
+
+def test_ai_suggestions_export_columns_are_stable():
+    assert AI_SUGGESTIONS_EXPORT_COLUMNS == [
+        "sku",
+        "selected_suggestion_types",
+        "improved_product_title",
+        "improved_product_description",
+        "bullet_points",
+        "suggested_missing_attributes",
+        "translation",
+        "compliance_safety_review_note",
+        "human_review_notes",
+    ]
 
 
 def test_safe_sheet_name_replaces_invalid_excel_characters():
