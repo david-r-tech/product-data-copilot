@@ -582,6 +582,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, schema/parser helpers, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 5: Structured Response Normalization Review` only after explicit approval.
 
+### Smart Suggestions v2 - Phase 5: Structured Response Normalization Review
+
+* Date: TODO
+* Change: Hardened Smart Suggestions v2 schema/parser behavior and expanded edge-case tests for unsafe approval values, restricted factual target fields, missing source fields, missing reasons, unsupported source shapes, nested non-suggestion payloads, and ignored extra keys.
+* Why it matters: Ensures malformed, incomplete, or unsafe AI output cannot become approved or use-ready before any runtime integration.
+* How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, runtime modules outside Smart Suggestions, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 6: Runtime Integration Planning` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -607,7 +615,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Smart Suggestions v2 - Phase 5: Structured Response Normalization Review`
+1. Start `Smart Suggestions v2 - Phase 6: Runtime Integration Planning`
 2. Expand pytest coverage for key business rules after helper integration
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`

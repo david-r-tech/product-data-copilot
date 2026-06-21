@@ -25,8 +25,10 @@ from product_data_copilot.ai.suggestion_schema import (  # noqa: E402
     RISK_LEVEL_LOW,
     RISK_LEVEL_MEDIUM,
     SUGGESTION_STATUS_REVIEW_REQUIRED,
+    UNSUPPORTED_FACT_TARGET_FIELDS,
     create_review_required_suggestion,
     has_required_source_and_reason,
+    is_unsupported_fact_target_field,
     normalize_approval_status,
     normalize_confidence,
     normalize_risk_level,
@@ -52,6 +54,9 @@ def test_schema_module_imports_and_exposes_expected_constants():
     assert SUGGESTION_STATUS_REVIEW_REQUIRED in ALLOWED_SUGGESTION_STATUSES
     assert "target_field" in REQUIRED_SUGGESTION_FIELDS
     assert "requires_human_approval" in REQUIRED_SUGGESTION_FIELDS
+    assert "ean" in UNSUPPORTED_FACT_TARGET_FIELDS
+    assert "price" in UNSUPPORTED_FACT_TARGET_FIELDS
+    assert "compliance_claims" in UNSUPPORTED_FACT_TARGET_FIELDS
 
 
 def test_unknown_confidence_normalizes_to_cautious_low_value():
@@ -88,6 +93,18 @@ def test_source_fields_normalize_from_string_list_and_empty_values():
     ]
     assert normalize_source_fields(None) == []
     assert normalize_source_fields("-") == []
+    assert normalize_source_fields(12345) == []
+    assert normalize_source_fields({"field": "description"}) == []
+
+
+def test_unsupported_fact_target_fields_are_detected_cautiously():
+    assert is_unsupported_fact_target_field("EAN")
+    assert is_unsupported_fact_target_field(" price ")
+    assert is_unsupported_fact_target_field("certifications")
+    assert is_unsupported_fact_target_field("compliance_claim")
+    assert is_unsupported_fact_target_field("dimensions")
+    assert not is_unsupported_fact_target_field("description")
+    assert not is_unsupported_fact_target_field("product_name")
 
 
 def test_records_missing_source_fields_or_reason_are_not_valid():

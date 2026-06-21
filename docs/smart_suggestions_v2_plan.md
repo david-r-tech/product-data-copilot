@@ -379,6 +379,16 @@ Purpose:
 
 Review parser and schema behavior against the prompt adapter contract before runtime wiring. Add any missing pure tests for structured response normalization without changing app behavior.
 
+Status: Completed in `Smart Suggestions v2 - Phase 5: Structured Response Normalization Review`.
+
+Result:
+
+- Hardened schema normalization for unsupported source field shapes and restricted factual target fields.
+- Hardened parser behavior so AI-supplied approved-like statuses and restricted fields cannot become approved or use-ready.
+- Added edge-case tests for approval-like statuses, mixed confidence/risk values, missing source fields, missing reasons, unsupported fact categories, unsupported translation records, nested non-suggestion objects, and ignored extra keys.
+- Verified adapter/contract alignment for required keys and parser safety expectations.
+- Kept `app.py`, current AI Suggestions v1 prompt runtime, exports, UI, OpenAI behavior, and prompt helper runtime unchanged.
+
 ### Phase 6: Safe AI Response Runtime Wiring
 
 Purpose:

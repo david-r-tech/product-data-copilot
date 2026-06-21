@@ -14,6 +14,9 @@ from product_data_copilot.ai.suggestion_prompt_adapter import (  # noqa: E402
     build_smart_suggestion_prompt,
     normalize_prompt_value,
 )
+from product_data_copilot.ai.suggestion_contract import (  # noqa: E402
+    SMART_SUGGESTION_REQUIRED_KEYS,
+)
 
 
 def test_prompt_adapter_module_imports_and_normalizes_prompt_values():
@@ -126,13 +129,8 @@ def test_smart_suggestion_prompt_output_is_deterministic_and_contains_contract()
     assert "Smart Suggestions v2 output contract" in first_prompt
     assert "smart_suggestions array" in first_prompt
     assert "field-level suggestion" in first_prompt
-    assert "sku" in first_prompt
-    assert "target_field" in first_prompt
-    assert "source_fields" in first_prompt
-    assert "reason" in first_prompt
-    assert "confidence" in first_prompt
-    assert "risk_level" in first_prompt
-    assert "requires_human_approval" in first_prompt
+    for required_key in SMART_SUGGESTION_REQUIRED_KEYS:
+        assert required_key in first_prompt
 
 
 def test_smart_suggestion_prompt_contains_safety_and_human_review_rules():

@@ -8,6 +8,7 @@ from product_data_copilot.ai.suggestion_schema import (
     RISK_LEVEL_HIGH,
     SUGGESTION_STATUS_BLOCKED,
     SUGGESTION_STATUS_REVIEW_REQUIRED,
+    is_unsupported_fact_target_field,
     normalize_suggestion_record as normalize_schema_suggestion_record,
     normalize_text,
     validate_suggestion_record,
@@ -87,7 +88,10 @@ def normalize_suggestion_record(record):
     if normalized["approval_status"] == APPROVAL_STATUS_APPROVED:
         normalized["approval_status"] = DEFAULT_APPROVAL_STATUS
 
-    if not validate_suggestion_record(normalized):
+    if is_unsupported_fact_target_field(normalized["target_field"]):
+        normalized["risk_level"] = RISK_LEVEL_HIGH
+        normalized["suggestion_status"] = SUGGESTION_STATUS_BLOCKED
+    elif not validate_suggestion_record(normalized):
         normalized["suggestion_status"] = SUGGESTION_STATUS_BLOCKED
     elif normalized["suggestion_status"] == "draft":
         normalized["suggestion_status"] = SUGGESTION_STATUS_REVIEW_REQUIRED

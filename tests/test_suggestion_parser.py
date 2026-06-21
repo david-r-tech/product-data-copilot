@@ -183,19 +183,20 @@ def test_unknown_confidence_risk_and_status_normalize_cautiously():
 
 
 def test_parser_never_preserves_ai_supplied_approved_status():
-    suggestion = normalize_suggestion_record(
-        {
-            "sku": "SKU-006",
-            "target_field": "description",
-            "source_fields": ["product_name"],
-            "reason": "Uses source product title.",
-            "approval_status": "approved",
-            "suggestion_status": "draft",
-        }
-    )
+    for approval_status in ["approved", "ready", "done", "accepted", True]:
+        suggestion = normalize_suggestion_record(
+            {
+                "sku": "SKU-006",
+                "target_field": "description",
+                "source_fields": ["product_name"],
+                "reason": "Uses source product title.",
+                "approval_status": approval_status,
+                "suggestion_status": "draft",
+            }
+        )
 
-    assert suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
-    assert suggestion["requires_human_approval"] is True
+        assert suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+        assert suggestion["requires_human_approval"] is True
 
 
 def test_parser_requires_source_fields_and_reason_for_valid_suggestions():
@@ -228,3 +229,101 @@ def test_build_parser_error_record_is_non_approved_and_review_required():
     assert error_record["requires_human_approval"] is True
     assert error_record["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
     assert error_record["suggestion_status"] == SUGGESTION_STATUS_BLOCKED
+
+
+def test_unsupported_fact_target_fields_are_blocked_even_with_proposed_values():
+    for target_field in [
+        "ean",
+        "price",
+        "certification",
+        "compliance_claim",
+        "dimensions",
+        "materials",
+    ]:
+        suggestion = normalize_suggestion_record(
+            {
+                "sku": "SKU-009",
+                "target_field": target_field,
+                "current_value": "",
+                "proposed_value": "Invented factual value",
+                "source_fields": ["product_name"],
+                "reason": "AI attempted to fill a restricted field.",
+                "confidence": "high",
+                "risk_level": "low",
+                "approval_status": "approved",
+            }
+        )
+
+        assert suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+        assert suggestion["risk_level"] == RISK_LEVEL_HIGH
+        assert suggestion["suggestion_status"] == SUGGESTION_STATUS_BLOCKED
+
+
+def test_unsupported_translation_without_source_or_reason_is_blocked():
+    suggestion = normalize_suggestion_record(
+        {
+            "sku": "SKU-010",
+            "target_field": "translation_de",
+            "proposed_value": "Unsupported translated claim",
+            "source_fields": [],
+            "reason": "",
+            "confidence": "high",
+            "risk_level": "low",
+        }
+    )
+
+    assert suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+    assert suggestion["suggestion_status"] == SUGGESTION_STATUS_BLOCKED
+    assert not validate_suggestion_record(suggestion)
+
+
+def test_source_fields_unexpected_type_does_not_count_as_valid_source():
+    suggestion = normalize_suggestion_record(
+        {
+            "sku": "SKU-011",
+            "target_field": "description",
+            "source_fields": {"field": "product_name"},
+            "reason": "Looks like it has a source, but the type is unsupported.",
+        }
+    )
+
+    assert suggestion["source_fields"] == []
+    assert suggestion["suggestion_status"] == SUGGESTION_STATUS_BLOCKED
+    assert not validate_suggestion_record(suggestion)
+
+
+def test_nested_object_shape_that_is_not_suggestion_list_returns_no_records():
+    payload = {
+        "metadata": {
+            "smart_suggestions": [
+                {
+                    "sku": "SKU-012",
+                    "target_field": "description",
+                }
+            ]
+        }
+    }
+
+    assert extract_suggestion_records(payload) == []
+
+
+def test_extra_unknown_keys_do_not_affect_approval_or_readiness():
+    suggestion = normalize_suggestion_record(
+        {
+            "sku": "SKU-013",
+            "target_field": "description",
+            "source_fields": ["product_name"],
+            "reason": "Uses source fields.",
+            "approval_status": "needs_review",
+            "suggestion_status": "draft",
+            "auto_apply": True,
+            "publish_now": True,
+            "unexpected": "ignored",
+        }
+    )
+
+    assert "auto_apply" not in suggestion
+    assert "publish_now" not in suggestion
+    assert "unexpected" not in suggestion
+    assert suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+    assert suggestion["suggestion_status"] == SUGGESTION_STATUS_REVIEW_REQUIRED

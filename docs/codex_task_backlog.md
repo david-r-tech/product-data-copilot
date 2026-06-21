@@ -28,10 +28,11 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 20 | Smart Suggestions v2 - Phase 2: Contract & Parser Helpers | Done | Added safe response parser/normalization helpers for future field-level AI responses without runtime wiring. |
 | 21 | Smart Suggestions v2 - Phase 3: Prompt Contract Planning | Done | Planned how to update the AI prompt contract for field-level suggestions before runtime integration. |
 | 22 | Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter | Done | Added a tested prompt adapter for field-level suggestions while preserving current runtime behavior. |
-| 23 | Smart Suggestions v2 - Phase 5: Structured Response Normalization Review | NEXT | Review schema/parser behavior against the prompt adapter contract before runtime wiring. |
-| 24 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 25 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
-| 26 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 23 | Smart Suggestions v2 - Phase 5: Structured Response Normalization Review | Done | Reviewed and hardened schema/parser behavior against the prompt adapter contract before runtime wiring. |
+| 24 | Smart Suggestions v2 - Phase 6: Runtime Integration Planning | NEXT | Plan the safest path for wiring Smart Suggestions v2 into runtime without changing behavior prematurely. |
+| 25 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 26 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 27 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
 
 ## Backlog Rules
 

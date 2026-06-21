@@ -57,6 +57,25 @@ REQUIRED_SUGGESTION_FIELDS = [
     "suggestion_status",
 ]
 
+UNSUPPORTED_FACT_TARGET_FIELDS = [
+    "ean",
+    "gtin",
+    "price",
+    "dimension",
+    "dimensions",
+    "certification",
+    "certifications",
+    "material",
+    "materials",
+    "compliance",
+    "compliance_claim",
+    "compliance_claims",
+    "legal_claim",
+    "legal_claims",
+    "safety_claim",
+    "safety_claims",
+]
+
 
 def normalize_text(value):
     """Return a stripped text value, treating common placeholders as blank."""
@@ -112,7 +131,7 @@ def normalize_source_fields(value):
     elif isinstance(value, (list, tuple, set)):
         raw_fields = list(value)
     else:
-        raw_fields = [value]
+        return []
 
     source_fields = []
     for field_name in raw_fields:
@@ -121,6 +140,12 @@ def normalize_source_fields(value):
             source_fields.append(normalized_field)
 
     return source_fields
+
+
+def is_unsupported_fact_target_field(target_field):
+    """Return True when AI should not propose factual values for a field."""
+    normalized_target_field = normalize_text(target_field).lower()
+    return normalized_target_field in UNSUPPORTED_FACT_TARGET_FIELDS
 
 
 def has_required_source_and_reason(record):

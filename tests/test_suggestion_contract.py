@@ -126,3 +126,23 @@ def test_prompt_contract_block_is_deterministic_and_strict():
     assert "source data is missing" in first_contract
     assert "source data is contradictory" in first_contract
     assert "Human approval is required before use or export" in first_contract
+
+
+def test_contract_defaults_match_parser_safety_expectations():
+    contract = smart_suggestion_json_contract()
+
+    assert contract["root_key"] == "smart_suggestions"
+    assert contract["approval_status_values"] == [
+        "needs_review",
+        "approved",
+        "rejected",
+    ]
+    assert contract["suggestion_status_values"] == [
+        "draft",
+        "review_required",
+        "blocked_insufficient_source",
+    ]
+
+    prompt_contract = smart_suggestion_prompt_contract_block()
+    assert "AI-generated suggestions must not set approval_status to approved" in prompt_contract
+    assert "blocked_insufficient_source" in prompt_contract
