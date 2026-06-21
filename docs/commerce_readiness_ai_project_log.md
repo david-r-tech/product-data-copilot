@@ -534,6 +534,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab and missing API-key prompt preview.
 * Next recommended step: Start `Helper Integration v1 - Finalization` only after explicit approval.
 
+### Helper Integration v1 - Finalization
+
+* Date: TODO
+* Change: Finalized the Helper Integration v1 documentation, added `docs/project_status.md`, and set the next roadmap block to `Smart Suggestions v2 - Planning`.
+* Why it matters: Gives the project a clear current state after validators, scoring, review, export, and AI prompt helpers were integrated, while avoiding new runtime changes.
+* How to test: Run `python -m pytest`, run `git diff --check`, and confirm no runtime code, tests, requirements, or sample data changed.
+* Next recommended step: Plan `Smart Suggestions v2` before implementing any new AI suggestion workflow.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -559,9 +567,9 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Helper Integration v1 - Finalization`
-2. Integrate already-tested helper modules in small behavior-preserving groups
-3. Expand pytest coverage for key business rules after helper integration
+1. Start `Smart Suggestions v2 - Planning`
+2. Expand pytest coverage for key business rules after helper integration
+3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`
 5. Do one full demo walkthrough using `docs/demo_test_checklist.md`
 

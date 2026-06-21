@@ -540,6 +540,37 @@ Helper Integration v1 is complete when:
 - project log and backlog are updated
 - no forbidden product scope was added
 
-The immediate next block should be:
+## 12. Helper Integration v1 Final Status
 
-`Helper Integration v1 - Phase 1: Validators`
+Status: Completed through Phase 5 at stable baseline `30fcab7 Integrate AI prompt helpers`.
+
+Integrated into `app.py`:
+
+- Validator helpers for blank values, EAN validation, price validation, suspicious image URLs, generic product names, and useful attributes.
+- Scoring helpers for readiness status labels and simple check-based score percentages.
+- Review helpers for allowed review statuses, derived review status priority, task type mapping, and task priority mapping.
+- Export helper constants for the Excel management export filename, workbook sheet names, and AI Suggestions export columns.
+- AI prompt safety instruction helpers for anti-hallucination wording and human-review wording.
+
+Intentionally kept inline in `app.py`:
+
+- Data loading, upload handling, and sample-data fallback.
+- Product issue generation and rule grouping.
+- Product score assembly, sub-score calculations, and overall weighted score calculation.
+- Review task DataFrame creation, task filtering, and session-state manual override workflow.
+- AI product context assembly, current JSON prompt shape, OpenAI API call, response parsing, and suggestion export mapping.
+- CSV download buttons, Excel workbook creation, management summary generation, and Streamlit tab flow.
+
+Known limitations:
+
+- `app.py` is still the main application flow and remains relatively large.
+- Helper modules now reduce duplication, but they do not yet own complete business workflows.
+- Streamlit UI behavior still depends mainly on manual smoke testing.
+- AI Suggestions still use the current one-product draft workflow rather than a field-level approval model.
+- Manual review overrides remain session-only and are not persisted.
+
+Next recommended roadmap step:
+
+`Smart Suggestions v2 - Planning`
+
+This should plan a safer, structured field-level AI suggestion model before any implementation work begins.
