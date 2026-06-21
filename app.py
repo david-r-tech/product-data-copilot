@@ -22,6 +22,10 @@ from product_data_copilot.rules.validators import (  # noqa: E402
     is_valid_ean,
     is_valid_price,
 )
+from product_data_copilot.scoring.scoring_helpers import (  # noqa: E402
+    readiness_status_from_score as get_readiness_status,
+    score_from_checks,
+)
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     configure_page,
     render_app_intro,
@@ -361,14 +365,6 @@ def find_product_issues(products):
     )
 
 
-def get_readiness_status(score):
-    if score >= 85:
-        return "Ready"
-    if score >= 60:
-        return "Needs Review"
-    return "Critical"
-
-
 def get_review_status(product_issues, readiness_status):
     issue_types = product_issues["issue_type"].tolist()
 
@@ -381,12 +377,6 @@ def get_review_status(product_issues, readiness_status):
     if readiness_status == "Ready":
         return "Ready for Export"
     return "Needs Review"
-
-
-def score_from_checks(checks):
-    if len(checks) == 0:
-        return 100
-    return round((sum(checks) / len(checks)) * 100)
 
 
 def calculate_product_scores(row):

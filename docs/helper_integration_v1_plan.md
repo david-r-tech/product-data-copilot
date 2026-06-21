@@ -231,10 +231,31 @@ Stop if:
 
 ### Phase 2: Scoring Helpers Integration
 
+Status: Completed.
+
 Goal:
 
 - Replace `get_readiness_status` with `readiness_status_from_score`.
 - Replace `score_from_checks` with `scoring_helpers.score_from_checks` only after confirming identical outputs for current score inputs.
+
+Result:
+
+- Integrated `readiness_status_from_score` into `app.py` as `get_readiness_status` to preserve existing call sites.
+- Integrated `score_from_checks` from `scoring_helpers.py`.
+- Removed the corresponding duplicated inline scoring helper implementations from `app.py`.
+- Added test coverage for app-relevant rounded boolean check ratios.
+- Kept `calculate_product_scores` and `calculate_readiness_scores` in `app.py`.
+
+Stayed inline:
+
+- weighted overall score formula
+- individual sub-score calculation inputs
+- readiness score DataFrame assembly
+- review status derivation
+
+Mismatch found:
+
+- No mismatch found for current app usage. The helper functions are equivalent for the numeric readiness scores and boolean check lists used by `app.py`.
 
 Allowed future files:
 

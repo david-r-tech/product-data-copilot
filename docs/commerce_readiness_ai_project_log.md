@@ -502,6 +502,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the Issues tab with sample data.
 * Next recommended step: Start `Helper Integration v1 - Phase 2: Scoring` only after explicit approval.
 
+### Helper Integration v1 - Phase 2: Scoring
+
+* Date: TODO
+* Change: Integrated tested scoring helpers for readiness status labels and percentage scores, removed duplicated inline scoring helper implementations from `app.py`, and added rounding coverage for app-relevant boolean check lists.
+* Why it matters: Reduces scoring duplication while preserving existing readiness score values and keeping the larger product score calculation in the Streamlit app for now.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the Product Readiness Scores table with sample data.
+* Next recommended step: Start `Helper Integration v1 - Phase 3: Review Helpers` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -527,7 +535,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Helper Integration v1 - Phase 2: Scoring`
+1. Start `Helper Integration v1 - Phase 3: Review Helpers`
 2. Integrate already-tested helper modules in small behavior-preserving groups
 3. Expand pytest coverage for key business rules after helper integration
 4. Capture screenshots using `docs/screenshots_to_capture.md`

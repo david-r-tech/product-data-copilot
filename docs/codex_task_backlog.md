@@ -18,8 +18,8 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 10 | App Slimdown v1 - Phase 5 | Done | Finalized App Slimdown v1 as a safe stop point and documented what remains in `app.py`. |
 | 11 | Helper Integration v1 - Planning | Done | Planned how already extracted helpers can be wired into `app.py` safely without behavior changes. |
 | 12 | Helper Integration v1 - Phase 1: Validators | Done | Wired tested validator helpers into `app.py` with behavior-preserving checks. |
-| 13 | Helper Integration v1 - Phase 2: Scoring | NEXT | Wire tested scoring helpers into `app.py` after validator integration is stable. |
-| 14 | Helper Integration v1 - Phase 3: Review | Planned | Wire tested review helpers into `app.py` after scoring integration is stable. |
+| 13 | Helper Integration v1 - Phase 2: Scoring | Done | Wired tested scoring helpers into `app.py` after validator integration stayed stable. |
+| 14 | Helper Integration v1 - Phase 3: Review Helpers | NEXT | Wire tested review helpers into `app.py` after scoring integration is stable. |
 | 15 | Helper Integration v1 - Phase 4: Export | Planned | Wire tested export constants/helpers into `app.py` after review integration is stable. |
 | 16 | Helper Integration v1 - Phase 5: AI Prompt | Planned | Plan or narrowly wire AI prompt helpers while preserving current AI behavior. |
 | 17 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |

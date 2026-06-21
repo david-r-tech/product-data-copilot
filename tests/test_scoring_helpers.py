@@ -49,6 +49,8 @@ def test_score_from_checks_returns_percentage():
     assert score_from_checks([True, True, True]) == 100
     assert score_from_checks([True, False]) == 50
     assert score_from_checks([False, False, False]) == 0
+    assert score_from_checks([True, False, False, False, False, False]) == 17
+    assert score_from_checks([True, True, True, True, True, False]) == 83
 
 
 def test_weighted_average_score():
@@ -70,4 +72,3 @@ def test_score_after_issue_penalties():
     assert score_after_issue_penalties(100, ["Warning", "Info"]) == 87
     assert score_after_issue_penalties(20, ["Critical"]) == 0
     assert score_after_issue_penalties(100, []) == 100
-
