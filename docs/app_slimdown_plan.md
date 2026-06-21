@@ -93,13 +93,13 @@ This module should eventually contain:
 
 ## 5. What Should Stay in Root `app.py`
 
-After the first safe slimdown phase, root `app.py` should become a small Streamlit entrypoint:
+Longer term, root `app.py` may become a small Streamlit entrypoint:
 
 - ensure `src/` is importable when running `python -m streamlit run app.py`
 - import `run_app`
 - call `run_app()`
 
-Root `app.py` should not contain business logic after the entrypoint phase is complete.
+For App Slimdown v1, this was intentionally not completed. Root `app.py` still contains the main app flow and business-sensitive orchestration so behavior stays stable.
 
 ## 6. What Should Not Be Moved Yet
 
@@ -174,14 +174,14 @@ Do not split the tab UI into many section files first. That would create too man
 
 ### Phase 1: Create Streamlit Entrypoint Wrapper
 
+Status: Completed as a safer in-file wrapper.
+
 Goal:
 
-- Add `src/product_data_copilot/ui/__init__.py`.
-- Add `src/product_data_copilot/ui/streamlit_app.py`.
-- Move the current Streamlit app runtime into `run_app()`.
+- Add a minimal `run_app()` boundary inside root `app.py`.
 - Keep behavior unchanged.
-- Keep helper logic together during the first move if needed.
-- Make root `app.py` a thin launcher that imports and calls `run_app()`.
+- Keep helper logic and main app orchestration in `app.py`.
+- Preserve the existing local Streamlit start command.
 
 Important:
 
@@ -191,6 +191,12 @@ Important:
 - Preserve filenames.
 - Preserve environment variable names.
 - Preserve missing API key fallback.
+
+Completed in Phase 1:
+
+- Wrapped the existing Streamlit runtime in `run_app()` inside `app.py`.
+- Did not create `src/product_data_copilot/ui/streamlit_app.py`.
+- Did not move tab rendering, data loading, scoring, checks, review, AI, or export logic.
 
 Checks:
 
@@ -257,26 +263,51 @@ Completed in Phase 4:
 
 Next safest recommendation:
 
-- Continue with a small Phase 5 that replaces duplicated pure helper logic with tested imports in small groups.
-- Start with the lowest-risk helpers only.
+- Continue with a small Phase 5 finalization block.
+- Review whether App Slimdown v1 has reached a safe stop point before any helper integration begins.
 - Do not split Streamlit tabs into files yet.
 - Do not move data loading, product checks, scoring, review, AI, or export orchestration in the same phase.
 
-### Phase 5: Replace Duplicated Pure Helpers With Tested Imports
+### Phase 5: Finalize App Slimdown v1
+
+Status: Completed.
 
 Goal:
 
-- Replace duplicated validator helper logic in the UI module with imports from `rules/validators.py`.
-- Replace simple scoring helper logic with imports from `scoring/scoring_helpers.py` where safe.
-- Replace review mapping helpers with imports from `review/review_helpers.py` where safe.
-- Replace export preparation constants/helpers with imports from `export/export_helpers.py` where safe.
-- Replace AI prompt safety text helpers with imports from `ai/prompt_helpers.py` where safe.
+- Confirm App Slimdown v1 has reached a safe stop point.
+- Document what was safely extracted.
+- Document what intentionally remains in `app.py`.
+- Set the next roadmap step to Helper Integration v1 planning.
 
-Important:
+Completed through Phase 5:
 
-- Do this in small groups.
-- Do not change outputs.
-- If a helper in `app.py` has slightly different behavior than the extracted helper, either keep the app behavior or add a test before changing it.
+- Root `app.py` now has a minimal `run_app()` boundary while still preserving the main app flow.
+- `src/product_data_copilot/ui/streamlit_layout.py` contains small import-safe Streamlit presentation helpers.
+- Extracted UI helpers cover page setup, app intro, sidebar upload widget, data source notice, row/column summaries, issue summaries, issue empty states, review task intro, review task summaries, and review task empty states.
+- `tests/test_streamlit_layout.py` covers the extracted UI helpers with fake Streamlit objects, without launching Streamlit.
+
+Intentionally still in `app.py`:
+
+- CSV/XLSX loading and parsing
+- sample data fallback
+- product data checks and issue generation
+- scoring calculations
+- review task generation
+- manual review session state
+- AI suggestion orchestration and API call handling
+- CSV and Excel export orchestration
+- tab layout and main Streamlit workflow
+
+Reason:
+
+- These areas are more behavior-sensitive than presentation helper extraction.
+- Moving them should happen only after a dedicated Helper Integration v1 plan compares existing `app.py` behavior against the already extracted helper modules.
+
+Next roadmap step:
+
+- Start with `Helper Integration v1 - Planning`.
+- Do not immediately wire all helper modules into `app.py`.
+- Plan how validators, scoring helpers, review helpers, export helpers, and AI prompt helpers can be integrated one small group at a time without changing behavior.
 
 Checks:
 
@@ -288,13 +319,14 @@ git diff --name-only -- data/sample_products.csv requirements.txt
 
 Manual checks:
 
-- Product checks still create expected issues.
-- Scores still appear.
-- Review tasks still appear.
-- Downloads still work.
-- AI prompt preview still renders without API key.
+- Start with `python -m streamlit run app.py`.
+- Confirm sample/upload flow still works.
+- Confirm all tabs still appear.
+- Confirm AI Suggestions missing-key fallback still appears.
+- Confirm exports still render.
+- Confirm review workflow still appears.
 
-### Phase 6: Split Tab Rendering Into Local Functions
+### Future Phase: Split Tab Rendering Into Local Functions
 
 Goal:
 
@@ -327,7 +359,7 @@ Manual checks:
 - Confirm manual review override still works.
 - Confirm AI Suggestions does not auto-apply changes.
 
-### Phase 7: Consider UI Submodules Only If Needed
+### Future Phase: Consider UI Submodules Only If Needed
 
 Goal:
 

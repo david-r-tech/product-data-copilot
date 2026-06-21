@@ -478,6 +478,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
 * Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
 
+### App Slimdown v1 - Phase 5
+
+* Date: TODO
+* Change: Finalized App Slimdown v1 as a safe stop point, documented the extracted UI helper scope, and clarified that business logic, scoring, review, AI, export, data loading, and tab flow intentionally remain in `app.py` for now.
+* Why it matters: Prevents risky over-extraction and makes the next step a deliberate Helper Integration planning block instead of an unplanned behavior-changing refactor.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
+* Next recommended step: Plan Helper Integration v1 before wiring validators, scoring, review, export, or AI helpers into `app.py`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -503,11 +511,11 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Extract review mapping helpers into an import-safe module
-2. Add lightweight pytest tests for review task priority and task type mapping
-3. Capture screenshots using `docs/screenshots_to_capture.md`
-4. Do one full demo walkthrough using `docs/demo_test_checklist.md`
-5. Add selected screenshots to the README or portfolio page
+1. Plan Helper Integration v1 before wiring extracted helpers into `app.py`
+2. Integrate already-tested helper modules in small behavior-preserving groups
+3. Expand pytest coverage for key business rules after helper integration
+4. Capture screenshots using `docs/screenshots_to_capture.md`
+5. Do one full demo walkthrough using `docs/demo_test_checklist.md`
 
 ## 11. Copy Context for Future Codex Prompts
 

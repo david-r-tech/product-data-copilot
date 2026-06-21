@@ -15,9 +15,10 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 7 | App Slimdown v1 - Phase 2 | Done | Extracted minimal Streamlit layout/setup intro helpers with focused tests. |
 | 8 | App Slimdown v1 - Phase 3 | Done | Extracted small data input/source notice UI helpers with focused tests. |
 | 9 | App Slimdown v1 - Phase 4 | Done | Extracted small status/summary UI helpers with focused tests. |
-| 10 | App Slimdown v1 - Phase 5 | NEXT | Replace duplicated pure helpers with tested imports in small groups. |
-| 11 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 12 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 10 | App Slimdown v1 - Phase 5 | Done | Finalized App Slimdown v1 as a safe stop point and documented what remains in `app.py`. |
+| 11 | Helper Integration v1 - Planning | NEXT | Plan how already extracted helpers can be wired into `app.py` safely without behavior changes. |
+| 12 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 13 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
 
 ## Backlog Rules
 
