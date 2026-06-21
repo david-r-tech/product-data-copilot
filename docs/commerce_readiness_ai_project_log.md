@@ -446,6 +446,14 @@ Readiness status logic:
 * How to test: Review `docs/app_slimdown_plan.md`, run `python -m py_compile app.py`, run `python -m pytest`, and confirm forbidden code/data paths were not modified.
 * Next recommended step: Start `App Slimdown v1 - Phase 1` only after explicit approval.
 
+### App Slimdown v1 - Phase 1
+
+* Date: TODO
+* Change: Wrapped the existing Streamlit runtime in a minimal `run_app()` entrypoint inside `app.py` without splitting UI sections or changing behavior.
+* Why it matters: Creates a safer boundary for future app slimdown work while preserving the existing local start command.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually start `python -m streamlit run app.py`.
+* Next recommended step: Replace duplicated pure helper logic with tested imports in small groups.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

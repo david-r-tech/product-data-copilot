@@ -914,410 +914,415 @@ def create_excel_management_export(
     return output.getvalue()
 
 
-st.title("Commerce Readiness AI")
-st.caption("CSV-based product data quality checks for e-commerce readiness.")
+def run_app():
+    """Run the Streamlit app."""
+    st.title("Commerce Readiness AI")
+    st.caption("CSV-based product data quality checks for e-commerce readiness.")
 
-st.sidebar.header("Input")
-uploaded_file = st.sidebar.file_uploader(
-    "Upload a CSV or Excel file", type=["csv", "xlsx"]
-)
-
-if uploaded_file is not None:
-    if uploaded_file.name.endswith(".xlsx"):
-        products = pd.read_excel(uploaded_file)
-    else:
-        products = pd.read_csv(uploaded_file)
-    data_source = "Uploaded file"
-else:
-    products = pd.read_csv("data/sample_products.csv")
-    data_source = "Sample data"
-
-row_count, column_count = products.shape
-
-issues = find_product_issues(products)
-readiness_scores = calculate_readiness_scores(products, issues)
-readiness_scores = apply_manual_review_overrides(readiness_scores)
-review_tasks = create_review_tasks(issues, readiness_scores)
-
-critical_issues = len(issues[issues["severity"] == "Critical"])
-warning_issues = len(issues[issues["severity"] == "Warning"])
-info_issues = len(issues[issues["severity"] == "Info"])
-products_affected = issues["sku"].nunique()
-
-st.sidebar.header("Issue Filter")
-selected_severities = st.sidebar.multiselect(
-    "Filter by severity",
-    ["Critical", "Warning", "Info"],
-    default=["Critical", "Warning", "Info"],
-)
-
-filtered_issues = issues[issues["severity"].isin(selected_severities)]
-
-st.info(f"Using: {data_source}")
-
-tabs = st.tabs(
-    [
-        "Dashboard",
-        "Product Data",
-        "Scores",
-        "Issues",
-        "Review Tasks",
-        "Management Export",
-        "AI Suggestions",
-    ]
-)
-
-with tabs[0]:
-    st.subheader("Dashboard")
-
-    metric_columns = st.columns(3)
-    metric_columns[0].metric("Total products", row_count)
-    metric_columns[1].metric("Total issues", len(issues))
-    metric_columns[2].metric("Products affected", products_affected)
-
-    severity_columns = st.columns(3)
-    severity_columns[0].metric("Critical issues", critical_issues)
-    severity_columns[1].metric("Warning issues", warning_issues)
-    severity_columns[2].metric("Info issues", info_issues)
-
-    average_score = round(readiness_scores["overall_readiness_score"].mean())
-    average_score_columns = st.columns(3)
-    average_score_columns[0].metric("Average overall score", average_score)
-    average_score_columns[1].metric(
-        "Average data quality",
-        round(readiness_scores["data_quality_score"].mean()),
-    )
-    average_score_columns[2].metric(
-        "Average marketplace readiness",
-        round(readiness_scores["marketplace_readiness_score"].mean()),
+    st.sidebar.header("Input")
+    uploaded_file = st.sidebar.file_uploader(
+        "Upload a CSV or Excel file", type=["csv", "xlsx"]
     )
 
-with tabs[1]:
-    st.subheader("Product Data")
-    st.caption(f"Rows: {row_count} | Columns: {column_count}")
-    st.dataframe(make_display_safe(products), width="stretch")
-
-with tabs[2]:
-    st.subheader("Product Readiness Scores")
-    st.dataframe(make_display_safe(readiness_scores), width="stretch")
-    st.download_button(
-        "Download Product Readiness Scores",
-        readiness_scores.to_csv(index=False),
-        "product_readiness_scores.csv",
-        "text/csv",
-    )
-
-with tabs[3]:
-    st.subheader("Data Quality Issues")
-    st.caption(f"Total issues: {len(issues)} | Displayed issues: {len(filtered_issues)}")
-
-    if len(filtered_issues) > 0:
-        st.dataframe(make_display_safe(filtered_issues), width="stretch")
-    elif len(issues) > 0:
-        st.info("No issues match the selected severity filter.")
-    else:
-        st.success("No data quality issues found.")
-
-    st.download_button(
-        "Download Data Quality Issues",
-        issues.to_csv(index=False),
-        "data_quality_issues.csv",
-        "text/csv",
-    )
-
-with tabs[4]:
-    st.subheader("Review Tasks")
-    st.caption("Review workflow overview, filters, manual status overrides, and task export.")
-
-    st.write("Product Review Overview")
-    high_priority_tasks = len(review_tasks[review_tasks["priority"] == "High"])
-    medium_priority_tasks = len(review_tasks[review_tasks["priority"] == "Medium"])
-    low_priority_tasks = len(review_tasks[review_tasks["priority"] == "Low"])
-    ready_for_export_products = len(
-        readiness_scores[readiness_scores["review_status"] == "Ready for Export"]
-    )
-    not_ready_for_export_products = len(readiness_scores) - ready_for_export_products
-
-    overview_columns = st.columns(3)
-    overview_columns[0].metric("Total review tasks", len(review_tasks))
-    overview_columns[1].metric("High priority tasks", high_priority_tasks)
-    overview_columns[2].metric("Medium priority tasks", medium_priority_tasks)
-
-    readiness_columns = st.columns(3)
-    readiness_columns[0].metric("Low priority tasks", low_priority_tasks)
-    readiness_columns[1].metric("Ready for Export", ready_for_export_products)
-    readiness_columns[2].metric("Not Ready for Export", not_ready_for_export_products)
-
-    status_counts = (
-        readiness_scores["review_status"]
-        .value_counts()
-        .rename_axis("review_status")
-        .reset_index(name="products")
-    )
-    priority_counts = (
-        review_tasks["priority"]
-        .value_counts()
-        .rename_axis("priority")
-        .reset_index(name="tasks")
-    )
-    task_type_counts = (
-        review_tasks["task_type"]
-        .value_counts()
-        .head(5)
-        .rename_axis("task_type")
-        .reset_index(name="tasks")
-    )
-
-    summary_columns = st.columns(3)
-    summary_columns[0].write("Products by review status")
-    summary_columns[0].dataframe(make_display_safe(status_counts), width="stretch")
-    summary_columns[1].write("Tasks by priority")
-    summary_columns[1].dataframe(make_display_safe(priority_counts), width="stretch")
-    summary_columns[2].write("Top task types")
-    summary_columns[2].dataframe(make_display_safe(task_type_counts), width="stretch")
-
-    st.write("Manual Review Status Override")
-    product_options = {
-        get_product_option(row): row["sku"] for _, row in readiness_scores.iterrows()
-    }
-    selected_review_product = st.selectbox(
-        "Select SKU",
-        list(product_options.keys()),
-        key="manual_review_product",
-    )
-    selected_review_sku = product_options[selected_review_product]
-    current_manual_status = st.session_state["manual_review_status_overrides"].get(
-        selected_review_sku,
-        "Needs Review",
-    )
-    manual_status = st.selectbox(
-        "Manual review status",
-        REVIEW_STATUS_OPTIONS,
-        index=REVIEW_STATUS_OPTIONS.index(current_manual_status),
-        key="manual_review_status",
-    )
-
-    action_columns = st.columns(2)
-    if action_columns[0].button("Save Manual Review Status"):
-        st.session_state["manual_review_status_overrides"][
-            selected_review_sku
-        ] = manual_status
-        st.rerun()
-
-    if action_columns[1].button("Clear Manual Review Status"):
-        st.session_state["manual_review_status_overrides"].pop(selected_review_sku, None)
-        st.rerun()
-
-    st.write("Task Filters")
-    filter_columns = st.columns(3)
-    priority_options = get_filter_options(review_tasks, "priority")
-    task_type_options = get_filter_options(review_tasks, "task_type")
-    review_status_options = get_filter_options(review_tasks, "review_status")
-
-    selected_priorities = filter_columns[0].multiselect(
-        "Priority",
-        priority_options,
-        default=priority_options,
-    )
-    selected_task_types = filter_columns[1].multiselect(
-        "Task type",
-        task_type_options,
-        default=task_type_options,
-    )
-    selected_review_statuses = filter_columns[2].multiselect(
-        "Review status",
-        review_status_options,
-        default=review_status_options,
-    )
-
-    filtered_review_tasks = filter_review_tasks(
-        review_tasks,
-        selected_priorities,
-        selected_task_types,
-        selected_review_statuses,
-    )
-
-    st.caption(
-        f"Total review tasks: {len(review_tasks)} | Displayed tasks: {len(filtered_review_tasks)}"
-    )
-
-    if len(filtered_review_tasks) > 0:
-        st.dataframe(make_display_safe(filtered_review_tasks), width="stretch")
-    elif len(review_tasks) > 0:
-        st.info("No review tasks match the selected filters.")
-    else:
-        st.success("No review tasks needed.")
-
-    st.download_button(
-        "Download Review Tasks",
-        filtered_review_tasks.to_csv(index=False),
-        "review_tasks.csv",
-        "text/csv",
-    )
-
-with tabs[5]:
-    st.subheader("Management Export")
-    st.caption(
-        "Download one Excel workbook with summary metrics, scores, issues, review tasks, AI suggestions, and source products."
-    )
-
-    ai_suggestions_export = get_ai_suggestions_export_dataframe()
-    management_summary = create_management_summary(
-        data_source,
-        products,
-        issues,
-        readiness_scores,
-        review_tasks,
-        ai_suggestions_export,
-    )
-
-    st.write("Management Summary Preview")
-    st.dataframe(make_display_safe(management_summary), width="stretch")
-
-    st.download_button(
-        "Download Excel Management Export",
-        create_excel_management_export(
-            data_source,
-            products,
-            readiness_scores,
-            issues,
-            review_tasks,
-            ai_suggestions_export,
-        ),
-        "commerce_readiness_ai_management_export.xlsx",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
-
-with tabs[6]:
-    st.subheader("AI Suggestions")
-    st.caption(
-        "Generate structured suggestions for one selected product. Suggestions are not applied automatically."
-    )
-    st.warning(
-        "AI suggestions are draft recommendations and must be reviewed by a human before use."
-    )
-    st.write(
-        "By default, the product with the lowest readiness score is selected to focus AI support on the most critical item."
-    )
-
-    product_options = {
-        get_product_option(row): row_number
-        for row_number, row in readiness_scores.iterrows()
-    }
-    default_product_index = 0
-
-    if len(readiness_scores) > 0 and "overall_readiness_score" in readiness_scores.columns:
-        lowest_score_row = readiness_scores["overall_readiness_score"].idxmin()
-        default_product_index = list(readiness_scores.index).index(lowest_score_row)
-
-    selected_product_label = st.selectbox(
-        "Select a product",
-        list(product_options.keys()),
-        index=default_product_index,
-    )
-    selected_row_number = product_options[selected_product_label]
-    selected_product = products.iloc[selected_row_number]
-    selected_score = readiness_scores.iloc[selected_row_number]
-    selected_sku = selected_score["sku"]
-    selected_issues = issues[issues["sku"] == selected_sku]
-    selected_product_context = get_ai_product_context(selected_product, selected_score)
-
-    selected_suggestion_types = st.multiselect(
-        "Select suggestion types",
-        AI_SUGGESTION_TYPES,
-        default=[
-            "Improved Product Title",
-            "Product Description",
-            "Bullet Points",
-            "Missing Attribute Suggestions",
-        ],
-    )
-
-    st.write("Selected product context")
-    st.dataframe(make_display_safe(pd.DataFrame([selected_product_context])), width="stretch")
-
-    st.write("Current issues for this product")
-    if len(selected_issues) > 0:
-        st.dataframe(make_display_safe(selected_issues), width="stretch")
-    else:
-        st.success("No issues found for this product.")
-
-    if not os.getenv("OPENAI_API_KEY"):
-        st.info(
-            "AI generation requires an API key. AI suggestions are disabled because OPENAI_API_KEY is missing."
-        )
-        with st.expander("Prompt preview"):
-            st.text(
-                build_ai_prompt(
-                    selected_product,
-                    selected_issues,
-                    selected_score,
-                    selected_suggestion_types,
-                )
-            )
-    elif len(selected_suggestion_types) == 0:
-        st.info("Select at least one suggestion type to generate AI suggestions.")
-    elif st.button(
-        "Generate AI Suggestions",
-    ):
-        with st.spinner("Generating AI suggestions..."):
-            try:
-                suggestions = generate_ai_suggestions(
-                    selected_product,
-                    selected_issues,
-                    selected_score,
-                    selected_suggestion_types,
-                )
-                suggestions["selected_suggestion_types"] = selected_suggestion_types
-                st.session_state["ai_suggestions"] = suggestions
-                st.session_state["ai_suggestions_sku"] = selected_sku
-            except Exception as error:
-                st.error(
-                    "AI suggestion generation failed. Please check your API key, network connection, or model availability."
-                )
-                with st.expander("Technical details"):
-                    st.write(str(error))
-
-    if (
-        "ai_suggestions" in st.session_state
-        and st.session_state.get("ai_suggestions_sku") == selected_sku
-    ):
-        suggestions = st.session_state["ai_suggestions"]
-        bulletpoints = suggestions.get("bullet_points", "")
-
-        if isinstance(bulletpoints, list):
-            bulletpoints_text = "\n".join([f"- {item}" for item in bulletpoints])
+    if uploaded_file is not None:
+        if uploaded_file.name.endswith(".xlsx"):
+            products = pd.read_excel(uploaded_file)
         else:
-            bulletpoints_text = str(bulletpoints)
+            products = pd.read_csv(uploaded_file)
+        data_source = "Uploaded file"
+    else:
+        products = pd.read_csv("data/sample_products.csv")
+        data_source = "Sample data"
 
-        st.markdown("### Improved Product Title")
-        st.write(suggestions.get("improved_product_title", ""))
+    row_count, column_count = products.shape
 
-        st.markdown("### Improved Product Description")
-        st.write(suggestions.get("improved_product_description", ""))
+    issues = find_product_issues(products)
+    readiness_scores = calculate_readiness_scores(products, issues)
+    readiness_scores = apply_manual_review_overrides(readiness_scores)
+    review_tasks = create_review_tasks(issues, readiness_scores)
 
-        st.markdown("### Bullet Points")
-        st.write(bulletpoints_text)
+    critical_issues = len(issues[issues["severity"] == "Critical"])
+    warning_issues = len(issues[issues["severity"] == "Warning"])
+    info_issues = len(issues[issues["severity"] == "Info"])
+    products_affected = issues["sku"].nunique()
 
-        st.markdown("### Suggested Missing Attributes")
-        st.write(suggestions.get("suggested_missing_attributes", ""))
+    st.sidebar.header("Issue Filter")
+    selected_severities = st.sidebar.multiselect(
+        "Filter by severity",
+        ["Critical", "Warning", "Info"],
+        default=["Critical", "Warning", "Info"],
+    )
 
-        st.markdown("### Translation")
-        st.write(suggestions.get("translation", ""))
+    filtered_issues = issues[issues["severity"].isin(selected_severities)]
 
-        st.markdown("### Compliance / Safety Review Note")
-        st.write(suggestions.get("compliance_safety_review_note", ""))
+    st.info(f"Using: {data_source}")
 
-        st.markdown("### Human Review Notes")
-        st.write(suggestions.get("human_review_notes", ""))
+    tabs = st.tabs(
+        [
+            "Dashboard",
+            "Product Data",
+            "Scores",
+            "Issues",
+            "Review Tasks",
+            "Management Export",
+            "AI Suggestions",
+        ]
+    )
 
-        if suggestions.get("raw_response"):
-            st.markdown("### Raw AI response")
-            st.text(suggestions["raw_response"])
+    with tabs[0]:
+        st.subheader("Dashboard")
 
+        metric_columns = st.columns(3)
+        metric_columns[0].metric("Total products", row_count)
+        metric_columns[1].metric("Total issues", len(issues))
+        metric_columns[2].metric("Products affected", products_affected)
+
+        severity_columns = st.columns(3)
+        severity_columns[0].metric("Critical issues", critical_issues)
+        severity_columns[1].metric("Warning issues", warning_issues)
+        severity_columns[2].metric("Info issues", info_issues)
+
+        average_score = round(readiness_scores["overall_readiness_score"].mean())
+        average_score_columns = st.columns(3)
+        average_score_columns[0].metric("Average overall score", average_score)
+        average_score_columns[1].metric(
+            "Average data quality",
+            round(readiness_scores["data_quality_score"].mean()),
+        )
+        average_score_columns[2].metric(
+            "Average marketplace readiness",
+            round(readiness_scores["marketplace_readiness_score"].mean()),
+        )
+
+    with tabs[1]:
+        st.subheader("Product Data")
+        st.caption(f"Rows: {row_count} | Columns: {column_count}")
+        st.dataframe(make_display_safe(products), width="stretch")
+
+    with tabs[2]:
+        st.subheader("Product Readiness Scores")
+        st.dataframe(make_display_safe(readiness_scores), width="stretch")
         st.download_button(
-            "Download AI Suggestions",
-            suggestions_to_dataframe(selected_sku, suggestions).to_csv(index=False),
-            "ai_suggestions.csv",
+            "Download Product Readiness Scores",
+            readiness_scores.to_csv(index=False),
+            "product_readiness_scores.csv",
             "text/csv",
         )
+
+    with tabs[3]:
+        st.subheader("Data Quality Issues")
+        st.caption(f"Total issues: {len(issues)} | Displayed issues: {len(filtered_issues)}")
+
+        if len(filtered_issues) > 0:
+            st.dataframe(make_display_safe(filtered_issues), width="stretch")
+        elif len(issues) > 0:
+            st.info("No issues match the selected severity filter.")
+        else:
+            st.success("No data quality issues found.")
+
+        st.download_button(
+            "Download Data Quality Issues",
+            issues.to_csv(index=False),
+            "data_quality_issues.csv",
+            "text/csv",
+        )
+
+    with tabs[4]:
+        st.subheader("Review Tasks")
+        st.caption("Review workflow overview, filters, manual status overrides, and task export.")
+
+        st.write("Product Review Overview")
+        high_priority_tasks = len(review_tasks[review_tasks["priority"] == "High"])
+        medium_priority_tasks = len(review_tasks[review_tasks["priority"] == "Medium"])
+        low_priority_tasks = len(review_tasks[review_tasks["priority"] == "Low"])
+        ready_for_export_products = len(
+            readiness_scores[readiness_scores["review_status"] == "Ready for Export"]
+        )
+        not_ready_for_export_products = len(readiness_scores) - ready_for_export_products
+
+        overview_columns = st.columns(3)
+        overview_columns[0].metric("Total review tasks", len(review_tasks))
+        overview_columns[1].metric("High priority tasks", high_priority_tasks)
+        overview_columns[2].metric("Medium priority tasks", medium_priority_tasks)
+
+        readiness_columns = st.columns(3)
+        readiness_columns[0].metric("Low priority tasks", low_priority_tasks)
+        readiness_columns[1].metric("Ready for Export", ready_for_export_products)
+        readiness_columns[2].metric("Not Ready for Export", not_ready_for_export_products)
+
+        status_counts = (
+            readiness_scores["review_status"]
+            .value_counts()
+            .rename_axis("review_status")
+            .reset_index(name="products")
+        )
+        priority_counts = (
+            review_tasks["priority"]
+            .value_counts()
+            .rename_axis("priority")
+            .reset_index(name="tasks")
+        )
+        task_type_counts = (
+            review_tasks["task_type"]
+            .value_counts()
+            .head(5)
+            .rename_axis("task_type")
+            .reset_index(name="tasks")
+        )
+
+        summary_columns = st.columns(3)
+        summary_columns[0].write("Products by review status")
+        summary_columns[0].dataframe(make_display_safe(status_counts), width="stretch")
+        summary_columns[1].write("Tasks by priority")
+        summary_columns[1].dataframe(make_display_safe(priority_counts), width="stretch")
+        summary_columns[2].write("Top task types")
+        summary_columns[2].dataframe(make_display_safe(task_type_counts), width="stretch")
+
+        st.write("Manual Review Status Override")
+        product_options = {
+            get_product_option(row): row["sku"] for _, row in readiness_scores.iterrows()
+        }
+        selected_review_product = st.selectbox(
+            "Select SKU",
+            list(product_options.keys()),
+            key="manual_review_product",
+        )
+        selected_review_sku = product_options[selected_review_product]
+        current_manual_status = st.session_state["manual_review_status_overrides"].get(
+            selected_review_sku,
+            "Needs Review",
+        )
+        manual_status = st.selectbox(
+            "Manual review status",
+            REVIEW_STATUS_OPTIONS,
+            index=REVIEW_STATUS_OPTIONS.index(current_manual_status),
+            key="manual_review_status",
+        )
+
+        action_columns = st.columns(2)
+        if action_columns[0].button("Save Manual Review Status"):
+            st.session_state["manual_review_status_overrides"][
+                selected_review_sku
+            ] = manual_status
+            st.rerun()
+
+        if action_columns[1].button("Clear Manual Review Status"):
+            st.session_state["manual_review_status_overrides"].pop(selected_review_sku, None)
+            st.rerun()
+
+        st.write("Task Filters")
+        filter_columns = st.columns(3)
+        priority_options = get_filter_options(review_tasks, "priority")
+        task_type_options = get_filter_options(review_tasks, "task_type")
+        review_status_options = get_filter_options(review_tasks, "review_status")
+
+        selected_priorities = filter_columns[0].multiselect(
+            "Priority",
+            priority_options,
+            default=priority_options,
+        )
+        selected_task_types = filter_columns[1].multiselect(
+            "Task type",
+            task_type_options,
+            default=task_type_options,
+        )
+        selected_review_statuses = filter_columns[2].multiselect(
+            "Review status",
+            review_status_options,
+            default=review_status_options,
+        )
+
+        filtered_review_tasks = filter_review_tasks(
+            review_tasks,
+            selected_priorities,
+            selected_task_types,
+            selected_review_statuses,
+        )
+
+        st.caption(
+            f"Total review tasks: {len(review_tasks)} | Displayed tasks: {len(filtered_review_tasks)}"
+        )
+
+        if len(filtered_review_tasks) > 0:
+            st.dataframe(make_display_safe(filtered_review_tasks), width="stretch")
+        elif len(review_tasks) > 0:
+            st.info("No review tasks match the selected filters.")
+        else:
+            st.success("No review tasks needed.")
+
+        st.download_button(
+            "Download Review Tasks",
+            filtered_review_tasks.to_csv(index=False),
+            "review_tasks.csv",
+            "text/csv",
+        )
+
+    with tabs[5]:
+        st.subheader("Management Export")
+        st.caption(
+            "Download one Excel workbook with summary metrics, scores, issues, review tasks, AI suggestions, and source products."
+        )
+
+        ai_suggestions_export = get_ai_suggestions_export_dataframe()
+        management_summary = create_management_summary(
+            data_source,
+            products,
+            issues,
+            readiness_scores,
+            review_tasks,
+            ai_suggestions_export,
+        )
+
+        st.write("Management Summary Preview")
+        st.dataframe(make_display_safe(management_summary), width="stretch")
+
+        st.download_button(
+            "Download Excel Management Export",
+            create_excel_management_export(
+                data_source,
+                products,
+                readiness_scores,
+                issues,
+                review_tasks,
+                ai_suggestions_export,
+            ),
+            "commerce_readiness_ai_management_export.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+    with tabs[6]:
+        st.subheader("AI Suggestions")
+        st.caption(
+            "Generate structured suggestions for one selected product. Suggestions are not applied automatically."
+        )
+        st.warning(
+            "AI suggestions are draft recommendations and must be reviewed by a human before use."
+        )
+        st.write(
+            "By default, the product with the lowest readiness score is selected to focus AI support on the most critical item."
+        )
+
+        product_options = {
+            get_product_option(row): row_number
+            for row_number, row in readiness_scores.iterrows()
+        }
+        default_product_index = 0
+
+        if len(readiness_scores) > 0 and "overall_readiness_score" in readiness_scores.columns:
+            lowest_score_row = readiness_scores["overall_readiness_score"].idxmin()
+            default_product_index = list(readiness_scores.index).index(lowest_score_row)
+
+        selected_product_label = st.selectbox(
+            "Select a product",
+            list(product_options.keys()),
+            index=default_product_index,
+        )
+        selected_row_number = product_options[selected_product_label]
+        selected_product = products.iloc[selected_row_number]
+        selected_score = readiness_scores.iloc[selected_row_number]
+        selected_sku = selected_score["sku"]
+        selected_issues = issues[issues["sku"] == selected_sku]
+        selected_product_context = get_ai_product_context(selected_product, selected_score)
+
+        selected_suggestion_types = st.multiselect(
+            "Select suggestion types",
+            AI_SUGGESTION_TYPES,
+            default=[
+                "Improved Product Title",
+                "Product Description",
+                "Bullet Points",
+                "Missing Attribute Suggestions",
+            ],
+        )
+
+        st.write("Selected product context")
+        st.dataframe(make_display_safe(pd.DataFrame([selected_product_context])), width="stretch")
+
+        st.write("Current issues for this product")
+        if len(selected_issues) > 0:
+            st.dataframe(make_display_safe(selected_issues), width="stretch")
+        else:
+            st.success("No issues found for this product.")
+
+        if not os.getenv("OPENAI_API_KEY"):
+            st.info(
+                "AI generation requires an API key. AI suggestions are disabled because OPENAI_API_KEY is missing."
+            )
+            with st.expander("Prompt preview"):
+                st.text(
+                    build_ai_prompt(
+                        selected_product,
+                        selected_issues,
+                        selected_score,
+                        selected_suggestion_types,
+                    )
+                )
+        elif len(selected_suggestion_types) == 0:
+            st.info("Select at least one suggestion type to generate AI suggestions.")
+        elif st.button(
+            "Generate AI Suggestions",
+        ):
+            with st.spinner("Generating AI suggestions..."):
+                try:
+                    suggestions = generate_ai_suggestions(
+                        selected_product,
+                        selected_issues,
+                        selected_score,
+                        selected_suggestion_types,
+                    )
+                    suggestions["selected_suggestion_types"] = selected_suggestion_types
+                    st.session_state["ai_suggestions"] = suggestions
+                    st.session_state["ai_suggestions_sku"] = selected_sku
+                except Exception as error:
+                    st.error(
+                        "AI suggestion generation failed. Please check your API key, network connection, or model availability."
+                    )
+                    with st.expander("Technical details"):
+                        st.write(str(error))
+
+        if (
+            "ai_suggestions" in st.session_state
+            and st.session_state.get("ai_suggestions_sku") == selected_sku
+        ):
+            suggestions = st.session_state["ai_suggestions"]
+            bulletpoints = suggestions.get("bullet_points", "")
+
+            if isinstance(bulletpoints, list):
+                bulletpoints_text = "\n".join([f"- {item}" for item in bulletpoints])
+            else:
+                bulletpoints_text = str(bulletpoints)
+
+            st.markdown("### Improved Product Title")
+            st.write(suggestions.get("improved_product_title", ""))
+
+            st.markdown("### Improved Product Description")
+            st.write(suggestions.get("improved_product_description", ""))
+
+            st.markdown("### Bullet Points")
+            st.write(bulletpoints_text)
+
+            st.markdown("### Suggested Missing Attributes")
+            st.write(suggestions.get("suggested_missing_attributes", ""))
+
+            st.markdown("### Translation")
+            st.write(suggestions.get("translation", ""))
+
+            st.markdown("### Compliance / Safety Review Note")
+            st.write(suggestions.get("compliance_safety_review_note", ""))
+
+            st.markdown("### Human Review Notes")
+            st.write(suggestions.get("human_review_notes", ""))
+
+            if suggestions.get("raw_response"):
+                st.markdown("### Raw AI response")
+                st.text(suggestions["raw_response"])
+
+            st.download_button(
+                "Download AI Suggestions",
+                suggestions_to_dataframe(selected_sku, suggestions).to_csv(index=False),
+                "ai_suggestions.csv",
+                "text/csv",
+            )
+
+
+run_app()
