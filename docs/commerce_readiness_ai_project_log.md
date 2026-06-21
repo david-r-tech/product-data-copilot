@@ -574,6 +574,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, schema/parser helpers, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter` only after explicit approval.
 
+### Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter
+
+* Date: TODO
+* Change: Added pure prompt adapter helpers and tests for building future Smart Suggestions v2 prompts from product, issue, and review task context without calling OpenAI or changing runtime behavior.
+* Why it matters: Creates a tested bridge between existing product audit context and the structured Smart Suggestions v2 contract while keeping current AI Suggestions v1 untouched.
+* How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, schema/parser helpers, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 5: Structured Response Normalization Review` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -599,7 +607,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter`
+1. Start `Smart Suggestions v2 - Phase 5: Structured Response Normalization Review`
 2. Expand pytest coverage for key business rules after helper integration
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`

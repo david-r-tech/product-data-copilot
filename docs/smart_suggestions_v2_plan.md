@@ -351,6 +351,16 @@ Purpose:
 
 Create a prompt adapter that requests field-level suggestion rows while preserving the current OpenAI provider and missing-key fallback.
 
+Status: Completed in `Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter`.
+
+Result:
+
+- Added pure prompt adapter helpers in `src/product_data_copilot/ai/suggestion_prompt_adapter.py`.
+- Adapter helpers build product, issue, and review task context lines from existing source values.
+- Adapter helpers include the Smart Suggestions v2 structured contract, anti-hallucination rules, human-review requirement, source-field requirement, confidence/risk expectations, and review-required fallback instructions.
+- Added focused pytest coverage in `tests/test_suggestion_prompt_adapter.py`.
+- Kept `app.py`, current AI Suggestions v1 prompt runtime, exports, UI, OpenAI behavior, and parser/schema modules unchanged.
+
 Allowed future files:
 
 - `app.py`
@@ -363,11 +373,17 @@ Stop if:
 - prompt changes would require broad UI or export changes in the same phase
 - AI response keys become ambiguous
 
-### Phase 5: Safe AI Response Runtime Wiring
+### Phase 5: Structured Response Normalization Review
 
 Purpose:
 
-Parse and normalize AI responses into the field-level schema. Preserve raw response fallback for malformed JSON.
+Review parser and schema behavior against the prompt adapter contract before runtime wiring. Add any missing pure tests for structured response normalization without changing app behavior.
+
+### Phase 6: Safe AI Response Runtime Wiring
+
+Purpose:
+
+Wire parsing and normalization into runtime while preserving raw response fallback for malformed JSON.
 
 Allowed future files:
 
@@ -377,7 +393,7 @@ Allowed future files:
 - optional `tests/test_response_parser.py`
 - `app.py` only for minimal wiring
 
-### Phase 6: Display Structured Suggestions in Existing AI Tab
+### Phase 7: Display Structured Suggestions in Existing AI Tab
 
 Purpose:
 
@@ -395,7 +411,7 @@ Behavior limits:
 - session-state only
 - no automatic product-data overwrite
 
-### Phase 7: Export Approved Suggestions Only
+### Phase 8: Export Approved Suggestions Only
 
 Purpose:
 
