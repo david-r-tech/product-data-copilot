@@ -21,9 +21,10 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 13 | Helper Integration v1 - Phase 2: Scoring | Done | Wired tested scoring helpers into `app.py` after validator integration stayed stable. |
 | 14 | Helper Integration v1 - Phase 3: Review Helpers | Done | Wired tested review helpers into `app.py` after scoring integration stayed stable. |
 | 15 | Helper Integration v1 - Phase 4: Export Helpers | Done | Wired tested export constants into `app.py` while preserving export behavior. |
-| 16 | Helper Integration v1 - Phase 5: AI Prompt Helpers | NEXT | Plan or narrowly wire AI prompt helpers while preserving current AI behavior. |
-| 17 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 18 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 16 | Helper Integration v1 - Phase 5: AI Prompt Helpers | Done | Wired narrow AI prompt safety helpers into `app.py` while preserving current AI behavior. |
+| 17 | Helper Integration v1 - Finalization | NEXT | Review completed helper integration, document final state, and decide the next safe quality block. |
+| 18 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 19 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
 
 ## Backlog Rules
 

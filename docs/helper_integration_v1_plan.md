@@ -392,10 +392,33 @@ Stop if:
 
 ### Phase 5: AI Prompt Helpers Integration
 
+Status: Completed.
+
 Goal:
 
 - Plan or narrowly integrate prompt safety helpers without changing the generated prompt meaning.
 - Only use helpers where text can be preserved or explicitly locked with tests.
+
+Result:
+
+- Integrated `do_not_invent_facts_instruction()` into `build_ai_prompt`.
+- Integrated `human_review_instruction()` into `build_ai_prompt`.
+- Added prompt-helper tests to lock down stronger anti-hallucination, source-field, compliance-claim, human-review, confidence, and reason wording.
+- Kept OpenAI provider calls, model selection, API-key fallback, prompt preview UI, AI response parsing, session-state storage, and CSV export behavior unchanged.
+
+Stayed inline:
+
+- `get_ai_product_context`, because the helper context builder removes unknown/empty fields and does not include score/status context currently included by the app.
+- `build_ai_prompt` structure, because the app's current selected suggestion types, issues, scores, and JSON output keys are app-specific.
+- current JSON output schema keys, because `structured_suggestion_schema_description()` describes the future field-level suggestion model and does not match the current app output.
+- `generate_ai_suggestions`, because it owns the OpenAI call and response parsing.
+- `suggestions_to_dataframe`, because it maps the current app-specific suggestion payload to export columns.
+
+Mismatch found:
+
+- `build_safe_prompt_instructions()` includes confidence and reason requirements that are useful for the target product direction, but using it directly could change the current JSON output expectations.
+- `build_product_context_snippet()` filters empty/unknown fields and omits current score/status context, so it was not integrated in this phase.
+- `structured_suggestion_schema_description()` targets a future field-level suggestion schema and was not integrated into the current app prompt.
 
 Allowed future files:
 

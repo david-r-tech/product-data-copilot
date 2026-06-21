@@ -526,6 +526,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify Management Export and CSV/Excel downloads.
 * Next recommended step: Start `Helper Integration v1 - Phase 5: AI Prompt Helpers` only after explicit approval.
 
+### Helper Integration v1 - Phase 5: AI Prompt Helpers
+
+* Date: TODO
+* Change: Integrated tested AI prompt safety helpers for anti-hallucination and human-review instructions while keeping the current OpenAI call, API-key fallback, prompt structure, output keys, and export mapping in `app.py`.
+* Why it matters: Strengthens AI safety wording without broad prompt rewrites or changing current AI suggestion workflow behavior.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab and missing API-key prompt preview.
+* Next recommended step: Start `Helper Integration v1 - Finalization` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -551,7 +559,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Helper Integration v1 - Phase 5: AI Prompt Helpers`
+1. Start `Helper Integration v1 - Finalization`
 2. Integrate already-tested helper modules in small behavior-preserving groups
 3. Expand pytest coverage for key business rules after helper integration
 4. Capture screenshots using `docs/screenshots_to_capture.md`

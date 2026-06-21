@@ -37,6 +37,10 @@ from product_data_copilot.export.export_helpers import (  # noqa: E402
     MANAGEMENT_EXPORT_FILENAME,
     MANAGEMENT_EXPORT_SHEETS,
 )
+from product_data_copilot.ai.prompt_helpers import (  # noqa: E402
+    do_not_invent_facts_instruction,
+    human_review_instruction,
+)
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     configure_page,
     render_app_intro,
@@ -616,6 +620,8 @@ def build_ai_prompt(product, product_issues, product_score, selected_suggestion_
     product_context = get_ai_product_context(product, product_score)
     issues_context = product_issues.to_dict(orient="records")
     scores_context = product_score.to_dict()
+    anti_hallucination_instruction = do_not_invent_facts_instruction()
+    human_review_safety_instruction = human_review_instruction()
 
     return f"""
 You are helping with an e-commerce product data audit.
@@ -623,12 +629,11 @@ You are helping with an e-commerce product data audit.
 Create human-review suggestions for exactly one product.
 Only generate sections requested in the selected suggestion types.
 If a selected section is not applicable, return a short note explaining why.
-Do not invent technical attributes or unverifiable claims.
-Flag uncertainty clearly.
+{anti_hallucination_instruction}
 Do not claim legal compliance.
 Do not say the product is legally safe.
 If the product is compliance-relevant or has missing warning notes, the review note must say that a human must check the warning and compliance information.
-All suggestions are draft recommendations and require human review before use.
+{human_review_safety_instruction}
 
 Return only valid JSON with these keys:
 - improved_product_title

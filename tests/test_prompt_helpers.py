@@ -70,6 +70,8 @@ def test_safety_instruction_contains_anti_hallucination_rules():
     instruction = do_not_invent_facts_instruction()
 
     assert "Do not invent facts" in instruction
+    assert "certifications" in instruction
+    assert "compliance claims" in instruction
     assert "provided source fields" in instruction
     assert "flag uncertainty" in instruction
 
@@ -80,6 +82,7 @@ def test_human_review_instruction_requires_review_before_use():
     assert "draft recommendations" in instruction
     assert "human reviewer" in instruction
     assert "approve, edit, or reject" in instruction
+    assert "used or exported" in instruction
 
 
 def test_structured_suggestion_schema_description():
@@ -132,3 +135,4 @@ def test_build_safe_prompt_instructions_combines_core_safety_rules():
     assert "draft recommendations" in instructions
     assert "Do not claim legal compliance" in instructions
     assert "confidence value" in instructions
+    assert "reason" in instructions
