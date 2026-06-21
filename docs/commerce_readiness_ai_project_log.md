@@ -558,6 +558,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `git diff --check`, and confirm `app.py`, current prompt helpers, runtime modules, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 2: Contract & Parser Helpers` only after explicit approval.
 
+### Smart Suggestions v2 - Phase 2: Contract & Parser Helpers
+
+* Date: TODO
+* Change: Added pure parser helpers and tests for future field-level AI responses, including safe JSON parsing, payload extraction, normalization, parser error records, and review-required defaults.
+* Why it matters: Prevents malformed or unsafe AI responses from becoming approved or use-ready suggestions before any runtime integration.
+* How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, runtime modules, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 3: Prompt Contract Planning` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -583,7 +591,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Smart Suggestions v2 - Phase 2: Contract & Parser Helpers`
+1. Start `Smart Suggestions v2 - Phase 3: Prompt Contract Planning`
 2. Expand pytest coverage for key business rules after helper integration
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`

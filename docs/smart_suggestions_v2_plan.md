@@ -303,6 +303,17 @@ Purpose:
 
 Add safe parser and response-normalization helpers for future field-level AI responses. Keep contract helpers aligned with the schema, but do not change runtime prompts yet.
 
+Status: Completed in `Smart Suggestions v2 - Phase 2: Contract & Parser Helpers`.
+
+Result:
+
+- Added pure parser helpers in `src/product_data_copilot/ai/suggestion_parser.py`.
+- Parser helpers safely parse JSON responses, extract supported payload shapes, normalize records through the schema helpers, and downgrade AI-supplied approved statuses back to review-required.
+- Invalid JSON returns a safe parser error record and no suggestions.
+- Empty or null responses return an empty safe result.
+- Added focused pytest coverage in `tests/test_suggestion_parser.py`.
+- Kept `app.py`, current prompt runtime behavior, exports, UI, OpenAI behavior, and existing AI Suggestions v1 behavior unchanged.
+
 Allowed future files:
 
 - `src/product_data_copilot/ai/suggestion_schema.py`
