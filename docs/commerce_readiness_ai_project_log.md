@@ -726,6 +726,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually load demo V2 records and review the Improved Product Data Export Preview in the AI Suggestions tab.
 * Next recommended step: Plan `Improved Excel Export v1` before adding an actual workbook download.
 
+### Improved Excel Export v1 Planning
+
+* Date: TODO
+* Change: Added `docs/improved_excel_export_v1_plan.md` with workbook goals, required sheets, sheet columns, approved-candidate rules, source data protection, empty-state behavior, safety boundaries, and implementation sequence.
+* Why it matters: Defines the actual Excel download safely before adding workbook helper code or Streamlit download wiring.
+* How to test: Run `git status`, run `git diff --check`, and confirm no app, helper, test, requirements, data, or runtime behavior changed.
+* Next recommended step: Build `Improved Excel Export Helpers v1` with pure helper functions and tests.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -751,7 +759,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Plan `Improved Excel Export v1`
+1. Start `Improved Excel Export Helpers v1`
 2. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`
