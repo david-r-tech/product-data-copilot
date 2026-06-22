@@ -696,6 +696,18 @@ def generate_ai_suggestions(product, product_issues, product_score, selected_sug
         }
 
 
+def generate_smart_suggestions_v2(prompt):
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+
+    response = client.responses.create(
+        model=model,
+        input=prompt,
+    )
+
+    return response.output_text.strip()
+
+
 def suggestions_to_dataframe(sku, suggestions):
     return pd.DataFrame(
         [
@@ -732,6 +744,9 @@ def smart_suggestions_v2_to_dataframe(suggestions):
             column: suggestion.get(column, "")
             for column in SMART_SUGGESTIONS_V2_COLUMNS
         }
+        if row.get("approval_status") == "approved":
+            row["approval_status"] = "needs_review"
+            row["suggestion_status"] = "review_required"
         source_fields = row.get("source_fields", [])
         if isinstance(source_fields, list):
             row["source_fields"] = ", ".join(source_fields)
@@ -1273,36 +1288,124 @@ def run_app():
         with st.expander("Smart Suggestions v2 prompt preview"):
             st.text(smart_suggestions_v2_prompt)
 
+        if not os.getenv("OPENAI_API_KEY"):
+            st.info(
+                "Smart Suggestions v2 generation is disabled because OPENAI_API_KEY is missing. The structured prompt preview is still available."
+            )
+        elif st.button("Generate Smart Suggestions v2"):
+            with st.spinner("Generating Smart Suggestions v2..."):
+                try:
+                    smart_suggestions_v2_raw_response = generate_smart_suggestions_v2(
+                        smart_suggestions_v2_prompt
+                    )
+                    smart_suggestions_v2_result = parse_and_normalize_suggestions(
+                        smart_suggestions_v2_raw_response
+                    )
+                    st.session_state["smart_suggestions_v2_prompt"] = (
+                        smart_suggestions_v2_prompt
+                    )
+                    st.session_state["smart_suggestions_v2_raw_response"] = (
+                        smart_suggestions_v2_raw_response
+                    )
+                    st.session_state["smart_suggestions_v2_records"] = (
+                        smart_suggestions_v2_result["suggestions"]
+                    )
+                    st.session_state["smart_suggestions_v2_error"] = (
+                        smart_suggestions_v2_result["errors"]
+                    )
+                    st.session_state["smart_suggestions_v2_is_valid_json"] = (
+                        smart_suggestions_v2_result["is_valid_json"]
+                    )
+                    st.session_state["smart_suggestions_v2_sku"] = selected_sku
+                except Exception as error:
+                    st.error(
+                        "Smart Suggestions v2 generation failed. Please check your API key, network connection, or model availability."
+                    )
+                    with st.expander("Technical details"):
+                        st.write(str(error))
+                    st.session_state["smart_suggestions_v2_prompt"] = (
+                        smart_suggestions_v2_prompt
+                    )
+                    st.session_state["smart_suggestions_v2_raw_response"] = ""
+                    st.session_state["smart_suggestions_v2_records"] = []
+                    st.session_state["smart_suggestions_v2_error"] = str(error)
+                    st.session_state["smart_suggestions_v2_is_valid_json"] = False
+                    st.session_state["smart_suggestions_v2_sku"] = selected_sku
+
         st.write("Structured Smart Suggestions v2")
         st.caption(
-            "Runtime generation is not enabled in this phase. The table shows the expected safe schema for future parsed suggestions."
+            "Generated V2 rows stay review-required or blocked. They are not applied to product data."
         )
 
-        smart_suggestions_v2_response = st.session_state.get(
-            "smart_suggestions_v2_raw_response",
-            "",
+        smart_suggestions_v2_state_matches = (
+            st.session_state.get("smart_suggestions_v2_sku") == selected_sku
+            and st.session_state.get("smart_suggestions_v2_prompt")
+            == smart_suggestions_v2_prompt
         )
-        smart_suggestions_v2_result = parse_and_normalize_suggestions(
-            smart_suggestions_v2_response
-        )
+
+        if smart_suggestions_v2_state_matches:
+            smart_suggestions_v2_records = st.session_state.get(
+                "smart_suggestions_v2_records",
+                [],
+            )
+            smart_suggestions_v2_error = st.session_state.get(
+                "smart_suggestions_v2_error",
+                [],
+            )
+            smart_suggestions_v2_raw_response = st.session_state.get(
+                "smart_suggestions_v2_raw_response",
+                "",
+            )
+            smart_suggestions_v2_is_valid_json = st.session_state.get(
+                "smart_suggestions_v2_is_valid_json",
+                True,
+            )
+        else:
+            smart_suggestions_v2_records = []
+            smart_suggestions_v2_error = []
+            smart_suggestions_v2_raw_response = ""
+            smart_suggestions_v2_is_valid_json = True
+
         smart_suggestions_v2_df = smart_suggestions_v2_to_dataframe(
-            smart_suggestions_v2_result["suggestions"]
+            smart_suggestions_v2_records
         )
 
         st.dataframe(make_display_safe(smart_suggestions_v2_df), width="stretch")
         if len(smart_suggestions_v2_df) == 0:
-            st.info(
-                "No Smart Suggestions v2 response has been generated yet. Future V2 suggestions will appear here as review-required field-level rows."
+            if smart_suggestions_v2_raw_response:
+                st.warning(
+                    "Smart Suggestions v2 returned no structured records. Review the raw response before taking any action."
+                )
+            else:
+                st.info(
+                    "No Smart Suggestions v2 records are available for this product yet. Generate V2 suggestions to populate review-required field-level rows."
+                )
+        elif (smart_suggestions_v2_df["suggestion_status"] == "blocked_insufficient_source").any():
+            st.warning(
+                "Some Smart Suggestions v2 rows are blocked because the response was incomplete, unsafe, or not supported for automatic use."
             )
 
-        if len(smart_suggestions_v2_result["errors"]) > 0:
+        if smart_suggestions_v2_is_valid_json is False:
+            st.warning(
+                "Smart Suggestions v2 response could not be parsed safely. No suggestion was approved automatically."
+            )
+
+        if isinstance(smart_suggestions_v2_error, list) and len(smart_suggestions_v2_error) > 0:
             st.warning(
                 "Smart Suggestions v2 parser output needs review. No suggestion was approved automatically."
             )
             parser_errors_df = smart_suggestions_v2_to_dataframe(
-                smart_suggestions_v2_result["errors"]
+                smart_suggestions_v2_error
             )
             st.dataframe(make_display_safe(parser_errors_df), width="stretch")
+        elif isinstance(smart_suggestions_v2_error, str) and smart_suggestions_v2_error:
+            st.warning(
+                "Smart Suggestions v2 generation returned an error. No suggestion was approved automatically."
+            )
+
+        if smart_suggestions_v2_raw_response:
+            with st.expander("Raw Smart Suggestions v2 response"):
+                st.text(smart_suggestions_v2_raw_response)
 
 
 run_app()

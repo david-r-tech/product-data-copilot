@@ -622,6 +622,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, `src/`, tests, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 9: Controlled Runtime Generation` only after explicit approval.
 
+### Smart Suggestions v2 - Phase 9: Controlled Runtime Generation
+
+* Date: TODO
+* Change: Added a separate `Generate Smart Suggestions v2` button, V2-only session state, parser normalization, safe warnings, and raw-response review inside the existing experimental V2 section.
+* Why it matters: Creates the first controlled V2 runtime path while preserving AI Suggestions v1, exports, product data, and all approval/write-back boundaries.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab with and without `OPENAI_API_KEY`.
+* Next recommended step: Perform `Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning` before adding approval workflow or export changes.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

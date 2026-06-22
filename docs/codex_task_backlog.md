@@ -32,11 +32,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 24 | Smart Suggestions v2 - Phase 6: Runtime Integration Planning | Done | Planned the safest path for wiring Smart Suggestions v2 into the existing AI Suggestions tab without changing runtime behavior yet. |
 | 25 | Smart Suggestions v2 - Phase 7: Experimental UI Wiring | Done | Added a clearly separated experimental V2 prompt preview and schema-stable structured suggestions table inside the existing AI Suggestions tab. |
 | 26 | Smart Suggestions v2 - Phase 8: Controlled Runtime Generation Planning | Done | Planned the separate V2 runtime generation flow, API-key fallback, parser handling, session-state keys, error display, and rollback strategy. |
-| 27 | Smart Suggestions v2 - Phase 9: Controlled Runtime Generation | NEXT | Add a separate V2 generate button that calls OpenAI, parses normalized field-level rows, and keeps all output review-required without changing V1 or exports. |
-| 28 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 29 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
-| 30 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 31 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 27 | Smart Suggestions v2 - Phase 9: Controlled Runtime Generation | Done | Added a separate V2 generate button, separate session state, parser normalization, safe error display, and raw-response review expander without changing V1 or exports. |
+| 28 | Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning | NEXT | Review actual V2 runtime behavior with manual smoke tests before planning approval, export, or UX changes. |
+| 29 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 30 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 31 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 32 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 

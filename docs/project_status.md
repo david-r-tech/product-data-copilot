@@ -8,7 +8,7 @@
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 controlled runtime generation is planned, but the V2 OpenAI call is not implemented yet.
+- Current planning focus: Smart Suggestions v2 controlled runtime generation is implemented as a separate experimental V2 flow; approval and export integration are not implemented yet.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -26,6 +26,7 @@
 - Missing API-key fallback for AI Suggestions
 - Human-review wording for AI Suggestions
 - Experimental Smart Suggestions v2 prompt preview and structured suggestions table
+- Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -43,6 +44,7 @@
 - Smart Suggestions v2 runtime integration planning is documented in `docs/smart_suggestions_v2_runtime_integration_plan.md`.
 - Smart Suggestions v2 experimental UI wiring shows a prompt preview and schema-stable table without changing V1 behavior.
 - Smart Suggestions v2 controlled runtime generation planning is documented in `docs/smart_suggestions_v2_generation_plan.md`.
+- Smart Suggestions v2 controlled runtime generation is wired separately from V1 and stores V2 output in separate session state.
 
 ## Intentionally Not Implemented Yet
 
@@ -52,13 +54,13 @@
 - Marketplace-specific rule presets
 - Automatic AI mass generation
 - Automatic acceptance or write-back of AI suggestions
-- Smart Suggestions v2 runtime generation behavior
+- Smart Suggestions v2 approval workflow and export integration
 - Field-level AI suggestion approval workflow in the Streamlit app
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 - Phase 9: Controlled Runtime Generation
+1. Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

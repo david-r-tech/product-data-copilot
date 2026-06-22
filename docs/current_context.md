@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Phase 7 implementation: `45194d5 Plan smart suggestion runtime integration`
+- Current repo head before Phase 9 implementation: `9a7558c Plan smart suggestion runtime generation`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 controlled runtime generation is planned; the V2 OpenAI call is not implemented yet.
-- Next block: `Smart Suggestions v2 - Phase 9: Controlled Runtime Generation`
+- Current roadmap position: Smart Suggestions v2 controlled runtime generation is implemented separately from V1; approval and export integration are not implemented yet.
+- Next block: `Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning`
 
 ## Current App Capabilities
 
@@ -21,6 +21,7 @@
 - CSV exports and Excel Management Export
 - AI Suggestions v1 for one selected product with missing-key fallback
 - Experimental Smart Suggestions v2 prompt preview and empty/safe structured suggestions table
+- Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
 
 ## Key Modules
 
