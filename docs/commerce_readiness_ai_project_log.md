@@ -598,6 +598,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `git diff --check`, and confirm no runtime code, tests, requirements, or sample data changed.
 * Next recommended step: Use `docs/current_context.md` as the default context for `Smart Suggestions v2 - Phase 6: Runtime Integration Planning`.
 
+### Smart Suggestions v2 - Phase 6: Runtime Integration Planning
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_runtime_integration_plan.md` with a practical plan for adding Smart Suggestions v2 as an experimental section inside the existing AI Suggestions tab.
+* Why it matters: Defines how the prompt adapter, parser, and schema helpers can create visible app value while keeping AI Suggestions v1 unchanged and all V2 output human-reviewed.
+* How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, `src/`, tests, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 7: Experimental UI Wiring` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

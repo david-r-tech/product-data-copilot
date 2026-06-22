@@ -3,11 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Stable commit: `348213d Harden smart suggestion normalization`
+- Current repo head before Phase 6 planning: `bc53f34 Optimize Codex workflow docs`
+- Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 helper foundations are in place; runtime integration is not wired yet.
-- Next block: `Smart Suggestions v2 - Phase 6: Runtime Integration Planning`
+- Current roadmap position: Smart Suggestions v2 runtime integration is planned; runtime wiring is not implemented yet.
+- Next block: `Smart Suggestions v2 - Phase 7: Experimental UI Wiring`
 
 ## Current App Capabilities
 

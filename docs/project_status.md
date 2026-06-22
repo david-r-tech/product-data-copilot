@@ -3,11 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current stable baseline: `348213d Harden smart suggestion normalization`
+- Current repo head before this planning block: `bc53f34 Optimize Codex workflow docs`
+- Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 has pure schema, contract, parser, prompt adapter, and normalization hardening foundations; it is not wired into runtime yet.
+- Current planning focus: Smart Suggestions v2 runtime integration is planned; it is not wired into runtime yet.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -38,6 +39,7 @@
 - Smart Suggestions v2 prompt contract planning is documented in `docs/smart_suggestions_v2_phase3_prompt_contract_plan.md`.
 - Smart Suggestions v2 prompt adapter helpers exist as pure import-safe modules with tests.
 - Smart Suggestions v2 normalization hardening covers approved-like statuses, restricted factual fields, missing source fields, missing reasons, unsupported source shapes, and ignored extra keys.
+- Smart Suggestions v2 runtime integration planning is documented in `docs/smart_suggestions_v2_runtime_integration_plan.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -53,7 +55,7 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 - Phase 6: Runtime Integration Planning
+1. Smart Suggestions v2 - Phase 7: Experimental UI Wiring
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass
