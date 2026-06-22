@@ -614,6 +614,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab shows both the existing V1 flow and the new V2 experimental section.
 * Next recommended step: Plan `Smart Suggestions v2 - Phase 8: Controlled Runtime Generation` before adding a separate V2 OpenAI call.
 
+### Smart Suggestions v2 - Phase 8: Controlled Runtime Generation Planning
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_generation_plan.md` with the controlled V2 generation flow, separate button/session state, API-key fallback pattern, parser handling, safe error display, and rollback strategy.
+* Why it matters: Prepares the first real V2 runtime generation step without changing V1, exports, approval behavior, or product data.
+* How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, `src/`, tests, requirements, and sample data were not modified.
+* Next recommended step: Start `Smart Suggestions v2 - Phase 9: Controlled Runtime Generation` only after explicit approval.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

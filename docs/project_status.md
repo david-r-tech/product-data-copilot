@@ -8,7 +8,7 @@
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 is visible as an experimental schema-ready section, but runtime generation is not enabled yet.
+- Current planning focus: Smart Suggestions v2 controlled runtime generation is planned, but the V2 OpenAI call is not implemented yet.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -42,6 +42,7 @@
 - Smart Suggestions v2 normalization hardening covers approved-like statuses, restricted factual fields, missing source fields, missing reasons, unsupported source shapes, and ignored extra keys.
 - Smart Suggestions v2 runtime integration planning is documented in `docs/smart_suggestions_v2_runtime_integration_plan.md`.
 - Smart Suggestions v2 experimental UI wiring shows a prompt preview and schema-stable table without changing V1 behavior.
+- Smart Suggestions v2 controlled runtime generation planning is documented in `docs/smart_suggestions_v2_generation_plan.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -57,7 +58,7 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 - Phase 8: Controlled Runtime Generation Planning
+1. Smart Suggestions v2 - Phase 9: Controlled Runtime Generation
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

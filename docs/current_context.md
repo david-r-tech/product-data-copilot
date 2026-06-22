@@ -7,8 +7,8 @@
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 is visible as an experimental schema-ready UI section; runtime generation is not enabled yet.
-- Next block: `Smart Suggestions v2 - Phase 8: Controlled Runtime Generation Planning`
+- Current roadmap position: Smart Suggestions v2 controlled runtime generation is planned; the V2 OpenAI call is not implemented yet.
+- Next block: `Smart Suggestions v2 - Phase 9: Controlled Runtime Generation`
 
 ## Current App Capabilities
 
