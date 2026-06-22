@@ -42,11 +42,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 34 | Smart Suggestions v2 Test Fixture v1 | Done | Added a deterministic JSON fixture, parser test coverage, and clearly labeled Streamlit demo fixture loader without export/write-back scope. |
 | 35 | Smart Suggestions v2 Fixture QA | Done | Documented fixture coverage, parser test coverage, demo loader behavior, approval UI testability, safety checks, limitations, and manual smoke-test steps. |
 | 36 | Product Data Copilot Branding Polish | Done | Aligned visible app and README branding around Product Data Copilot while preserving historical Commerce Readiness AI context. |
-| 37 | Improved Product Data Export Planning | NEXT | Plan approved-suggestion export only after approval workflow direction is clear. |
-| 38 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 39 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 40 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 41 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 37 | Improved Product Data Export Planning | Done | Planned safe approved-suggestion export with source protection, proposed/approved/rejected/blocked separation, workbook sheets, and phased implementation. |
+| 38 | Improved Export Helpers v1 | NEXT | Design and test pure helper functions for splitting V2 suggestions into safe export DataFrames without Streamlit wiring. |
+| 39 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 40 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 41 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 42 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 

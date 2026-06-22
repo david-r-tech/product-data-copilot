@@ -702,6 +702,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the Dashboard header shows Product Data Copilot.
 * Next recommended step: Plan improved product data export now that visible product branding is aligned.
 
+### Improved Product Data Export Planning
+
+* Date: TODO
+* Change: Added `docs/improved_product_data_export_plan.md` with a safe export plan for source data, proposed improvements, approved improvements, rejected suggestions, blocked suggestions, summary sheets, session-only state, and phased implementation.
+* Why it matters: Defines how Product Data Copilot can later export approved field-level improvements without overwriting source data, auto-applying AI output, or inventing facts.
+* How to test: Run `python -m pytest` and confirm no runtime code, app behavior, product logic, tests, requirements, or sample data changed.
+* Next recommended step: Implement or plan `Improved Export Helpers v1` with pure helper functions and pytest coverage.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -727,7 +735,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Plan improved product data export
+1. Start `Improved Export Helpers v1`
 2. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`
@@ -735,7 +743,7 @@ Current known limitations:
 
 ## 11. Copy Context for Future Codex Prompts
 
-Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. The AI Suggestions tab selects the product with the lowest readiness score by default and supports selectable suggestion types. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering. Final GitHub Readiness v1 is complete, with README, demo checklist, demo script, portfolio draft, screenshot planning, and project log prepared for review.
+Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. Smart Suggestions v2 supports structured field-level draft suggestions, deterministic demo fixture records, and session-only human review. Improved Product Data Export Planning is complete and defines a future safe export path for approved improvements without source write-back. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering.
 
 The current data columns are `sku`, `product_name`, `category`, `description`, `brand`, `manufacturer`, `attributes`, `ean`, `language`, `price`, `image_url`, `warning_notes`, `translation_de`, and `translation_en`.
 
