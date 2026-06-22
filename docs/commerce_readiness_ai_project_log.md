@@ -670,6 +670,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, or sample data changed.
 * Next recommended step: Plan `Smart Suggestions v2 Test Fixture` support before approved-suggestion export planning.
 
+### Smart Suggestions v2 Test Fixture Planning
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_test_fixture_plan.md` with a deterministic fixture strategy for parser tests and optional demo loading without requiring an API key.
+* Why it matters: Enables reliable QA of approved, rejected, pending, blocked, high-risk, and malformed V2 states before export or write-back planning.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, sample data, or exports changed.
+* Next recommended step: Implement `Smart Suggestions v2 Test Fixture v1` as a small fixture/test/demo-support block.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

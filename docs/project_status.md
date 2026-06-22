@@ -8,7 +8,7 @@
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 approval UI QA is documented; deterministic test fixture planning is the next recommended block.
+- Current planning focus: Smart Suggestions v2 test fixture strategy is planned; fixture implementation is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -51,6 +51,7 @@
 - Smart Suggestions v2 approval workflow planning is documented in `docs/smart_suggestions_v2_approval_workflow_plan.md`.
 - Smart Suggestions v2 Approval UI v1 supports one-suggestion-at-a-time session-only approve/reject/pending decisions with blocked rows non-approvable.
 - Smart Suggestions v2 Approval UI QA is documented in `docs/smart_suggestions_v2_approval_ui_qa.md`.
+- Smart Suggestions v2 test fixture planning is documented in `docs/smart_suggestions_v2_test_fixture_plan.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -66,7 +67,7 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 Test Fixture Planning
+1. Smart Suggestions v2 Test Fixture v1
 2. Improved Product Data Export Planning
 3. Tests Expansion v1
 4. UX Polish v1

@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Approval UI QA: `5488b0c Add smart suggestion approval UI`
+- Current repo head before Test Fixture Planning: `2c8969c Document smart suggestion approval UI QA`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 Approval UI QA is documented; deterministic test fixture planning is the next recommended block.
-- Next block: `Smart Suggestions v2 Test Fixture Planning`
+- Current roadmap position: Smart Suggestions v2 test fixture strategy is planned; fixture implementation is the next recommended block.
+- Next block: `Smart Suggestions v2 Test Fixture v1`
 
 ## Current App Capabilities
 
