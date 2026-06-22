@@ -34,9 +34,11 @@ from product_data_copilot.review.review_helpers import (  # noqa: E402
 )
 from product_data_copilot.export.export_helpers import (  # noqa: E402
     AI_SUGGESTIONS_EXPORT_COLUMNS,
+    IMPROVED_EXCEL_EXPORT_FILENAME,
     IMPROVED_EXPORT_STATUS_GROUPS,
     MANAGEMENT_EXPORT_FILENAME,
     MANAGEMENT_EXPORT_SHEETS,
+    build_improved_excel_export_sheets,
     split_smart_suggestions_for_export,
 )
 from product_data_copilot.ai.prompt_helpers import (  # noqa: E402
@@ -905,6 +907,21 @@ def create_excel_management_export(
     return output.getvalue()
 
 
+def create_improved_excel_export(suggestions, products):
+    output = BytesIO()
+    improved_export_sheets = build_improved_excel_export_sheets(
+        suggestions,
+        source_products=products,
+    )
+
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        for sheet_name, sheet_dataframe in improved_export_sheets.items():
+            sheet_dataframe.to_excel(writer, sheet_name=sheet_name, index=False)
+
+    output.seek(0)
+    return output.getvalue()
+
+
 def run_app():
     """Run the Streamlit app."""
     st.set_page_config(page_title=APP_NAME, layout="wide")
@@ -1714,6 +1731,9 @@ def run_app():
                 st.info(
                     "No approved export candidates yet. Approve a non-blocked suggestion in the human review section to preview approved export rows."
                 )
+                st.caption(
+                    "You can still download the workbook for review context; the Approved Improvements sheet will be empty."
+                )
 
             export_preview_labels = {
                 "approved": "Approved Export Candidates",
@@ -1738,6 +1758,21 @@ def run_app():
                             make_display_safe(group_dataframe),
                             width="stretch",
                         )
+
+            st.markdown("##### Download Improved Product Data Export")
+            st.caption(
+                "This export contains approved suggestions as export candidates only. No product data is changed automatically."
+            )
+            improved_excel_export = create_improved_excel_export(
+                smart_suggestions_v2_df,
+                products,
+            )
+            st.download_button(
+                "Download Improved Product Data Export",
+                improved_excel_export,
+                IMPROVED_EXCEL_EXPORT_FILENAME,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
 
         if smart_suggestions_v2_raw_response:
             with st.expander("Raw Smart Suggestions v2 response"):

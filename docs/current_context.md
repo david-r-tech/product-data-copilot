@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Improved Excel Export Helpers v1: `29878bc Plan improved Excel export`
+- Current repo head before Improved Excel Download Wiring v1: `12b3839 Add improved Excel export helpers`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Improved Excel Export Helpers v1 completed.
-- Next block: `Improved Excel Download Wiring v1`
+- Current roadmap position: Improved Excel Download Wiring v1 completed.
+- Next block: `Improved Export Manual QA v1`
 
 ## Current App Capabilities
 
@@ -32,6 +32,7 @@
 - Improved Product Data Export Preview in the Smart Suggestions v2 area without downloads or write-back
 - Improved Excel Export v1 plan for a safe workbook download with approved/pending/rejected/blocked/unknown sheets and original source snapshot
 - Improved Excel export helpers for workbook sheet mapping, export summary data, suggestion groups, and original source snapshots without file writing or write-back
+- Improved Excel download wiring for a safe in-memory workbook generated from Smart Suggestions v2 review state without source write-back
 
 ## Key Modules
 

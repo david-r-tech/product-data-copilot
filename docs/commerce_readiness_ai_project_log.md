@@ -742,6 +742,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `git diff --check`, and confirm no app UI, source data, requirements, or non-export helper modules changed.
 * Next recommended step: Implement `Improved Excel Download Wiring v1` as a small in-memory Streamlit download block.
 
+### Improved Excel Download Wiring v1
+
+* Date: TODO
+* Change: Added an in-memory Excel download button in the Improved Product Data Export Preview area using the improved Excel export helper sheet mapping.
+* Why it matters: Gives users a real workbook handoff for Smart Suggestions v2 review results while keeping approved suggestions as export candidates only and leaving source product data unchanged.
+* How to test: Run `python -m streamlit run app.py`, load or generate Smart Suggestions v2 records, download `product_data_copilot_improved_export.xlsx`, and confirm all planned sheets exist.
+* Next recommended step: Perform `Improved Export Manual QA v1` to verify workbook contents and unchanged existing exports.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -767,7 +775,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Improved Excel Download Wiring v1`
+1. Start `Improved Export Manual QA v1`
 2. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`
@@ -775,7 +783,7 @@ Current known limitations:
 
 ## 11. Copy Context for Future Codex Prompts
 
-Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. Smart Suggestions v2 supports structured field-level draft suggestions, deterministic demo fixture records, and session-only human review. Improved Product Data Export Planning is complete and tested helpers now prepare improved Excel workbook sheet data for approved/pending/rejected/blocked/unknown suggestions and original source snapshots without source write-back. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering.
+Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. Smart Suggestions v2 supports structured field-level draft suggestions, deterministic demo fixture records, and session-only human review. Improved Product Data Export Planning is complete and the app can now create an in-memory improved Excel workbook for approved/pending/rejected/blocked/unknown suggestions and original source snapshots without source write-back. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering.
 
 The current data columns are `sku`, `product_name`, `category`, `description`, `brand`, `manufacturer`, `attributes`, `ean`, `language`, `price`, `image_url`, `warning_notes`, `translation_de`, and `translation_en`.
 
