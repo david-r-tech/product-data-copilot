@@ -630,6 +630,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab with and without `OPENAI_API_KEY`.
 * Next recommended step: Perform `Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning` before adding approval workflow or export changes.
 
+### Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_runtime_qa.md` with the manual smoke-test result, V1 preservation check, V2 session-state separation check, parser/safety behavior check, limitations, risks, and recommended next product block.
+* Why it matters: Confirms the V2 runtime path is stable enough to polish result presentation before adding approval workflow or export features.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, or sample data changed.
+* Next recommended step: Start `Smart Suggestions v2 Result UX Polish` as the next visible, low-scope product-value block.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

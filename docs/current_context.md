@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Phase 9 implementation: `9a7558c Plan smart suggestion runtime generation`
+- Current repo head before Phase 10 QA: `6175716 Add controlled smart suggestion generation`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 controlled runtime generation is implemented separately from V1; approval and export integration are not implemented yet.
-- Next block: `Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning`
+- Current roadmap position: Smart Suggestions v2 runtime QA is documented; result UX polish is the next recommended visible-value block.
+- Next block: `Smart Suggestions v2 Result UX Polish`
 
 ## Current App Capabilities
 

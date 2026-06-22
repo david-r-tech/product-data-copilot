@@ -8,7 +8,7 @@
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 controlled runtime generation is implemented as a separate experimental V2 flow; approval and export integration are not implemented yet.
+- Current planning focus: Smart Suggestions v2 runtime QA is documented; result UX polish is the next recommended visible-value block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -45,6 +45,7 @@
 - Smart Suggestions v2 experimental UI wiring shows a prompt preview and schema-stable table without changing V1 behavior.
 - Smart Suggestions v2 controlled runtime generation planning is documented in `docs/smart_suggestions_v2_generation_plan.md`.
 - Smart Suggestions v2 controlled runtime generation is wired separately from V1 and stores V2 output in separate session state.
+- Smart Suggestions v2 runtime QA is documented in `docs/smart_suggestions_v2_runtime_qa.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -60,7 +61,9 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning
-2. Tests Expansion v1
-3. UX Polish v1
-4. Public GitHub Readiness / portfolio presentation pass
+1. Smart Suggestions v2 Result UX Polish
+2. Smart Suggestions v2 Approval Workflow Planning
+3. Improved Product Data Export Planning
+4. Tests Expansion v1
+5. UX Polish v1
+6. Public GitHub Readiness / portfolio presentation pass
