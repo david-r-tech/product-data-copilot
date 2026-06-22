@@ -40,12 +40,13 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 32 | Smart Suggestions v2 Approval UI QA | Done | Documented approval UI QA findings, missing-key smoke test result, untested record-dependent paths, session-state safety, blocked-row behavior, V1 preservation, and export/write-back boundaries. |
 | 33 | Smart Suggestions v2 Test Fixture Planning | Done | Planned deterministic parser/demo fixture support so approval UI states can be tested without an API key before export planning. |
 | 34 | Smart Suggestions v2 Test Fixture v1 | Done | Added a deterministic JSON fixture, parser test coverage, and clearly labeled Streamlit demo fixture loader without export/write-back scope. |
-| 35 | Smart Suggestions v2 Fixture QA | NEXT | Manually verify the demo fixture path, approval/rejection actions, blocked-row behavior, V1 preservation, and unchanged exports. |
-| 36 | Improved Product Data Export Planning | Planned | Plan approved-suggestion export only after approval workflow direction is clear. |
-| 37 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 38 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 39 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 40 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 35 | Smart Suggestions v2 Fixture QA | Done | Documented fixture coverage, parser test coverage, demo loader behavior, approval UI testability, safety checks, limitations, and manual smoke-test steps. |
+| 36 | Product Data Copilot Branding Polish | NEXT | Align visible portfolio-facing naming and wording around Product Data Copilot without changing product behavior. |
+| 37 | Improved Product Data Export Planning | Planned | Plan approved-suggestion export only after approval workflow direction is clear. |
+| 38 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 39 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 40 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 41 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 

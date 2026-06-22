@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Test Fixture v1: `4496184 Plan smart suggestion test fixtures`
+- Current repo head before Fixture QA: `afdab57 Add smart suggestion test fixture`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `102` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 deterministic fixture support is implemented; fixture QA is the next recommended block.
+- Current planning focus: Smart Suggestions v2 fixture QA is documented; Product Data Copilot branding polish is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -29,6 +29,7 @@
 - Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Smart Suggestions v2 demo fixture loader for deterministic local review testing without an API key
+- Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -54,6 +55,7 @@
 - Smart Suggestions v2 Approval UI QA is documented in `docs/smart_suggestions_v2_approval_ui_qa.md`.
 - Smart Suggestions v2 test fixture planning is documented in `docs/smart_suggestions_v2_test_fixture_plan.md`.
 - Smart Suggestions v2 Test Fixture v1 adds deterministic fixture records and parser coverage for pending, high-risk, blocked, missing-source, and AI-supplied approved cases.
+- Smart Suggestions v2 Fixture QA is documented in `docs/smart_suggestions_v2_fixture_qa.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -68,7 +70,7 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 Fixture QA
+1. Product Data Copilot Branding Polish
 2. Improved Product Data Export Planning
 3. Tests Expansion v1
 4. UX Polish v1

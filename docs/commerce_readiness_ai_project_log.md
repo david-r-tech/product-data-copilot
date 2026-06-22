@@ -686,6 +686,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then run `python -m streamlit run app.py` and load demo V2 records from the AI Suggestions tab.
 * Next recommended step: Perform `Smart Suggestions v2 Fixture QA` to manually verify approve/reject/pending behavior and blocked-row protection.
 
+### Smart Suggestions v2 Fixture QA
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_fixture_qa.md` with fixture purpose, fixture coverage, parser test coverage, demo loader behavior, approval UI testability, safety checks, limitations, and manual smoke-test steps.
+* Why it matters: Makes the fixture/demo path reviewable before moving toward branding polish or future export planning.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually load demo V2 records in the AI Suggestions tab and capture the requested screenshot.
+* Next recommended step: Start `Product Data Copilot Branding Polish` to improve visible portfolio quality without changing product behavior.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -711,8 +719,8 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Perform `Smart Suggestions v2 Fixture QA`
-2. Plan improved product data export after fixture QA
+1. Start `Product Data Copilot Branding Polish`
+2. Plan improved product data export after branding polish
 3. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
 4. Plan UX Polish v1 after the AI suggestion model is clearer
 5. Capture screenshots using `docs/screenshots_to_capture.md`
