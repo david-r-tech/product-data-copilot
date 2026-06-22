@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Improved Excel Export v1 Planning: `582c620 Add improved export preview`
+- Current repo head before Improved Excel Export Helpers v1: `29878bc Plan improved Excel export`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
-- Current test count: `112` passing pytest tests
+- Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Improved Excel Export v1 planning completed; improved Excel export helpers are the next recommended block.
+- Current planning focus: Improved Excel Export Helpers v1 completed; improved Excel download wiring is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -35,6 +35,7 @@
 - Improved export helpers for splitting Smart Suggestions v2 records into approved, pending, rejected, blocked, and unknown export DataFrames
 - Improved Product Data Export Preview in the Smart Suggestions v2 area without downloads or write-back
 - Improved Excel Export v1 plan for a safe workbook download with approved/pending/rejected/blocked/unknown sheets and original source snapshot
+- Improved Excel export helpers for workbook sheet mapping, export summary data, suggestion groups, and original source snapshots without file writing or write-back
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -66,6 +67,7 @@
 - Improved Export Helpers v1 adds pure helper functions and tests for preparing Smart Suggestions v2 export data without Streamlit wiring or write-back.
 - Improved Export Preview v1 wires the helper output into a preview-only Streamlit section without downloads, source mutation, or write-back.
 - Improved Excel Export v1 planning is documented in `docs/improved_excel_export_v1_plan.md`.
+- Improved Excel Export Helpers v1 adds pure helper functions and tests for preparing workbook sheet data before Streamlit download wiring.
 
 ## Intentionally Not Implemented Yet
 
@@ -77,12 +79,12 @@
 - Automatic acceptance or write-back of AI suggestions
 - Smart Suggestions v2 export integration
 - Improved Product Data Export implementation
-- Improved Excel Export implementation
+- Improved Excel Download Wiring
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Improved Excel Export Helpers v1
+1. Improved Excel Download Wiring v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

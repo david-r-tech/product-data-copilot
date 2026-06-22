@@ -10,19 +10,26 @@ sys.path.insert(0, str(SRC_PATH))
 
 from product_data_copilot.export.export_helpers import (  # noqa: E402
     AI_SUGGESTIONS_EXPORT_COLUMNS,
+    IMPROVED_EXCEL_EXPORT_FILENAME,
+    IMPROVED_EXCEL_EXPORT_SHEETS,
+    IMPROVED_EXPORT_SUMMARY_COLUMNS,
     IMPROVED_EXPORT_STATUS_GROUPS,
     IMPROVED_PRODUCT_EXPORT_COLUMNS,
     MANAGEMENT_EXPORT_SHEETS,
     MANAGEMENT_EXPORT_FILENAME,
     build_export_filename,
+    build_improved_excel_export_sheets,
+    build_improved_export_summary,
     dataframe_has_columns,
     dataframe_has_rows,
     has_required_sheets,
     missing_required_sheets,
     normalize_improved_export_status,
     ordered_columns,
+    required_improved_excel_export_sheets,
     required_management_export_sheets,
     safe_sheet_name,
+    source_products_to_snapshot_dataframe,
     smart_suggestions_to_export_dataframe,
     split_smart_suggestions_for_export,
 )
@@ -300,3 +307,189 @@ def test_empty_source_fields_can_fall_back_to_source_value():
     )
 
     assert dataframe.iloc[0]["source"] == "description"
+
+
+def _improved_excel_export_suggestions():
+    return [
+        {
+            "sku": "SKU-11",
+            "product_name": "Demo Bottle",
+            "target_field": "product_name",
+            "current_value": "Bottle",
+            "proposed_value": "Demo Trail Bottle",
+            "source_fields": ["product_name", "category"],
+            "reason": "User approved clearer title.",
+            "confidence": "high",
+            "human_review_status": "approved",
+            "suggestion_status": "review_required",
+        },
+        {
+            "sku": "SKU-12",
+            "product_name": "Office Lamp",
+            "target_field": "description",
+            "current_value": "Lamp",
+            "proposed_value": "Adjustable office lamp for desks.",
+            "approval_status": "needs_review",
+            "suggestion_status": "review_required",
+        },
+        {
+            "sku": "SKU-13",
+            "product_name": "Rejected Shirt",
+            "target_field": "description",
+            "human_review_status": "rejected",
+        },
+        {
+            "sku": "SKU-14",
+            "product_name": "Blocked Toy",
+            "target_field": "warning_notes",
+            "human_review_status": "approved",
+            "suggestion_status": "blocked_insufficient_source",
+        },
+        {
+            "sku": "SKU-15",
+            "product_name": "Unknown Item",
+            "target_field": "description",
+            "approval_status": "unclear",
+        },
+    ]
+
+
+def test_improved_excel_export_filename_and_sheet_order_are_stable():
+    assert IMPROVED_EXCEL_EXPORT_FILENAME == "product_data_copilot_improved_export.xlsx"
+    assert IMPROVED_EXCEL_EXPORT_SHEETS == [
+        "Export Summary",
+        "Approved Improvements",
+        "Pending Suggestions",
+        "Rejected Suggestions",
+        "Blocked Suggestions",
+        "Unknown Suggestions",
+        "Original Source Snapshot",
+    ]
+    assert required_improved_excel_export_sheets() == IMPROVED_EXCEL_EXPORT_SHEETS
+
+
+def test_required_improved_excel_export_sheets_returns_copy():
+    sheets = required_improved_excel_export_sheets()
+    sheets.append("Extra")
+
+    assert "Extra" not in required_improved_excel_export_sheets()
+
+
+def test_build_improved_excel_export_sheets_contains_all_expected_sheets():
+    sheets = build_improved_excel_export_sheets(_improved_excel_export_suggestions())
+
+    assert list(sheets.keys()) == IMPROVED_EXCEL_EXPORT_SHEETS
+    assert has_required_sheets(sheets, IMPROVED_EXCEL_EXPORT_SHEETS)
+
+
+def test_improved_export_summary_counts_status_groups():
+    summary = build_improved_export_summary(_improved_excel_export_suggestions())
+    summary_values = dict(zip(summary["metric"], summary["value"]))
+
+    assert list(summary.columns) == IMPROVED_EXPORT_SUMMARY_COLUMNS
+    assert summary_values["total_smart_suggestions_v2_records"] == 5
+    assert summary_values["approved_improvement_count"] == 1
+    assert summary_values["pending_suggestion_count"] == 1
+    assert summary_values["rejected_suggestion_count"] == 1
+    assert summary_values["blocked_suggestion_count"] == 1
+    assert summary_values["unknown_suggestion_count"] == 1
+    assert summary_values["source_data_changed"] == "No"
+    assert summary_values["write_back_enabled"] == "No"
+
+
+def test_original_source_snapshot_is_included_when_source_data_provided():
+    source_products = pd.DataFrame(
+        [
+            {
+                "sku": "SKU-11",
+                "product_name": "Bottle",
+                "description": "Original product data",
+            }
+        ]
+    )
+
+    sheets = build_improved_excel_export_sheets(
+        _improved_excel_export_suggestions(),
+        source_products=source_products,
+    )
+    snapshot = sheets["Original Source Snapshot"]
+
+    assert len(snapshot) == 1
+    assert snapshot.iloc[0]["product_name"] == "Bottle"
+
+
+def test_missing_source_data_creates_safe_empty_snapshot():
+    snapshot = source_products_to_snapshot_dataframe()
+    sheets = build_improved_excel_export_sheets(_improved_excel_export_suggestions())
+
+    assert isinstance(snapshot, pd.DataFrame)
+    assert len(snapshot) == 0
+    assert isinstance(sheets["Original Source Snapshot"], pd.DataFrame)
+    assert len(sheets["Original Source Snapshot"]) == 0
+
+
+def test_improved_excel_export_helpers_do_not_mutate_inputs():
+    suggestions = _improved_excel_export_suggestions()
+    source_products = [
+        {
+            "sku": "SKU-11",
+            "product_name": "Bottle",
+            "description": "Original product data",
+        }
+    ]
+    original_suggestions = [dict(record) for record in suggestions]
+    original_source = [dict(record) for record in source_products]
+
+    build_improved_excel_export_sheets(suggestions, source_products)
+
+    assert suggestions == original_suggestions
+    assert source_products == original_source
+
+
+def test_approved_suggestions_are_not_applied_to_original_source_rows():
+    source_products = [
+        {
+            "sku": "SKU-11",
+            "product_name": "Bottle",
+            "description": "Original product data",
+        }
+    ]
+
+    sheets = build_improved_excel_export_sheets(
+        _improved_excel_export_suggestions(),
+        source_products=source_products,
+    )
+
+    approved = sheets["Approved Improvements"]
+    snapshot = sheets["Original Source Snapshot"]
+
+    assert approved.iloc[0]["approved_value"] == "Demo Trail Bottle"
+    assert snapshot.iloc[0]["product_name"] == "Bottle"
+
+
+def test_empty_suggestion_input_returns_stable_improved_excel_sheets():
+    sheets = build_improved_excel_export_sheets()
+    summary_values = dict(zip(sheets["Export Summary"]["metric"], sheets["Export Summary"]["value"]))
+
+    assert list(sheets.keys()) == IMPROVED_EXCEL_EXPORT_SHEETS
+    assert summary_values["total_smart_suggestions_v2_records"] == 0
+    for sheet_name in IMPROVED_EXCEL_EXPORT_SHEETS:
+        assert isinstance(sheets[sheet_name], pd.DataFrame)
+
+    for sheet_name in [
+        "Approved Improvements",
+        "Pending Suggestions",
+        "Rejected Suggestions",
+        "Blocked Suggestions",
+        "Unknown Suggestions",
+    ]:
+        assert list(sheets[sheet_name].columns) == IMPROVED_PRODUCT_EXPORT_COLUMNS
+
+
+def test_improved_excel_export_sheets_are_dataframes():
+    sheets = build_improved_excel_export_sheets(
+        _improved_excel_export_suggestions(),
+        source_products=[{"sku": "SKU-11", "product_name": "Bottle"}],
+    )
+
+    assert all(isinstance(sheet, pd.DataFrame) for sheet in sheets.values())

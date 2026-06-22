@@ -33,6 +33,23 @@ IMPROVED_EXPORT_STATUS_GROUPS = [
     "unknown",
 ]
 
+IMPROVED_EXCEL_EXPORT_FILENAME = "product_data_copilot_improved_export.xlsx"
+
+IMPROVED_EXCEL_EXPORT_SHEETS = [
+    "Export Summary",
+    "Approved Improvements",
+    "Pending Suggestions",
+    "Rejected Suggestions",
+    "Blocked Suggestions",
+    "Unknown Suggestions",
+    "Original Source Snapshot",
+]
+
+IMPROVED_EXPORT_SUMMARY_COLUMNS = [
+    "metric",
+    "value",
+]
+
 IMPROVED_PRODUCT_EXPORT_COLUMNS = [
     "sku",
     "product_name",
@@ -89,6 +106,11 @@ def build_export_filename(base_name, extension):
 def required_management_export_sheets():
     """Return the expected management export sheet names."""
     return MANAGEMENT_EXPORT_SHEETS.copy()
+
+
+def required_improved_excel_export_sheets():
+    """Return the expected improved Excel export sheet names."""
+    return IMPROVED_EXCEL_EXPORT_SHEETS.copy()
 
 
 def missing_required_sheets(available_sheets, required_sheets=None):
@@ -256,6 +278,90 @@ def split_smart_suggestions_for_export(suggestions):
             ].copy()
 
     return grouped_dataframes
+
+
+def source_products_to_snapshot_dataframe(source_products=None):
+    """Return an unchanged source product snapshot DataFrame for export.
+
+    This helper copies the source product data for workbook preparation only.
+    It never applies approved suggestions or writes changes back to products.
+    """
+    if source_products is None:
+        return pd.DataFrame()
+
+    if isinstance(source_products, pd.DataFrame):
+        return source_products.copy(deep=True)
+
+    if isinstance(source_products, dict):
+        return pd.DataFrame([dict(source_products)])
+
+    try:
+        return pd.DataFrame(
+            [dict(record) for record in source_products if isinstance(record, dict)]
+        )
+    except TypeError:
+        return pd.DataFrame()
+
+
+def build_improved_export_summary(suggestions=None, source_products=None):
+    """Return a summary DataFrame for future improved Excel export.
+
+    The summary describes review-state export candidates only. It does not
+    mutate source products, approve AI output, or write files.
+    """
+    grouped_suggestions = split_smart_suggestions_for_export(suggestions)
+    source_snapshot = source_products_to_snapshot_dataframe(source_products)
+
+    return _build_improved_export_summary_from_groups(
+        grouped_suggestions,
+        source_snapshot,
+    )
+
+
+def build_improved_excel_export_sheets(suggestions=None, source_products=None):
+    """Return workbook sheet data for future improved Excel export.
+
+    The returned mapping contains DataFrames only. It does not write Excel
+    files, change source product data, or apply approved suggestions.
+    """
+    grouped_suggestions = split_smart_suggestions_for_export(suggestions)
+    source_snapshot = source_products_to_snapshot_dataframe(source_products)
+
+    return {
+        "Export Summary": _build_improved_export_summary_from_groups(
+            grouped_suggestions,
+            source_snapshot,
+        ),
+        "Approved Improvements": grouped_suggestions["approved"].copy(),
+        "Pending Suggestions": grouped_suggestions["pending"].copy(),
+        "Rejected Suggestions": grouped_suggestions["rejected"].copy(),
+        "Blocked Suggestions": grouped_suggestions["blocked"].copy(),
+        "Unknown Suggestions": grouped_suggestions["unknown"].copy(),
+        "Original Source Snapshot": source_snapshot,
+    }
+
+
+def _build_improved_export_summary_from_groups(grouped_suggestions, source_snapshot):
+    total_suggestions = sum(
+        len(grouped_suggestions[status_group])
+        for status_group in IMPROVED_EXPORT_STATUS_GROUPS
+    )
+
+    rows = [
+        ("total_smart_suggestions_v2_records", total_suggestions),
+        ("approved_improvement_count", len(grouped_suggestions["approved"])),
+        ("pending_suggestion_count", len(grouped_suggestions["pending"])),
+        ("rejected_suggestion_count", len(grouped_suggestions["rejected"])),
+        ("blocked_suggestion_count", len(grouped_suggestions["blocked"])),
+        ("unknown_suggestion_count", len(grouped_suggestions["unknown"])),
+        ("source_product_count", len(source_snapshot)),
+        ("export_scope", "Smart Suggestions v2 review results"),
+        ("source_data_changed", "No"),
+        ("write_back_enabled", "No"),
+        ("generated_from_session_state", "Yes"),
+    ]
+
+    return pd.DataFrame(rows, columns=IMPROVED_EXPORT_SUMMARY_COLUMNS)
 
 
 def _suggestion_records(suggestions):
