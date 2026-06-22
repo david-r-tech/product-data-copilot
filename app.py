@@ -1273,10 +1273,10 @@ def run_app():
         st.divider()
         st.markdown("### Smart Suggestions v2 (experimental)")
         st.caption(
-            "Schema-ready field-level suggestions for future review workflows. V2 does not replace the current AI Suggestions flow."
+            "Field-level draft suggestions for future review workflows. V2 is separate from the current AI Suggestions flow."
         )
         st.info(
-            "Smart Suggestions v2 are experimental draft records. They are not applied to product data and require human review."
+            "Smart Suggestions v2 creates structured review rows. Suggestions are not applied automatically, and every row needs human review before use."
         )
 
         smart_suggestions_v2_prompt = build_smart_suggestion_prompt(
@@ -1290,7 +1290,7 @@ def run_app():
 
         if not os.getenv("OPENAI_API_KEY"):
             st.info(
-                "Smart Suggestions v2 generation is disabled because OPENAI_API_KEY is missing. The structured prompt preview is still available."
+                "Smart Suggestions v2 generation is disabled because OPENAI_API_KEY is missing. You can still review the structured prompt preview above."
             )
         elif st.button("Generate Smart Suggestions v2"):
             with st.spinner("Generating Smart Suggestions v2..."):
@@ -1334,7 +1334,7 @@ def run_app():
 
         st.write("Structured Smart Suggestions v2")
         st.caption(
-            "Generated V2 rows stay review-required or blocked. They are not applied to product data."
+            "Generated V2 rows stay review-required or blocked. They are not exported or written back to product data."
         )
 
         smart_suggestions_v2_state_matches = (
@@ -1370,7 +1370,71 @@ def run_app():
             smart_suggestions_v2_records
         )
 
-        st.dataframe(make_display_safe(smart_suggestions_v2_df), width="stretch")
+        if len(smart_suggestions_v2_df) > 0:
+            total_v2_suggestions = len(smart_suggestions_v2_df)
+            needs_review_count = len(
+                smart_suggestions_v2_df[
+                    smart_suggestions_v2_df["approval_status"] == "needs_review"
+                ]
+            )
+            blocked_count = len(
+                smart_suggestions_v2_df[
+                    smart_suggestions_v2_df["suggestion_status"]
+                    == "blocked_insufficient_source"
+                ]
+            )
+            high_risk_count = len(
+                smart_suggestions_v2_df[
+                    smart_suggestions_v2_df["risk_level"] == "high"
+                ]
+            )
+
+            smart_v2_metric_columns = st.columns(4)
+            smart_v2_metric_columns[0].metric(
+                "Total V2 suggestions",
+                total_v2_suggestions,
+            )
+            smart_v2_metric_columns[1].metric("Needs review", needs_review_count)
+            smart_v2_metric_columns[2].metric("Blocked", blocked_count)
+            smart_v2_metric_columns[3].metric("High risk", high_risk_count)
+
+            with st.expander("How to read Smart Suggestions v2"):
+                st.write(
+                    "`approval_status` shows whether a suggestion still needs human review. "
+                    "`suggestion_status` shows whether the row is usable as a draft or blocked because source data is missing, unsafe, or unsupported."
+                )
+
+        smart_suggestions_v2_display_columns = [
+            "sku",
+            "product_name",
+            "target_field",
+            "current_value",
+            "proposed_value",
+            "reason",
+            "source_fields",
+            "confidence",
+            "risk_level",
+            "approval_status",
+            "suggestion_status",
+        ]
+        smart_suggestions_v2_display_labels = {
+            "sku": "SKU",
+            "product_name": "Product",
+            "target_field": "Field",
+            "current_value": "Current Value",
+            "proposed_value": "Suggested Value",
+            "reason": "Reason",
+            "source_fields": "Source Fields",
+            "confidence": "Confidence",
+            "risk_level": "Risk",
+            "approval_status": "Review Status",
+            "suggestion_status": "Suggestion State",
+        }
+        smart_suggestions_v2_display_df = smart_suggestions_v2_df[
+            smart_suggestions_v2_display_columns
+        ].rename(columns=smart_suggestions_v2_display_labels)
+
+        st.dataframe(make_display_safe(smart_suggestions_v2_display_df), width="stretch")
         if len(smart_suggestions_v2_df) == 0:
             if smart_suggestions_v2_raw_response:
                 st.warning(
@@ -1378,7 +1442,7 @@ def run_app():
                 )
             else:
                 st.info(
-                    "No Smart Suggestions v2 records are available for this product yet. Generate V2 suggestions to populate review-required field-level rows."
+                    "No Smart Suggestions v2 records yet. Generate V2 suggestions to create field-level draft rows for human review."
                 )
         elif (smart_suggestions_v2_df["suggestion_status"] == "blocked_insufficient_source").any():
             st.warning(

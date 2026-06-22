@@ -8,7 +8,7 @@
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 runtime QA is documented; result UX polish is the next recommended visible-value block.
+- Current planning focus: Smart Suggestions v2 result UX is clearer; approval workflow planning is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -27,6 +27,7 @@
 - Human-review wording for AI Suggestions
 - Experimental Smart Suggestions v2 prompt preview and structured suggestions table
 - Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
+- Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -46,6 +47,7 @@
 - Smart Suggestions v2 controlled runtime generation planning is documented in `docs/smart_suggestions_v2_generation_plan.md`.
 - Smart Suggestions v2 controlled runtime generation is wired separately from V1 and stores V2 output in separate session state.
 - Smart Suggestions v2 runtime QA is documented in `docs/smart_suggestions_v2_runtime_qa.md`.
+- Smart Suggestions v2 result UX polish keeps V2 easier to understand without adding approval, export, or write-back scope.
 
 ## Intentionally Not Implemented Yet
 
@@ -61,9 +63,8 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 Result UX Polish
-2. Smart Suggestions v2 Approval Workflow Planning
-3. Improved Product Data Export Planning
-4. Tests Expansion v1
-5. UX Polish v1
-6. Public GitHub Readiness / portfolio presentation pass
+1. Smart Suggestions v2 Approval Workflow Planning
+2. Improved Product Data Export Planning
+3. Tests Expansion v1
+4. UX Polish v1
+5. Public GitHub Readiness / portfolio presentation pass

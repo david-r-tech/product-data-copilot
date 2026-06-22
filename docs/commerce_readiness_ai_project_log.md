@@ -638,6 +638,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, or sample data changed.
 * Next recommended step: Start `Smart Suggestions v2 Result UX Polish` as the next visible, low-scope product-value block.
 
+### Smart Suggestions v2 Result UX Polish
+
+* Date: TODO
+* Change: Improved the experimental V2 result section with clearer business-facing copy, friendly empty states, status explanations, summary metrics, and display-only column labels.
+* Why it matters: Makes Smart Suggestions v2 easier to understand for product and business users while preserving V1, generation logic, parser behavior, session state, exports, and write-back boundaries.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab still shows V1 unchanged and V2 with clearer result presentation.
+* Next recommended step: Plan `Smart Suggestions v2 Approval Workflow` before adding row-level actions.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

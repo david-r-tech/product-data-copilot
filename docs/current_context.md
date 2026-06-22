@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Phase 10 QA: `6175716 Add controlled smart suggestion generation`
+- Current repo head before V2 Result UX Polish: `d945c88 Document smart suggestion runtime QA`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 runtime QA is documented; result UX polish is the next recommended visible-value block.
-- Next block: `Smart Suggestions v2 Result UX Polish`
+- Current roadmap position: Smart Suggestions v2 result UX is clearer; approval workflow planning is the next recommended block.
+- Next block: `Smart Suggestions v2 Approval Workflow Planning`
 
 ## Current App Capabilities
 
@@ -22,6 +22,7 @@
 - AI Suggestions v1 for one selected product with missing-key fallback
 - Experimental Smart Suggestions v2 prompt preview and empty/safe structured suggestions table
 - Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
+- Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 
 ## Key Modules
 
