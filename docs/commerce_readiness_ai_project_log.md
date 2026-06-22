@@ -1,8 +1,8 @@
-# Commerce Readiness AI - Project Log
+# Product Data Copilot - Project Log
 
 ## 1. Project Overview
 
-Commerce Readiness AI is a beginner-friendly Streamlit MVP for checking e-commerce product data quality.
+Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for checking e-commerce product data quality.
 
 The product is for merchants, marketplace operators, catalog managers, and e-commerce teams who need a quick way to review product data before publishing or improving listings.
 
@@ -694,6 +694,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually load demo V2 records in the AI Suggestions tab and capture the requested screenshot.
 * Next recommended step: Start `Product Data Copilot Branding Polish` to improve visible portfolio quality without changing product behavior.
 
+### Product Data Copilot Branding Polish
+
+* Date: TODO
+* Change: Updated the visible app title/header and README identity from Commerce Readiness AI to Product Data Copilot while keeping the old name only as historical context.
+* Why it matters: Aligns the local demo, README, and roadmap around the forward-looking product name without changing app behavior.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the Dashboard header shows Product Data Copilot.
+* Next recommended step: Plan improved product data export now that visible product branding is aligned.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -719,15 +727,15 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Product Data Copilot Branding Polish`
-2. Plan improved product data export after branding polish
-3. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
-4. Plan UX Polish v1 after the AI suggestion model is clearer
-5. Capture screenshots using `docs/screenshots_to_capture.md`
+1. Plan improved product data export
+2. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
+3. Plan UX Polish v1 after the AI suggestion model is clearer
+4. Capture screenshots using `docs/screenshots_to_capture.md`
+5. Do one full demo walkthrough using `docs/demo_test_checklist.md`
 
 ## 11. Copy Context for Future Codex Prompts
 
-Commerce Readiness AI is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. The AI Suggestions tab selects the product with the lowest readiness score by default and supports selectable suggestion types. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering. Final GitHub Readiness v1 is complete, with README, demo checklist, demo script, portfolio draft, screenshot planning, and project log prepared for review.
+Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. The AI Suggestions tab selects the product with the lowest readiness score by default and supports selectable suggestion types. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering. Final GitHub Readiness v1 is complete, with README, demo checklist, demo script, portfolio draft, screenshot planning, and project log prepared for review.
 
 The current data columns are `sku`, `product_name`, `category`, `description`, `brand`, `manufacturer`, `attributes`, `ean`, `language`, `price`, `image_url`, `warning_notes`, `translation_de`, and `translation_en`.
 

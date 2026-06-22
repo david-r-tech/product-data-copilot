@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Fixture QA: `afdab57 Add smart suggestion test fixture`
+- Current repo head before Branding Polish: `99d13b1 Document smart suggestion fixture QA`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `102` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 fixture QA is documented; Product Data Copilot branding polish is the next recommended block.
+- Current planning focus: visible app and README branding are aligned around Product Data Copilot; improved product data export planning is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -30,6 +30,7 @@
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Smart Suggestions v2 demo fixture loader for deterministic local review testing without an API key
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
+- Visible app and README branding aligned around Product Data Copilot
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -56,6 +57,7 @@
 - Smart Suggestions v2 test fixture planning is documented in `docs/smart_suggestions_v2_test_fixture_plan.md`.
 - Smart Suggestions v2 Test Fixture v1 adds deterministic fixture records and parser coverage for pending, high-risk, blocked, missing-source, and AI-supplied approved cases.
 - Smart Suggestions v2 Fixture QA is documented in `docs/smart_suggestions_v2_fixture_qa.md`.
+- Product Data Copilot branding polish updates the visible app title and README identity while preserving the original project history.
 
 ## Intentionally Not Implemented Yet
 
@@ -70,8 +72,7 @@
 
 ## Recommended Next Roadmap
 
-1. Product Data Copilot Branding Polish
-2. Improved Product Data Export Planning
-3. Tests Expansion v1
-4. UX Polish v1
-5. Public GitHub Readiness / portfolio presentation pass
+1. Improved Product Data Export Planning
+2. Tests Expansion v1
+3. UX Polish v1
+4. Public GitHub Readiness / portfolio presentation pass

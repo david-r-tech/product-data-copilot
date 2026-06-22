@@ -41,8 +41,8 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 33 | Smart Suggestions v2 Test Fixture Planning | Done | Planned deterministic parser/demo fixture support so approval UI states can be tested without an API key before export planning. |
 | 34 | Smart Suggestions v2 Test Fixture v1 | Done | Added a deterministic JSON fixture, parser test coverage, and clearly labeled Streamlit demo fixture loader without export/write-back scope. |
 | 35 | Smart Suggestions v2 Fixture QA | Done | Documented fixture coverage, parser test coverage, demo loader behavior, approval UI testability, safety checks, limitations, and manual smoke-test steps. |
-| 36 | Product Data Copilot Branding Polish | NEXT | Align visible portfolio-facing naming and wording around Product Data Copilot without changing product behavior. |
-| 37 | Improved Product Data Export Planning | Planned | Plan approved-suggestion export only after approval workflow direction is clear. |
+| 36 | Product Data Copilot Branding Polish | Done | Aligned visible app and README branding around Product Data Copilot while preserving historical Commerce Readiness AI context. |
+| 37 | Improved Product Data Export Planning | NEXT | Plan approved-suggestion export only after approval workflow direction is clear. |
 | 38 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
 | 39 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
 | 40 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |

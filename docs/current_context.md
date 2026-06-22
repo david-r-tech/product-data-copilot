@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Fixture QA: `afdab57 Add smart suggestion test fixture`
+- Current repo head before Branding Polish: `99d13b1 Document smart suggestion fixture QA`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `102` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 fixture QA is documented; fixture demo behavior is ready for manual browser verification and screenshot capture.
-- Next block: `Product Data Copilot Branding Polish`
+- Current roadmap position: visible app and README branding are aligned around Product Data Copilot.
+- Next block: `Improved Product Data Export Planning`
 
 ## Current App Capabilities
 
@@ -26,6 +26,7 @@
 - Smart Suggestions v2 session-only approval UI for one-suggestion review with blocked rows non-approvable
 - Smart Suggestions v2 demo fixture loader for deterministic local approval UI testing without an API key
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
+- Visible app and README branding aligned around Product Data Copilot
 
 ## Key Modules
 

@@ -51,8 +51,6 @@ from product_data_copilot.ai.suggestion_schema import (  # noqa: E402
     REQUIRED_SUGGESTION_FIELDS,
 )
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
-    configure_page,
-    render_app_intro,
     render_data_input_section,
     render_data_source_notice,
     render_dataset_summary,
@@ -66,6 +64,9 @@ from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
 )
 
 load_dotenv()
+
+APP_NAME = "Product Data Copilot"
+FORMER_APP_NAME = "Commerce Readiness AI"
 
 AI_SUGGESTION_TYPES = [
     "Improved Product Title",
@@ -904,8 +905,12 @@ def create_excel_management_export(
 
 def run_app():
     """Run the Streamlit app."""
-    configure_page(st)
-    render_app_intro(st)
+    st.set_page_config(page_title=APP_NAME, layout="wide")
+    st.title(APP_NAME)
+    st.caption(
+        f"Formerly {FORMER_APP_NAME}. "
+        "CSV/XLSX-based product data quality checks for e-commerce readiness."
+    )
 
     uploaded_file = render_data_input_section(st)
 

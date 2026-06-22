@@ -1,6 +1,6 @@
-# Commerce Readiness AI
+# Product Data Copilot
 
-Commerce Readiness AI is a Streamlit MVP for auditing e-commerce product data before marketplace or shop publication.
+Product Data Copilot, formerly Commerce Readiness AI, is a Streamlit MVP for auditing e-commerce product data before marketplace or shop publication.
 
 It helps product data managers, marketplace managers, e-commerce operations teams, and category teams find missing or weak product data, prioritize review work, calculate readiness scores, generate human-reviewed AI draft suggestions, and export audit results.
 
@@ -16,7 +16,7 @@ E-commerce teams often manage product data across CSV files, PIM exports, market
 - Which issues should be fixed first
 - What can be exported for management or operational follow-up
 
-Commerce Readiness AI turns a product file into a clear audit workflow with scores, issues, review tasks, and exports.
+Product Data Copilot turns a product file into a clear audit workflow with scores, issues, review tasks, and exports.
 
 ## Business Value
 
@@ -46,6 +46,7 @@ The MVP is designed to show how product-data teams can move from an unstructured
 - CSV exports for scores, issues, and review tasks
 - Excel Management Export with summary, scores, issues, tasks, AI suggestions, and source products
 - Optional AI Suggestions for one selected product at a time
+- Experimental Smart Suggestions v2 with structured demo fixtures and session-only human review
 
 ## Sample Data
 
@@ -108,7 +109,7 @@ The Review Tasks tab helps turn audit findings into practical work:
 
 Manual overrides are not stored in a database. They are session-only and are included in the current score display and exports while the app session is active.
 
-## AI Suggestions v1
+## AI Suggestions
 
 The AI Suggestions tab can generate draft recommendations for one selected product:
 
@@ -131,6 +132,8 @@ To enable AI suggestions:
 3. Set `OPENAI_API_KEY` in your local `.env` file.
 
 If `OPENAI_API_KEY` is missing, the app still works and shows a clear missing-key message.
+
+Smart Suggestions v2 is experimental and separate from the current V1 flow. It supports structured field-level suggestions, deterministic demo fixture rows, and session-only human review. V2 suggestions are not exported and are not written back to product data.
 
 ## Excel Management Export
 
@@ -227,7 +230,7 @@ The current GitHub-ready state focuses on a clean local demo, understandable doc
 ## Roadmap
 
 - Improve Excel export formatting and column widths
-- Add accept/reject tracking for AI suggestions
+- Plan approved-suggestion export after the Smart Suggestions v2 review workflow is stable
 - Expand the rule catalog after testing with realistic merchant data
 - Add optional persistence for review decisions
 - Add marketplace-specific rule presets later
