@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Improved Excel Download Wiring v1: `12b3839 Add improved Excel export helpers`
+- Current repo head before Improved Export Manual QA v1: `066d126 Add improved Excel download`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Improved Excel Download Wiring v1 completed; improved export manual QA is the next recommended block.
+- Current planning focus: Improved Export Manual QA v1 completed; UX polish planning is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -37,6 +37,7 @@
 - Improved Excel Export v1 plan for a safe workbook download with approved/pending/rejected/blocked/unknown sheets and original source snapshot
 - Improved Excel export helpers for workbook sheet mapping, export summary data, suggestion groups, and original source snapshots without file writing or write-back
 - Improved Excel download wiring for a safe in-memory workbook generated from Smart Suggestions v2 review state without source write-back
+- Improved export manual QA checklist for verifying workbook sheets, approved export candidates, empty states, and unchanged source snapshots
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -70,6 +71,7 @@
 - Improved Excel Export v1 planning is documented in `docs/improved_excel_export_v1_plan.md`.
 - Improved Excel Export Helpers v1 adds pure helper functions and tests for preparing workbook sheet data before Streamlit download wiring.
 - Improved Excel Download Wiring v1 adds the Streamlit download button using helper-built workbook sheets and in-memory Excel generation.
+- Improved Export Manual QA v1 is documented in `docs/improved_export_manual_qa.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -81,12 +83,12 @@
 - Automatic acceptance or write-back of AI suggestions
 - Smart Suggestions v2 export integration
 - Improved Product Data Export implementation
-- Improved Export Manual QA
+- UX Polish Planning
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Improved Export Manual QA v1
+1. UX Polish Planning v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass
