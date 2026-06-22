@@ -6,6 +6,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC_PATH = PROJECT_ROOT / "src"
 sys.path.insert(0, str(SRC_PATH))
+FIXTURE_PATH = PROJECT_ROOT / "tests" / "fixtures" / "smart_suggestions_v2_demo_response.json"
 
 from product_data_copilot.ai.suggestion_parser import (  # noqa: E402
     build_parser_error_record,
@@ -327,3 +328,60 @@ def test_extra_unknown_keys_do_not_affect_approval_or_readiness():
     assert "unexpected" not in suggestion
     assert suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
     assert suggestion["suggestion_status"] == SUGGESTION_STATUS_REVIEW_REQUIRED
+
+
+def test_demo_fixture_parses_into_safe_review_records():
+    raw_response = FIXTURE_PATH.read_text(encoding="utf-8")
+
+    result = parse_and_normalize_suggestions(raw_response)
+
+    assert result["is_valid_json"] is True
+    assert result["errors"] == []
+    assert len(result["suggestions"]) == 5
+    assert all(
+        suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+        for suggestion in result["suggestions"]
+    )
+
+
+def test_demo_fixture_blocks_unsupported_fact_and_missing_source_cases():
+    result = parse_and_normalize_suggestions(FIXTURE_PATH.read_text(encoding="utf-8"))
+    suggestions_by_field = {
+        suggestion["target_field"]: suggestion
+        for suggestion in result["suggestions"]
+    }
+
+    ean_suggestion = suggestions_by_field["ean"]
+    attributes_suggestion = suggestions_by_field["attributes"]
+
+    assert ean_suggestion["suggestion_status"] == SUGGESTION_STATUS_BLOCKED
+    assert ean_suggestion["risk_level"] == RISK_LEVEL_HIGH
+    assert attributes_suggestion["suggestion_status"] == SUGGESTION_STATUS_BLOCKED
+    assert attributes_suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+    assert not validate_suggestion_record(attributes_suggestion)
+
+
+def test_demo_fixture_keeps_high_risk_records_visible_but_review_required():
+    result = parse_and_normalize_suggestions(FIXTURE_PATH.read_text(encoding="utf-8"))
+    warning_suggestion = next(
+        suggestion
+        for suggestion in result["suggestions"]
+        if suggestion["target_field"] == "warning_notes"
+    )
+
+    assert warning_suggestion["risk_level"] == RISK_LEVEL_HIGH
+    assert warning_suggestion["suggestion_status"] == SUGGESTION_STATUS_REVIEW_REQUIRED
+    assert warning_suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+
+
+def test_demo_fixture_downgrades_ai_supplied_approved_status():
+    result = parse_and_normalize_suggestions(FIXTURE_PATH.read_text(encoding="utf-8"))
+    title_suggestion = next(
+        suggestion
+        for suggestion in result["suggestions"]
+        if suggestion["target_field"] == "product_name"
+    )
+
+    assert title_suggestion["approval_status"] == APPROVAL_STATUS_NEEDS_REVIEW
+    assert title_suggestion["suggestion_status"] == SUGGESTION_STATUS_REVIEW_REQUIRED
+    assert title_suggestion["requires_human_approval"] is True

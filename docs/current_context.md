@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Test Fixture Planning: `2c8969c Document smart suggestion approval UI QA`
+- Current repo head before Test Fixture v1: `4496184 Plan smart suggestion test fixtures`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
-- Test count: `98` passing pytest tests
+- Test count: `102` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 test fixture strategy is planned; fixture implementation is the next recommended block.
-- Next block: `Smart Suggestions v2 Test Fixture v1`
+- Current roadmap position: Smart Suggestions v2 deterministic fixture support is implemented for parser tests and local demo review testing.
+- Next block: `Smart Suggestions v2 Fixture QA`
 
 ## Current App Capabilities
 
@@ -24,6 +24,7 @@
 - Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Smart Suggestions v2 session-only approval UI for one-suggestion review with blocked rows non-approvable
+- Smart Suggestions v2 demo fixture loader for deterministic local approval UI testing without an API key
 
 ## Key Modules
 

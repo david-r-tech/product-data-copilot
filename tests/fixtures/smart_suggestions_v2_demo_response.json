@@ -1,0 +1,69 @@
+{
+  "smart_suggestions": [
+    {
+      "sku": "DEMO-SKU-001",
+      "product_name": "Demo Trail Bottle",
+      "target_field": "description",
+      "current_value": "Bottle",
+      "proposed_value": "Reusable trail bottle for everyday hydration based on the product name and attributes.",
+      "source_fields": ["product_name", "category", "attributes"],
+      "reason": "Uses existing product name, category, and attributes to create clearer product copy.",
+      "confidence": "medium",
+      "risk_level": "low",
+      "approval_status": "needs_review",
+      "suggestion_status": "review_required"
+    },
+    {
+      "sku": "DEMO-SKU-001",
+      "product_name": "Demo Trail Bottle",
+      "target_field": "warning_notes",
+      "current_value": "",
+      "proposed_value": "Human should review whether usage or safety notes are required before marketplace export.",
+      "source_fields": ["category", "issue_type", "review_status"],
+      "reason": "Safety-sensitive content should be reviewed by a human instead of being asserted automatically.",
+      "confidence": "low",
+      "risk_level": "high",
+      "approval_status": "needs_review",
+      "suggestion_status": "review_required"
+    },
+    {
+      "sku": "DEMO-SKU-001",
+      "product_name": "Demo Trail Bottle",
+      "target_field": "ean",
+      "current_value": "",
+      "proposed_value": "1234567890123",
+      "source_fields": ["product_name"],
+      "reason": "Demo record attempts an unsupported factual value and must be blocked.",
+      "confidence": "high",
+      "risk_level": "low",
+      "approval_status": "needs_review",
+      "suggestion_status": "review_required"
+    },
+    {
+      "sku": "DEMO-SKU-001",
+      "product_name": "Demo Trail Bottle",
+      "target_field": "attributes",
+      "current_value": "",
+      "proposed_value": "capacity: 750 ml",
+      "source_fields": [],
+      "reason": "",
+      "confidence": "medium",
+      "risk_level": "medium",
+      "approval_status": "needs_review",
+      "suggestion_status": "review_required"
+    },
+    {
+      "sku": "DEMO-SKU-001",
+      "product_name": "Demo Trail Bottle",
+      "target_field": "product_name",
+      "current_value": "Bottle",
+      "proposed_value": "Demo Trail Bottle",
+      "source_fields": ["product_name", "category"],
+      "reason": "Clarifies product type using existing product title and category.",
+      "confidence": "high",
+      "risk_level": "low",
+      "approval_status": "approved",
+      "suggestion_status": "draft"
+    }
+  ]
+}

@@ -678,6 +678,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, sample data, or exports changed.
 * Next recommended step: Implement `Smart Suggestions v2 Test Fixture v1` as a small fixture/test/demo-support block.
 
+### Smart Suggestions v2 Test Fixture v1
+
+* Date: TODO
+* Change: Added a deterministic Smart Suggestions v2 JSON fixture, parser coverage for fixture safety behavior, and a clearly labeled demo fixture loader in the V2 experimental section.
+* Why it matters: Lets the approval UI be tested without an API key while keeping demo data separate from real AI output, exports, and product write-back.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then run `python -m streamlit run app.py` and load demo V2 records from the AI Suggestions tab.
+* Next recommended step: Perform `Smart Suggestions v2 Fixture QA` to manually verify approve/reject/pending behavior and blocked-row protection.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -703,11 +711,11 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Smart Suggestions v2 - Phase 6: Runtime Integration Planning`
-2. Expand pytest coverage for key business rules after helper integration
-3. Plan UX Polish v1 after the AI suggestion model is clearer
-4. Capture screenshots using `docs/screenshots_to_capture.md`
-5. Do one full demo walkthrough using `docs/demo_test_checklist.md`
+1. Perform `Smart Suggestions v2 Fixture QA`
+2. Plan improved product data export after fixture QA
+3. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
+4. Plan UX Polish v1 after the AI suggestion model is clearer
+5. Capture screenshots using `docs/screenshots_to_capture.md`
 
 ## 11. Copy Context for Future Codex Prompts
 
