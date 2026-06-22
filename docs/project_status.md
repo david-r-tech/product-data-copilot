@@ -8,7 +8,7 @@
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 runtime integration is planned; it is not wired into runtime yet.
+- Current planning focus: Smart Suggestions v2 is visible as an experimental schema-ready section, but runtime generation is not enabled yet.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -25,6 +25,7 @@
 - AI Suggestions for one selected product
 - Missing API-key fallback for AI Suggestions
 - Human-review wording for AI Suggestions
+- Experimental Smart Suggestions v2 prompt preview and structured suggestions table
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -40,6 +41,7 @@
 - Smart Suggestions v2 prompt adapter helpers exist as pure import-safe modules with tests.
 - Smart Suggestions v2 normalization hardening covers approved-like statuses, restricted factual fields, missing source fields, missing reasons, unsupported source shapes, and ignored extra keys.
 - Smart Suggestions v2 runtime integration planning is documented in `docs/smart_suggestions_v2_runtime_integration_plan.md`.
+- Smart Suggestions v2 experimental UI wiring shows a prompt preview and schema-stable table without changing V1 behavior.
 
 ## Intentionally Not Implemented Yet
 
@@ -49,13 +51,13 @@
 - Marketplace-specific rule presets
 - Automatic AI mass generation
 - Automatic acceptance or write-back of AI suggestions
-- Smart Suggestions v2 runtime behavior
+- Smart Suggestions v2 runtime generation behavior
 - Field-level AI suggestion approval workflow in the Streamlit app
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 - Phase 7: Experimental UI Wiring
+1. Smart Suggestions v2 - Phase 8: Controlled Runtime Generation Planning
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

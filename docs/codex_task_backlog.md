@@ -30,11 +30,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 22 | Smart Suggestions v2 - Phase 4: Runtime Prompt Adapter | Done | Added a tested prompt adapter for field-level suggestions while preserving current runtime behavior. |
 | 23 | Smart Suggestions v2 - Phase 5: Structured Response Normalization Review | Done | Reviewed and hardened schema/parser behavior against the prompt adapter contract before runtime wiring. |
 | 24 | Smart Suggestions v2 - Phase 6: Runtime Integration Planning | Done | Planned the safest path for wiring Smart Suggestions v2 into the existing AI Suggestions tab without changing runtime behavior yet. |
-| 25 | Smart Suggestions v2 - Phase 7: Experimental UI Wiring | NEXT | Add an experimental V2 section in the existing AI Suggestions tab that generates, parses, displays, and optionally downloads field-level suggestions for one selected product. |
-| 26 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 27 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
-| 28 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 29 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 25 | Smart Suggestions v2 - Phase 7: Experimental UI Wiring | Done | Added a clearly separated experimental V2 prompt preview and schema-stable structured suggestions table inside the existing AI Suggestions tab. |
+| 26 | Smart Suggestions v2 - Phase 8: Controlled Runtime Generation Planning | NEXT | Plan whether and how V2 should call OpenAI separately from V1 while keeping review-required defaults and no write-back. |
+| 27 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 28 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
+| 29 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 30 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 

@@ -606,6 +606,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, `src/`, tests, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 7: Experimental UI Wiring` only after explicit approval.
 
+### Smart Suggestions v2 - Phase 7: Experimental UI Wiring
+
+* Date: TODO
+* Change: Added a clearly labeled experimental Smart Suggestions v2 section inside the existing AI Suggestions tab with a structured prompt preview and schema-stable field-level suggestions table.
+* Why it matters: Makes the V2 model visible in the app without replacing AI Suggestions v1, changing exports, auto-approving suggestions, or writing back to product data.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab shows both the existing V1 flow and the new V2 experimental section.
+* Next recommended step: Plan `Smart Suggestions v2 - Phase 8: Controlled Runtime Generation` before adding a separate V2 OpenAI call.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

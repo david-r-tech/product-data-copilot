@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Phase 6 planning: `bc53f34 Optimize Codex workflow docs`
+- Current repo head before Phase 7 implementation: `45194d5 Plan smart suggestion runtime integration`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 runtime integration is planned; runtime wiring is not implemented yet.
-- Next block: `Smart Suggestions v2 - Phase 7: Experimental UI Wiring`
+- Current roadmap position: Smart Suggestions v2 is visible as an experimental schema-ready UI section; runtime generation is not enabled yet.
+- Next block: `Smart Suggestions v2 - Phase 8: Controlled Runtime Generation Planning`
 
 ## Current App Capabilities
 
@@ -20,6 +20,7 @@
 - Review tasks with filters and session-only manual status override
 - CSV exports and Excel Management Export
 - AI Suggestions v1 for one selected product with missing-key fallback
+- Experimental Smart Suggestions v2 prompt preview and empty/safe structured suggestions table
 
 ## Key Modules
 

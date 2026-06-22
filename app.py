@@ -41,6 +41,15 @@ from product_data_copilot.ai.prompt_helpers import (  # noqa: E402
     do_not_invent_facts_instruction,
     human_review_instruction,
 )
+from product_data_copilot.ai.suggestion_parser import (  # noqa: E402
+    parse_and_normalize_suggestions,
+)
+from product_data_copilot.ai.suggestion_prompt_adapter import (  # noqa: E402
+    build_smart_suggestion_prompt,
+)
+from product_data_copilot.ai.suggestion_schema import (  # noqa: E402
+    REQUIRED_SUGGESTION_FIELDS,
+)
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     configure_page,
     render_app_intro,
@@ -67,6 +76,8 @@ AI_SUGGESTION_TYPES = [
     "Translation EN to DE",
     "Compliance / Safety Review Note",
 ]
+
+SMART_SUGGESTIONS_V2_COLUMNS = REQUIRED_SUGGESTION_FIELDS
 
 
 def get_value(row, field_name):
@@ -711,6 +722,24 @@ def suggestions_to_dataframe(sku, suggestions):
     )
 
 
+def smart_suggestions_v2_to_dataframe(suggestions):
+    if len(suggestions) == 0:
+        return pd.DataFrame(columns=SMART_SUGGESTIONS_V2_COLUMNS)
+
+    rows = []
+    for suggestion in suggestions:
+        row = {
+            column: suggestion.get(column, "")
+            for column in SMART_SUGGESTIONS_V2_COLUMNS
+        }
+        source_fields = row.get("source_fields", [])
+        if isinstance(source_fields, list):
+            row["source_fields"] = ", ".join(source_fields)
+        rows.append(row)
+
+    return pd.DataFrame(rows, columns=SMART_SUGGESTIONS_V2_COLUMNS)
+
+
 def create_management_summary(
     data_source,
     products,
@@ -1124,6 +1153,7 @@ def run_app():
         selected_sku = selected_score["sku"]
         selected_issues = issues[issues["sku"] == selected_sku]
         selected_product_context = get_ai_product_context(selected_product, selected_score)
+        selected_review_tasks = review_tasks[review_tasks["sku"] == selected_sku]
 
         selected_suggestion_types = st.multiselect(
             "Select suggestion types",
@@ -1224,6 +1254,55 @@ def run_app():
                 "ai_suggestions.csv",
                 "text/csv",
             )
+
+        st.divider()
+        st.markdown("### Smart Suggestions v2 (experimental)")
+        st.caption(
+            "Schema-ready field-level suggestions for future review workflows. V2 does not replace the current AI Suggestions flow."
+        )
+        st.info(
+            "Smart Suggestions v2 are experimental draft records. They are not applied to product data and require human review."
+        )
+
+        smart_suggestions_v2_prompt = build_smart_suggestion_prompt(
+            selected_product_context,
+            selected_issues.to_dict(orient="records"),
+            selected_review_tasks.to_dict(orient="records"),
+        )
+
+        with st.expander("Smart Suggestions v2 prompt preview"):
+            st.text(smart_suggestions_v2_prompt)
+
+        st.write("Structured Smart Suggestions v2")
+        st.caption(
+            "Runtime generation is not enabled in this phase. The table shows the expected safe schema for future parsed suggestions."
+        )
+
+        smart_suggestions_v2_response = st.session_state.get(
+            "smart_suggestions_v2_raw_response",
+            "",
+        )
+        smart_suggestions_v2_result = parse_and_normalize_suggestions(
+            smart_suggestions_v2_response
+        )
+        smart_suggestions_v2_df = smart_suggestions_v2_to_dataframe(
+            smart_suggestions_v2_result["suggestions"]
+        )
+
+        st.dataframe(make_display_safe(smart_suggestions_v2_df), width="stretch")
+        if len(smart_suggestions_v2_df) == 0:
+            st.info(
+                "No Smart Suggestions v2 response has been generated yet. Future V2 suggestions will appear here as review-required field-level rows."
+            )
+
+        if len(smart_suggestions_v2_result["errors"]) > 0:
+            st.warning(
+                "Smart Suggestions v2 parser output needs review. No suggestion was approved automatically."
+            )
+            parser_errors_df = smart_suggestions_v2_to_dataframe(
+                smart_suggestions_v2_result["errors"]
+            )
+            st.dataframe(make_display_safe(parser_errors_df), width="stretch")
 
 
 run_app()
