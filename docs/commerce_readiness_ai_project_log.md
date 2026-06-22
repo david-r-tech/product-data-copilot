@@ -662,6 +662,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab approval actions with generated V2 rows.
 * Next recommended step: Perform `Smart Suggestions v2 Approval UI QA` before planning approved-suggestion exports.
 
+### Smart Suggestions v2 Approval UI QA
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_approval_ui_qa.md` with QA findings for the approval UI, including the passed missing-key smoke test and the need for V2 records or a fixture to fully test approval interactions.
+* Why it matters: Keeps the project honest about what has been verified and points to deterministic fixture planning before export or write-back work.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, or sample data changed.
+* Next recommended step: Plan `Smart Suggestions v2 Test Fixture` support before approved-suggestion export planning.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
