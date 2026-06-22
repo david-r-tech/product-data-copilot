@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Improved Product Data Export Planning: `4f627b1 Polish Product Data Copilot branding`
+- Current repo head before Improved Export Helpers v1: `ed56b28 Plan improved product data export`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
-- Current test count: `102` passing pytest tests
+- Current test count: `112` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Improved Product Data Export Planning completed; improved export helpers are the next recommended block.
+- Current planning focus: Improved Export Helpers v1 completed; improved export preview is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -32,6 +32,7 @@
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
+- Improved export helpers for splitting Smart Suggestions v2 records into approved, pending, rejected, blocked, and unknown export DataFrames
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -60,6 +61,7 @@
 - Smart Suggestions v2 Fixture QA is documented in `docs/smart_suggestions_v2_fixture_qa.md`.
 - Product Data Copilot branding polish updates the visible app title and README identity while preserving the original project history.
 - Improved Product Data Export Planning is documented in `docs/improved_product_data_export_plan.md`.
+- Improved Export Helpers v1 adds pure helper functions and tests for preparing Smart Suggestions v2 export data without Streamlit wiring or write-back.
 
 ## Intentionally Not Implemented Yet
 
@@ -75,7 +77,7 @@
 
 ## Recommended Next Roadmap
 
-1. Improved Export Helpers v1 planning or implementation
+1. Improved Export Preview v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

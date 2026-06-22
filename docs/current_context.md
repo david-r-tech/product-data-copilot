@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Improved Product Data Export Planning: `4f627b1 Polish Product Data Copilot branding`
+- Current repo head before Improved Export Helpers v1: `ed56b28 Plan improved product data export`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
-- Test count: `102` passing pytest tests
+- Test count: `112` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Improved Product Data Export Planning completed.
-- Next block: `Improved Export Helpers v1 planning or implementation`
+- Current roadmap position: Improved Export Helpers v1 completed.
+- Next block: `Improved Export Preview v1`
 
 ## Current App Capabilities
 
@@ -28,6 +28,7 @@
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
+- Improved export helpers for splitting Smart Suggestions v2 records into approved, pending, rejected, blocked, and unknown export DataFrames
 
 ## Key Modules
 

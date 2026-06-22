@@ -710,6 +710,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest` and confirm no runtime code, app behavior, product logic, tests, requirements, or sample data changed.
 * Next recommended step: Implement or plan `Improved Export Helpers v1` with pure helper functions and pytest coverage.
 
+### Improved Export Helpers v1
+
+* Date: TODO
+* Change: Added pure export helper functions and tests for converting Smart Suggestions v2 records into stable export rows and splitting them into approved, pending, rejected, blocked, and unknown DataFrames.
+* Why it matters: Creates a tested safety layer before any Streamlit preview or Excel export work, while keeping source product data untouched.
+* How to test: Run `python -m pytest` and confirm no app UI, export runtime, AI generation, requirements, or sample data changed.
+* Next recommended step: Build `Improved Export Preview v1` as a preview-only UI section before adding any download/export implementation.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -735,7 +743,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Improved Export Helpers v1`
+1. Start `Improved Export Preview v1`
 2. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`
