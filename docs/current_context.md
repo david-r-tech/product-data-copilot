@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before V2 Result UX Polish: `d945c88 Document smart suggestion runtime QA`
+- Current repo head before approval workflow planning: `3f66c09 Polish smart suggestion result UX`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 result UX is clearer; approval workflow planning is the next recommended block.
-- Next block: `Smart Suggestions v2 Approval Workflow Planning`
+- Current roadmap position: Smart Suggestions v2 approval workflow is planned; approval UI is not implemented yet.
+- Next block: `Smart Suggestions v2 Approval UI v1`
 
 ## Current App Capabilities
 

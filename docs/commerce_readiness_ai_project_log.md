@@ -646,6 +646,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab still shows V1 unchanged and V2 with clearer result presentation.
 * Next recommended step: Plan `Smart Suggestions v2 Approval Workflow` before adding row-level actions.
 
+### Smart Suggestions v2 Approval Workflow Planning
+
+* Date: TODO
+* Change: Added `docs/smart_suggestions_v2_approval_workflow_plan.md` with a session-state-only human approval model for pending, approved, rejected, and blocked V2 suggestions.
+* Why it matters: Defines how users can review one suggestion at a time while ensuring AI cannot approve itself, blocked rows remain non-approvable, and approved suggestions do not update product data automatically.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, or sample data changed.
+* Next recommended step: Implement `Smart Suggestions v2 Approval UI v1` as a small Streamlit-only review section.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

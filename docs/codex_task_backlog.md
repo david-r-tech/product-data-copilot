@@ -35,12 +35,13 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 27 | Smart Suggestions v2 - Phase 9: Controlled Runtime Generation | Done | Added a separate V2 generate button, separate session state, parser normalization, safe error display, and raw-response review expander without changing V1 or exports. |
 | 28 | Smart Suggestions v2 - Phase 10: Runtime QA and Next-Step Planning | Done | Documented V2 runtime QA, manual smoke-test result, V1 preservation, session-state separation, parser safety, limitations, and next product block. |
 | 29 | Smart Suggestions v2 Result UX Polish | Done | Improved V2 copy, empty states, status explanations, summary metrics, and business-friendly table labels without changing generation, approval, export, or write-back behavior. |
-| 30 | Smart Suggestions v2 Approval Workflow Planning | NEXT | Plan row-level review actions only after V2 result UX is clear and manually tested. |
-| 31 | Improved Product Data Export Planning | Planned | Plan approved-suggestion export only after approval workflow direction is clear. |
-| 32 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 33 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 34 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 35 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 30 | Smart Suggestions v2 Approval Workflow Planning | Done | Planned a session-state-only human approval workflow with pending, approved, rejected, and blocked states while preserving V1, exports, and product data. |
+| 31 | Smart Suggestions v2 Approval UI v1 | NEXT | Add a small one-suggestion-at-a-time review UI for pending/approved/rejected decisions, with blocked rows non-approvable and no export/write-back scope. |
+| 32 | Improved Product Data Export Planning | Planned | Plan approved-suggestion export only after approval workflow direction is clear. |
+| 33 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 34 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 35 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 36 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
