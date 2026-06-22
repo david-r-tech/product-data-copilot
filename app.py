@@ -755,6 +755,34 @@ def smart_suggestions_v2_to_dataframe(suggestions):
     return pd.DataFrame(rows, columns=SMART_SUGGESTIONS_V2_COLUMNS)
 
 
+def get_smart_suggestion_v2_review_key(suggestion):
+    key_fields = ["sku", "target_field", "current_value", "proposed_value"]
+    return " | ".join([str(suggestion.get(field, "")) for field in key_fields])
+
+
+def get_smart_suggestion_v2_review_status(suggestion, review_decisions):
+    if suggestion.get("suggestion_status") == "blocked_insufficient_source":
+        return "blocked"
+
+    review_key = get_smart_suggestion_v2_review_key(suggestion)
+    decision = review_decisions.get(review_key, {})
+    approval_state = decision.get("approval_state", "pending")
+
+    if approval_state in ["approved", "rejected"]:
+        return approval_state
+
+    return "pending"
+
+
+def apply_smart_suggestions_v2_review_decisions(suggestions_df, review_decisions):
+    reviewed_df = suggestions_df.copy()
+    reviewed_df["human_review_status"] = [
+        get_smart_suggestion_v2_review_status(row, review_decisions)
+        for _, row in reviewed_df.iterrows()
+    ]
+    return reviewed_df
+
+
 def create_management_summary(
     data_source,
     products,
@@ -1369,39 +1397,49 @@ def run_app():
         smart_suggestions_v2_df = smart_suggestions_v2_to_dataframe(
             smart_suggestions_v2_records
         )
+        if "smart_suggestions_v2_review_decisions" not in st.session_state:
+            st.session_state["smart_suggestions_v2_review_decisions"] = {}
+        smart_suggestions_v2_review_decisions = st.session_state[
+            "smart_suggestions_v2_review_decisions"
+        ]
+        smart_suggestions_v2_df = apply_smart_suggestions_v2_review_decisions(
+            smart_suggestions_v2_df,
+            smart_suggestions_v2_review_decisions,
+        )
 
         if len(smart_suggestions_v2_df) > 0:
-            total_v2_suggestions = len(smart_suggestions_v2_df)
-            needs_review_count = len(
+            approved_count = len(
                 smart_suggestions_v2_df[
-                    smart_suggestions_v2_df["approval_status"] == "needs_review"
+                    smart_suggestions_v2_df["human_review_status"] == "approved"
+                ]
+            )
+            rejected_count = len(
+                smart_suggestions_v2_df[
+                    smart_suggestions_v2_df["human_review_status"] == "rejected"
+                ]
+            )
+            pending_count = len(
+                smart_suggestions_v2_df[
+                    smart_suggestions_v2_df["human_review_status"] == "pending"
                 ]
             )
             blocked_count = len(
                 smart_suggestions_v2_df[
-                    smart_suggestions_v2_df["suggestion_status"]
-                    == "blocked_insufficient_source"
-                ]
-            )
-            high_risk_count = len(
-                smart_suggestions_v2_df[
-                    smart_suggestions_v2_df["risk_level"] == "high"
+                    smart_suggestions_v2_df["human_review_status"] == "blocked"
                 ]
             )
 
             smart_v2_metric_columns = st.columns(4)
-            smart_v2_metric_columns[0].metric(
-                "Total V2 suggestions",
-                total_v2_suggestions,
-            )
-            smart_v2_metric_columns[1].metric("Needs review", needs_review_count)
-            smart_v2_metric_columns[2].metric("Blocked", blocked_count)
-            smart_v2_metric_columns[3].metric("High risk", high_risk_count)
+            smart_v2_metric_columns[0].metric("Approved", approved_count)
+            smart_v2_metric_columns[1].metric("Rejected", rejected_count)
+            smart_v2_metric_columns[2].metric("Pending", pending_count)
+            smart_v2_metric_columns[3].metric("Blocked", blocked_count)
 
             with st.expander("How to read Smart Suggestions v2"):
                 st.write(
-                    "`approval_status` shows whether a suggestion still needs human review. "
-                    "`suggestion_status` shows whether the row is usable as a draft or blocked because source data is missing, unsafe, or unsupported."
+                    "`Human Review Status` shows your local session-only decision. "
+                    "Approved suggestions are not exported or written back yet. "
+                    "Blocked rows cannot be approved because they are incomplete, unsafe, or unsupported."
                 )
 
         smart_suggestions_v2_display_columns = [
@@ -1414,7 +1452,7 @@ def run_app():
             "source_fields",
             "confidence",
             "risk_level",
-            "approval_status",
+            "human_review_status",
             "suggestion_status",
         ]
         smart_suggestions_v2_display_labels = {
@@ -1427,7 +1465,7 @@ def run_app():
             "source_fields": "Source Fields",
             "confidence": "Confidence",
             "risk_level": "Risk",
-            "approval_status": "Review Status",
+            "human_review_status": "Human Review Status",
             "suggestion_status": "Suggestion State",
         }
         smart_suggestions_v2_display_df = smart_suggestions_v2_df[
@@ -1466,6 +1504,101 @@ def run_app():
             st.warning(
                 "Smart Suggestions v2 generation returned an error. No suggestion was approved automatically."
             )
+
+        if len(smart_suggestions_v2_df) > 0:
+            st.markdown("#### Human Review for Smart Suggestions v2")
+            st.caption(
+                "Review one suggestion at a time. Decisions are stored only in this Streamlit session and do not update product data."
+            )
+
+            review_row_indexes = list(range(len(smart_suggestions_v2_df)))
+
+            def format_smart_suggestion_v2_review_option(row_index):
+                row = smart_suggestions_v2_df.iloc[row_index]
+                return (
+                    f"{row_index + 1}. {row['target_field']} - "
+                    f"{row['human_review_status']}"
+                )
+
+            selected_review_row_index = st.selectbox(
+                "Select one Smart Suggestion",
+                review_row_indexes,
+                format_func=format_smart_suggestion_v2_review_option,
+                key="smart_suggestions_v2_review_row",
+            )
+            selected_review_suggestion = smart_suggestions_v2_df.iloc[
+                selected_review_row_index
+            ]
+            selected_review_key = get_smart_suggestion_v2_review_key(
+                selected_review_suggestion
+            )
+            selected_review_status = selected_review_suggestion[
+                "human_review_status"
+            ]
+
+            review_details = pd.DataFrame(
+                [
+                    {
+                        "SKU": selected_review_suggestion.get("sku", ""),
+                        "Product": selected_review_suggestion.get("product_name", ""),
+                        "Field": selected_review_suggestion.get("target_field", ""),
+                        "Current Value": selected_review_suggestion.get(
+                            "current_value",
+                            "",
+                        ),
+                        "Suggested Value": selected_review_suggestion.get(
+                            "proposed_value",
+                            "",
+                        ),
+                        "Reason": selected_review_suggestion.get("reason", ""),
+                        "Source Fields": selected_review_suggestion.get(
+                            "source_fields",
+                            "",
+                        ),
+                        "Confidence": selected_review_suggestion.get("confidence", ""),
+                        "Risk": selected_review_suggestion.get("risk_level", ""),
+                        "Current Review Status": selected_review_status,
+                    }
+                ]
+            )
+            st.dataframe(make_display_safe(review_details), width="stretch")
+
+            if selected_review_status == "blocked":
+                st.warning(
+                    "This suggestion is blocked and cannot be approved. It remains visible for review and audit context."
+                )
+            else:
+                review_action_columns = st.columns(3)
+                if review_action_columns[0].button("Approve selected suggestion"):
+                    smart_suggestions_v2_review_decisions[selected_review_key] = {
+                        "sku": selected_review_suggestion.get("sku", ""),
+                        "target_field": selected_review_suggestion.get(
+                            "target_field",
+                            "",
+                        ),
+                        "approval_state": "approved",
+                        "review_note": "",
+                    }
+                    st.rerun()
+
+                if review_action_columns[1].button("Reject selected suggestion"):
+                    smart_suggestions_v2_review_decisions[selected_review_key] = {
+                        "sku": selected_review_suggestion.get("sku", ""),
+                        "target_field": selected_review_suggestion.get(
+                            "target_field",
+                            "",
+                        ),
+                        "approval_state": "rejected",
+                        "review_note": "",
+                    }
+                    st.rerun()
+
+                if review_action_columns[2].button("Mark as pending"):
+                    smart_suggestions_v2_review_decisions.pop(
+                        selected_review_key,
+                        None,
+                    )
+                    st.rerun()
 
         if smart_suggestions_v2_raw_response:
             with st.expander("Raw Smart Suggestions v2 response"):

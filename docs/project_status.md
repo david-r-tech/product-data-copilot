@@ -8,7 +8,7 @@
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Smart Suggestions v2 approval workflow is planned; the next block is a small session-state-only approval UI.
+- Current planning focus: Smart Suggestions v2 approval UI is implemented session-only; approval UI QA is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -49,6 +49,7 @@
 - Smart Suggestions v2 runtime QA is documented in `docs/smart_suggestions_v2_runtime_qa.md`.
 - Smart Suggestions v2 result UX polish keeps V2 easier to understand without adding approval, export, or write-back scope.
 - Smart Suggestions v2 approval workflow planning is documented in `docs/smart_suggestions_v2_approval_workflow_plan.md`.
+- Smart Suggestions v2 Approval UI v1 supports one-suggestion-at-a-time session-only approve/reject/pending decisions with blocked rows non-approvable.
 
 ## Intentionally Not Implemented Yet
 
@@ -64,7 +65,7 @@
 
 ## Recommended Next Roadmap
 
-1. Smart Suggestions v2 Approval UI v1
+1. Smart Suggestions v2 Approval UI QA
 2. Improved Product Data Export Planning
 3. Tests Expansion v1
 4. UX Polish v1

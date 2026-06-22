@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before approval workflow planning: `3f66c09 Polish smart suggestion result UX`
+- Current repo head before Approval UI v1: `48c3631 Plan smart suggestion approval workflow`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `98` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Smart Suggestions v2 approval workflow is planned; approval UI is not implemented yet.
-- Next block: `Smart Suggestions v2 Approval UI v1`
+- Current roadmap position: Smart Suggestions v2 Approval UI v1 is implemented session-only; QA is the next recommended block.
+- Next block: `Smart Suggestions v2 Approval UI QA`
 
 ## Current App Capabilities
 
@@ -23,6 +23,7 @@
 - Experimental Smart Suggestions v2 prompt preview and empty/safe structured suggestions table
 - Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
+- Smart Suggestions v2 session-only approval UI for one-suggestion review with blocked rows non-approvable
 
 ## Key Modules
 

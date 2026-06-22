@@ -654,6 +654,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and confirm no runtime code, `src/`, tests, requirements, or sample data changed.
 * Next recommended step: Implement `Smart Suggestions v2 Approval UI v1` as a small Streamlit-only review section.
 
+### Smart Suggestions v2 Approval UI v1
+
+* Date: TODO
+* Change: Added a small session-only human review section for Smart Suggestions v2 with one-suggestion selection, detail preview, approve/reject/pending actions, decision metrics, and blocked-row protection.
+* Why it matters: Demonstrates human-in-the-loop control while preserving V1, V2 generation, parser behavior, exports, product data, and write-back boundaries.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, and manually verify the AI Suggestions tab approval actions with generated V2 rows.
+* Next recommended step: Perform `Smart Suggestions v2 Approval UI QA` before planning approved-suggestion exports.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
