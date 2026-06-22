@@ -33,6 +33,7 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 25 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
 | 26 | UX Polish v1 | Planned | Improve usability after the core logic is safer and more modular. |
 | 27 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 28 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 

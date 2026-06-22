@@ -590,6 +590,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest`, run `python -m py_compile app.py`, run `git diff --check`, and confirm `app.py`, current prompt helpers, runtime modules outside Smart Suggestions, requirements, and sample data were not modified.
 * Next recommended step: Start `Smart Suggestions v2 - Phase 6: Runtime Integration Planning` only after explicit approval.
 
+### Codex Workflow Optimization v1
+
+* Date: TODO
+* Change: Shortened `AGENTS.md`, refreshed `docs/codex_workflow.md`, added `docs/current_context.md`, and noted the current stable baseline/test count in the status docs.
+* Why it matters: Future Codex prompts can be shorter and more targeted while preserving safety checks, scope boundaries, and the current roadmap.
+* How to test: Run `python -m pytest`, run `git diff --check`, and confirm no runtime code, tests, requirements, or sample data changed.
+* Next recommended step: Use `docs/current_context.md` as the default context for `Smart Suggestions v2 - Phase 6: Runtime Integration Planning`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

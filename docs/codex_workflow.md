@@ -1,79 +1,78 @@
 # Codex Workflow - Product Data Copilot
 
-This workflow keeps Codex work focused, reviewable, and safe while the project evolves from a working Streamlit MVP into a more professional Product Data Copilot.
+This workflow keeps future Codex runs shorter, safer, and easier to review.
 
-## 1. Read the Project Instructions
+## Efficient Prompt Rules
 
-Before starting a task, read:
+- Reference `docs/current_context.md` instead of pasting the full project history.
+- Name the exact goal block, allowed files, forbidden files, checks, and commit message.
+- Keep prompts focused on one meaningful block.
+- Use planning mode for high-risk runtime changes before implementation.
 
+## What To Read
+
+Always read:
+
+- `docs/current_context.md`
 - `AGENTS.md`
+- The files directly named by the task
 
-For larger tasks, also read:
+Read only when relevant:
 
-- `docs/master_product_architecture_blueprint.md`
-- `docs/codebase_refactor_inventory.md`
-- `docs/testing_strategy.md`
-- `docs/product_requirements.md`
-- `docs/commerce_readiness_ai_project_log.md`
+- `docs/master_product_architecture_blueprint.md` for product/architecture direction
+- `docs/codebase_refactor_inventory.md` for app split/refactor work
+- `docs/helper_integration_v1_plan.md` for helper wiring history
+- `docs/commerce_readiness_ai_project_log.md` for historical context
+- `README.md` for public-facing usage/docs changes
 
-## 2. Work Only on the Current Task
+Do not reread every long document for small helper, test, or documentation tasks.
 
-Stay inside the requested scope.
+## Goal-Mode Block Size
 
-Do not add unrelated features, architecture, UI redesigns, integrations, database work, login, marketplace presets, or automatic AI mass updates unless the task explicitly asks for them.
+Good blocks:
 
-## 3. Check the Repo Before Editing
+- One helper module plus tests
+- One documentation/planning pass
+- One safe integration phase
+- One UI polish pass with clear acceptance criteria
 
-Run a status check before making changes:
+Too large:
 
-```bash
-git status --short
-```
+- Multiple runtime features at once
+- Refactor plus UI redesign plus AI behavior changes
+- Integration work plus product feature changes
 
-If unexpected files are already changed, do not overwrite them. Work around them or report the situation.
+## Checks
 
-## 4. Edit Only Allowed Files
-
-Each Codex task should list allowed and forbidden files.
-
-If a task forbids changes to files such as `app.py`, `data/sample_products.csv`, `requirements.txt`, `src/`, or `tests/`, verify those files remain unchanged before committing.
-
-## 5. Run Checks
-
-Use the checks requested by the task. Common checks are:
+Use the checks requested by the task. Defaults:
 
 ```bash
-python -m py_compile app.py
 python -m pytest
-git diff --name-only -- app.py data/sample_products.csv requirements.txt src tests
+git diff --check
+git diff --name-only -- app.py src tests requirements.txt data/sample_products.csv
 git status --short
 ```
 
-If a check fails, stop and report the failure instead of committing broken work.
+Run `python -m py_compile app.py` when `app.py` changes.
 
-## 6. Commit and Push
+## Safety Stop Rules
 
-Only commit and push when:
+Stop and report without committing if:
 
-- the requested work is complete
-- checks pass
-- forbidden files were not modified
-- the task explicitly asks for commit and push
+- Forbidden files changed
+- Tests fail and the fix is outside scope
+- Behavior changes become necessary but were not approved
+- The diff becomes too broad or unclear
+- Secrets or private data appear in changed files
 
-Recommended flow:
+## Compact Report
 
-```bash
-git add .
-git commit -m "Short clear commit message"
-git push
-git status
-git log --oneline -1
-```
+Use:
 
-## 7. Return the Codex Report
-
-Use the standard report format from:
-
-- `docs/codex_report_template.md`
-
-The report should make it clear what changed, what was tested, what was not implemented, and what should happen next.
+1. Result
+2. Files changed
+3. What changed
+4. Checks
+5. Commit/push
+6. Risks
+7. Next

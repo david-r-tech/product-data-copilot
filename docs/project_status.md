@@ -3,11 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Last documented baseline before this package: `0b36fd8 Add smart suggestion prompt adapter`
+- Current stable baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `98` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
 - Current planning focus: Smart Suggestions v2 has pure schema, contract, parser, prompt adapter, and normalization hardening foundations; it is not wired into runtime yet.
+- Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
 

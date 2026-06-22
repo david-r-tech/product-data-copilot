@@ -1,161 +1,68 @@
 # AGENTS.md - Product Data Copilot
 
-## Product Context
+## Product
 
-Product Data Copilot is the professional product direction for the current Commerce Readiness AI Streamlit MVP.
+Product Data Copilot is a local Streamlit MVP for e-commerce product data quality, readiness scoring, review tasks, safe AI suggestions, and management exports.
 
-The goal is to evolve the working local MVP into a professional, almost sellable product-data tool for e-commerce teams. The app should help users check product data, detect missing or inconsistent values, prioritize issues, generate review tasks, support safe AI suggestions, and export useful business artifacts.
+The project direction is professional and portfolio-ready, but still deliberately local-first. Future work should improve usefulness and code quality without drifting into SaaS, integrations, or production infrastructure unless explicitly requested.
 
-Primary users:
+## Default Context
 
-- Product Data Managers
-- Marketplace Managers
-- E-Commerce Operations teams
-- Category teams
-- Business stakeholders reviewing product data readiness
+For most future Codex tasks, read:
 
-Core value:
+1. `docs/current_context.md`
+2. `AGENTS.md`
+3. The specific files named by the task
 
-- Check product data quality
-- Evaluate product readiness
-- Prioritize problems
-- Generate review tasks
-- Support human-reviewed AI suggestions
-- Provide useful exports for business workflows
+Read longer docs such as the master blueprint, refactor inventory, full project log, or requirements only when the task is about architecture, history, planning, or product scope.
 
-## Core Rule: No Scope Creep
+## Scope Rules
 
-Work only on the current approved task.
+Work only on the requested block. Do not add these without explicit approval:
 
-Do not add these without explicit task approval:
-
-- Release or deployment work
-- SaaS billing
-- Login, user accounts, or multi-user features
-- Database migrations or persistence layers
-- Shopware API
-- Plentymarkets API
-- Shopify app or API integration
-- Marketplace-specific rule presets
-- Large framework refactoring
-- Tkinter UI
-- Desktop drag-and-drop UI
-- Automatic mass generation of AI text
-- Automatic application of AI suggestions to product data
+- Deployment, hosting, SaaS billing, login, user accounts, or database persistence
+- Shopware, Shopify, Plentymarkets, marketplace presets, or external integrations
+- Tkinter UI, desktop drag-and-drop, or major UI rewrites
+- Automatic AI mass generation
+- Automatic write-back or auto-approval of AI suggestions
 - Legal advice or compliance guarantees
 
-## Development Mode
+## Code Rules
 
-- Keep existing app behavior stable unless the current task explicitly allows behavior changes.
-- Prefer focused, safe increments over broad rewrites.
-- Do not refactor code unless refactoring is the explicit task.
-- Do not add app features unless the task explicitly asks for them.
-- Keep code readable and beginner-friendly.
-- Add comments only where they explain non-obvious logic.
-- Preserve current CSV/XLSX upload, checks, scores, review workflow, exports, and AI fallback behavior unless explicitly instructed otherwise.
-
-## Required Reading Before Larger Work
-
-For larger tasks, read the relevant context before editing:
-
-- `AGENTS.md`
-- `docs/master_product_architecture_blueprint.md`
-- `docs/codebase_refactor_inventory.md`
-- `docs/testing_strategy.md`
-- `docs/product_requirements.md`
-- `docs/commerce_readiness_ai_project_log.md`
-
-## Codex Workflow
-
-For each task:
-
-1. Confirm the requested scope and forbidden changes.
-2. Inspect the current repo state.
-3. Edit only the files allowed by the task.
-4. Run the required checks.
-5. Verify forbidden files were not modified.
-6. Commit and push only if checks pass and the task requests it.
-7. Return a structured Codex Report.
-
-For larger product or architecture changes:
-
-- Plan first.
-- Include implementation steps, risks, and acceptance criteria.
-- Wait for approval before implementation.
-
-## Testing Rules
-
-After Python code changes, run:
-
-```bash
-python -m py_compile app.py
-```
-
-When tests exist or testable modules are touched, run:
-
-```bash
-python -m pytest
-```
-
-When the task forbids changes to specific files, run an explicit diff check, for example:
-
-```bash
-git diff --name-only -- app.py data/sample_products.csv requirements.txt src tests
-```
-
-Before committing, run:
-
-```bash
-git status --short
-```
-
-Commit and push only if checks pass. If checks fail, stop, report the failure, and do not push broken work.
+- Preserve app behavior unless the task explicitly allows behavior changes.
+- Keep changes small, reviewable, and targeted.
+- Prefer pure, import-safe helpers in `src/product_data_copilot/`.
+- Avoid broad refactors and unrelated formatting churn.
+- Keep `.env` ignored and never store secrets.
 
 ## Documentation Rules
 
-- Update `docs/commerce_readiness_ai_project_log.md` after every meaningful change.
-- Update `README.md` when usage, setup, startup, export, AI Suggestions, or workflow behavior changes.
-- Create new documents only when they clearly help the project.
-- Keep project log entries short and structured:
-  - What changed
-  - Why it matters
-  - How to test
-  - Next recommended step
+- Update `docs/commerce_readiness_ai_project_log.md` after meaningful changes.
+- Update `README.md` only when setup, usage, export, AI, or workflow behavior changes.
+- Future prompts should reference `docs/current_context.md` instead of repeating full project history.
 
-## Security Rules
+## Checks
 
-- Never store API keys, tokens, or secrets.
-- Keep `.env` ignored.
-- Keep `.env.example` limited to placeholders.
-- Do not print secrets in error messages.
-- AI Suggestions are draft recommendations and require human review.
+Run the checks requested by the task. Common checks:
 
-## Current Important Files
+```bash
+python -m py_compile app.py
+python -m pytest
+git diff --check
+git diff --name-only -- app.py src tests requirements.txt data/sample_products.csv
+git status --short
+```
 
-- `app.py`: main Streamlit app
-- `requirements.txt`: dependencies
-- `README.md`: setup and usage instructions
-- `AGENTS.md`: Codex working rules for this project
-- `.env.example`: environment variable template with placeholders only
-- `start_app.bat`: Windows double-click launcher
-- `data/sample_products.csv`: demo product data
-- `src/product_data_copilot/`: import-safe modules extracted from the app
-- `tests/`: pytest safety net for extracted helpers
-- `docs/master_product_architecture_blueprint.md`: long-term product and architecture direction
-- `docs/codebase_refactor_inventory.md`: current app inventory and safe refactor map
-- `docs/testing_strategy.md`: test-first refactor strategy
-- `docs/commerce_readiness_ai_project_log.md`: central project log and context
-- `docs/demo_test_checklist.md`: manual demo and smoke-test checklist
+Commit and push only when checks pass and the task asks for it. Stage only allowed files.
 
-## Required Codex Report
+## Compact Report
 
-After finishing a task, return:
+Use this format unless the task asks for a different one:
 
-1. Prompt executed
-2. Changed files committed
-3. What was implemented
-4. Tests/checks performed
-5. Commit and push result
-6. What was consciously not implemented
-7. Risks / limitations
-8. Next recommended Codex block
+1. Result
+2. Files changed
+3. What changed
+4. Checks
+5. Commit/push
+6. Risks
+7. Next
