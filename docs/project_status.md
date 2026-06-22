@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Improved Export Helpers v1: `ed56b28 Plan improved product data export`
+- Current repo head before Improved Export Preview v1: `fd00f90 Add improved export helpers`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `112` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Improved Export Helpers v1 completed; improved export preview is the next recommended block.
+- Current planning focus: Improved Export Preview v1 completed; improved Excel export planning is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -33,6 +33,7 @@
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
 - Improved export helpers for splitting Smart Suggestions v2 records into approved, pending, rejected, blocked, and unknown export DataFrames
+- Improved Product Data Export Preview in the Smart Suggestions v2 area without downloads or write-back
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -62,6 +63,7 @@
 - Product Data Copilot branding polish updates the visible app title and README identity while preserving the original project history.
 - Improved Product Data Export Planning is documented in `docs/improved_product_data_export_plan.md`.
 - Improved Export Helpers v1 adds pure helper functions and tests for preparing Smart Suggestions v2 export data without Streamlit wiring or write-back.
+- Improved Export Preview v1 wires the helper output into a preview-only Streamlit section without downloads, source mutation, or write-back.
 
 ## Intentionally Not Implemented Yet
 
@@ -73,11 +75,12 @@
 - Automatic acceptance or write-back of AI suggestions
 - Smart Suggestions v2 export integration
 - Improved Product Data Export implementation
+- Improved Excel Export implementation
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Improved Export Preview v1
+1. Improved Excel Export v1 planning
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

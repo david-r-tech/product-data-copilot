@@ -718,6 +718,14 @@ Readiness status logic:
 * How to test: Run `python -m pytest` and confirm no app UI, export runtime, AI generation, requirements, or sample data changed.
 * Next recommended step: Build `Improved Export Preview v1` as a preview-only UI section before adding any download/export implementation.
 
+### Improved Export Preview v1
+
+* Date: TODO
+* Change: Added a preview-only Smart Suggestions v2 export section that uses the improved export helpers to show approved, pending, rejected, blocked, and unknown export groups.
+* Why it matters: Lets users see how future improved product data export would be prepared while keeping source product data unchanged and avoiding downloads or write-back.
+* How to test: Run `python -m py_compile app.py`, run `python -m pytest`, then manually load demo V2 records and review the Improved Product Data Export Preview in the AI Suggestions tab.
+* Next recommended step: Plan `Improved Excel Export v1` before adding an actual workbook download.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -743,7 +751,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Improved Export Preview v1`
+1. Plan `Improved Excel Export v1`
 2. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`

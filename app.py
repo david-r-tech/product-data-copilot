@@ -34,8 +34,10 @@ from product_data_copilot.review.review_helpers import (  # noqa: E402
 )
 from product_data_copilot.export.export_helpers import (  # noqa: E402
     AI_SUGGESTIONS_EXPORT_COLUMNS,
+    IMPROVED_EXPORT_STATUS_GROUPS,
     MANAGEMENT_EXPORT_FILENAME,
     MANAGEMENT_EXPORT_SHEETS,
+    split_smart_suggestions_for_export,
 )
 from product_data_copilot.ai.prompt_helpers import (  # noqa: E402
     do_not_invent_facts_instruction,
@@ -1668,6 +1670,74 @@ def run_app():
                         None,
                     )
                     st.rerun()
+
+        st.markdown("#### Improved Product Data Export Preview")
+        st.caption(
+            "Preview only — no product data is changed and no source file is overwritten."
+        )
+        st.info(
+            "Approved suggestions are prepared as export candidates only. They are not applied automatically."
+        )
+
+        if len(smart_suggestions_v2_df) == 0:
+            st.info(
+                "No Smart Suggestions v2 records are available yet. Generate V2 suggestions or load demo fixture records to preview future export groups."
+            )
+        else:
+            improved_export_groups = split_smart_suggestions_for_export(
+                smart_suggestions_v2_df
+            )
+            improved_export_counts = {
+                status_group: len(improved_export_groups.get(status_group, []))
+                for status_group in IMPROVED_EXPORT_STATUS_GROUPS
+            }
+
+            preview_metric_columns = st.columns(4)
+            preview_metric_columns[0].metric(
+                "Approved candidates",
+                improved_export_counts.get("approved", 0),
+            )
+            preview_metric_columns[1].metric(
+                "Pending suggestions",
+                improved_export_counts.get("pending", 0),
+            )
+            preview_metric_columns[2].metric(
+                "Rejected suggestions",
+                improved_export_counts.get("rejected", 0),
+            )
+            preview_metric_columns[3].metric(
+                "Blocked suggestions",
+                improved_export_counts.get("blocked", 0),
+            )
+
+            if improved_export_counts.get("approved", 0) == 0:
+                st.info(
+                    "No approved export candidates yet. Approve a non-blocked suggestion in the human review section to preview approved export rows."
+                )
+
+            export_preview_labels = {
+                "approved": "Approved Export Candidates",
+                "pending": "Pending / Proposed Suggestions",
+                "rejected": "Rejected Suggestions",
+                "blocked": "Blocked Suggestions",
+                "unknown": "Unknown / Other Suggestions",
+            }
+
+            for status_group in IMPROVED_EXPORT_STATUS_GROUPS:
+                group_dataframe = improved_export_groups.get(status_group)
+                if group_dataframe is not None and len(group_dataframe) > 0:
+                    group_label = export_preview_labels.get(
+                        status_group,
+                        status_group.title(),
+                    )
+                    with st.expander(
+                        f"{group_label} ({len(group_dataframe)})",
+                        expanded=status_group == "approved",
+                    ):
+                        st.dataframe(
+                            make_display_safe(group_dataframe),
+                            width="stretch",
+                        )
 
         if smart_suggestions_v2_raw_response:
             with st.expander("Raw Smart Suggestions v2 response"):
