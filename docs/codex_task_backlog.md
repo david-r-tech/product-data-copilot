@@ -50,11 +50,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 42 | Improved Excel Download Wiring v1 | Done | Wired the improved Excel export sheet helpers into the existing preview area as a safe in-memory workbook download. |
 | 43 | Improved Export Manual QA v1 | Done | Added a manual QA checklist for the improved Excel download, workbook sheets, source snapshot safety, and unchanged existing exports. |
 | 44 | UX Polish Planning v1 | Done | Planned a focused usability polish pass without changing core data, export, AI, or review behavior yet. |
-| 45 | UX Copy Polish v1 | NEXT | Improve captions, help text, empty states, and safety wording without changing app behavior. |
-| 46 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 47 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 48 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 49 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 45 | UX Copy Polish v1 | Done | Improved captions, help text, empty states, and safety wording without changing app behavior. |
+| 46 | UX Manual QA v1 | NEXT | Manually verify the polished AI Suggestions and Improved Export wording in the running app. |
+| 47 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 48 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 49 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 50 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
