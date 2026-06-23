@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Improved Export Manual QA v1: `066d126 Add improved Excel download`
+- Current repo head before UX Polish Planning v1: `354bd2f Add improved export QA checklist`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Improved Export Manual QA v1 completed.
-- Next block: `UX Polish Planning v1`
+- Current roadmap position: UX Polish Planning v1 completed.
+- Next block: `UX Copy Polish v1`
 
 ## Current App Capabilities
 
@@ -34,6 +34,7 @@
 - Improved Excel export helpers for workbook sheet mapping, export summary data, suggestion groups, and original source snapshots without file writing or write-back
 - Improved Excel download wiring for a safe in-memory workbook generated from Smart Suggestions v2 review state without source write-back
 - Improved export manual QA checklist for verifying workbook sheets, approved export candidates, empty states, and unchanged source snapshots
+- UX Polish v1 plan for small copy, help text, empty-state, safety-message, Smart Suggestions v2, and improved export clarity improvements
 
 ## Key Modules
 

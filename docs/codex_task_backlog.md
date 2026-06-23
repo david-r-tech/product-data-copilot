@@ -49,11 +49,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 41 | Improved Excel Export Helpers v1 | Done | Added pure helper functions and tests for workbook sheet mapping, export summary, suggestion groups, and original source snapshots before Streamlit download wiring. |
 | 42 | Improved Excel Download Wiring v1 | Done | Wired the improved Excel export sheet helpers into the existing preview area as a safe in-memory workbook download. |
 | 43 | Improved Export Manual QA v1 | Done | Added a manual QA checklist for the improved Excel download, workbook sheets, source snapshot safety, and unchanged existing exports. |
-| 44 | UX Polish Planning v1 | NEXT | Plan a focused usability polish pass without changing core data, export, AI, or review behavior yet. |
-| 45 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 46 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 47 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 48 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 44 | UX Polish Planning v1 | Done | Planned a focused usability polish pass without changing core data, export, AI, or review behavior yet. |
+| 45 | UX Copy Polish v1 | NEXT | Improve captions, help text, empty states, and safety wording without changing app behavior. |
+| 46 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 47 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 48 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 49 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
