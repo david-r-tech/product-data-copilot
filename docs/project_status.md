@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Portfolio Case Study Planning v1: `ea3eb9a Add UX manual QA checklist`
+- Current repo head before Portfolio Case Study Draft v1: `7743846 Plan portfolio case study v1`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Portfolio Case Study Planning v1 completed; portfolio case study draft is the next recommended block.
+- Current planning focus: Portfolio Case Study Draft v1 completed; portfolio screenshot checklist is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -42,6 +42,7 @@
 - UX Copy Polish v1 improved AI safety wording, Smart Suggestions v2 guidance, empty states, and improved export explanations without behavior changes
 - UX Manual QA v1 checklist for validating browser clarity, AI safety wording, review workflow, export safety, and portfolio presentation
 - Portfolio Case Study Planning v1 defines the target audience, story arc, structure, screenshot needs, portfolio-worthy points, and honest claim boundaries for the final case study
+- Portfolio Case Study Draft v1 documents the product story, user problem, workflows, architecture, AI safety model, export safety, testing approach, limitations, roadmap, and screenshot placeholders
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -80,6 +81,7 @@
 - UX Copy Polish v1 updated in-app wording for clearer AI safety, Smart Suggestions v2 review flow, and improved export expectations.
 - UX Manual QA v1 is documented in `docs/ux_manual_qa_v1.md`.
 - Portfolio Case Study Planning v1 is documented in `docs/portfolio_case_study_plan_v1.md`.
+- Portfolio Case Study Draft v1 is documented in `docs/portfolio_case_study.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -89,14 +91,14 @@
 - Marketplace-specific rule presets
 - Automatic AI mass generation
 - Automatic acceptance or write-back of AI suggestions
-- Smart Suggestions v2 export integration
-- Improved Product Data Export implementation
-- Portfolio Case Study Draft
+- Permanent Smart Suggestions v2 approval persistence
+- Marketplace-ready export/write-back integration
+- Final screenshot set for the portfolio case study
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Portfolio Case Study Draft v1
+1. Portfolio Screenshot Checklist v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

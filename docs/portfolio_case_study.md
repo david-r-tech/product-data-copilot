@@ -1,125 +1,73 @@
-# Commerce Readiness AI - Portfolio Case Study
+# Product Data Copilot - Portfolio Case Study
 
-## Project Overview
+Product Data Copilot is a portfolio-grade product prototype for e-commerce product data audits. It is a local Streamlit MVP that helps teams inspect product files, detect data quality issues, calculate readiness scores, create review tasks, generate safe AI draft suggestions, and export review-ready workbooks.
 
-Commerce Readiness AI is a local Streamlit MVP for auditing e-commerce product data before products are published to shops, marketplaces, or catalog workflows.
+The project is not positioned as a finished SaaS platform. It is a realistic local product workflow that demonstrates product thinking, professional Python structure, AI safety design, and practical e-commerce data operations.
 
-The project turns a CSV/XLSX product file into a structured product-data review workflow with dashboard metrics, rule-based issue detection, explainable readiness scores, review tasks, optional AI draft suggestions, and exportable management reports.
+## 1. Short Product Summary
 
-The goal was not to build a full SaaS product. The goal was to create a focused, business-oriented MVP that demonstrates product thinking, requirements engineering, data quality logic, human-in-the-loop AI support, and practical reporting.
+Product Data Copilot turns CSV/XLSX product data into a structured audit workflow. Users can load sample data or upload their own product file, review detected issues, compare readiness scores, work through review tasks, generate AI-assisted draft suggestions for selected products, and export results for business handoff.
 
-## Problem Statement
+The core design principle is safety before automation. AI suggestions are draft recommendations, human approval is required, approved suggestions are export candidates only, and original product data is never overwritten automatically.
 
-E-commerce teams often receive product data in spreadsheets, PIM exports, supplier files, or marketplace templates. These files can contain missing product names, weak descriptions, invalid identifiers, missing translations, incomplete media links, unclear warning notes, or inconsistent commercial data.
+## 2. Problem Statement
 
-Without a structured audit workflow, teams have to inspect product rows manually. This makes it difficult to answer simple operational questions:
+E-commerce teams often prepare product data through spreadsheets, supplier files, PIM exports, marketplace templates, and manual review processes. Before publishing products, teams need to know whether product information is complete, understandable, safe, and ready for marketplace or shop usage.
 
-- Which products are ready?
-- Which products need urgent data completion?
-- Which issues block marketplace review?
-- Which products need translation or compliance review?
-- Which tasks should the team handle first?
-- What summary can be shared with managers or stakeholders?
+Common operational problems include:
 
-Commerce Readiness AI addresses this by making product-data issues visible, prioritized, and exportable.
+- Missing product names, descriptions, categories, brands, manufacturers, or attributes
+- Missing or invalid EAN/GTIN values
+- Weak or generic product titles
+- Short product descriptions
+- Missing translations
+- Missing or suspicious image URLs
+- Missing warning notes for safety-relevant categories
+- No clear prioritization of which product rows need work first
+- Spreadsheet-heavy handoff between operations, content, translation, and management teams
 
-## Target Users
+Without a structured audit workflow, teams spend too much time manually scanning rows and too little time fixing the most important issues.
 
-- Product Data Managers
-- Marketplace Managers
-- E-commerce Operations Teams
-- Category Managers
-- Content and Translation Teams
-- Small merchant teams preparing marketplace listings
+## 3. Target Users
 
-## Product Goals
+Product Data Copilot is designed for teams that work with product data before publication or marketplace submission:
 
-- Make product data quality issues visible quickly
-- Prioritize review work by severity and business impact
-- Provide explainable readiness scores per product
-- Convert audit findings into operational review tasks
-- Support AI-assisted content improvement without automatic write-back
-- Provide CSV and Excel exports for review and management workflows
-- Keep the MVP understandable, local, and easy to run
+- Product Data Managers who need to identify missing or invalid product fields.
+- Marketplace Managers who need to understand whether product listings are ready for review.
+- E-commerce Operations Teams who need a repeatable quality-control workflow.
+- Category Managers who need a business-friendly overview of product readiness.
+- Content and Translation Teams who need prioritized improvement tasks.
+- Recruiters or technical reviewers who want to see a practical, documented, testable AI-assisted workflow.
 
-## Requirements Approach
+## 4. Product Idea
 
-The project was shaped around practical requirements instead of a broad feature wishlist. The first priority was to make product data problems visible. The second priority was to make those problems actionable through scoring, review tasks, filters, and exports.
+The product idea is simple: turn a product spreadsheet into an actionable audit, review, and export workflow.
 
-The current requirements are documented in `docs/product_requirements.md`, including:
+Instead of only displaying rows, Product Data Copilot adds structure around the work:
 
-- Functional requirements
-- Non-functional requirements
-- Business rules
-- Acceptance criteria
-- Out-of-scope items
-- Risks and limitations
+1. Load product data from a sample file, CSV, or Excel file.
+2. Detect rule-based data quality issues.
+3. Calculate readiness scores that explain where a product is strong or weak.
+4. Convert issues into review tasks.
+5. Use AI carefully to draft field-level suggestions when useful.
+6. Require human review before anything becomes an export candidate.
+7. Export management and improvement workbooks without changing the source data.
 
-This gives the project a clear requirements-engineering baseline and makes it easier to explain why the MVP is scoped the way it is.
+This keeps the workflow realistic for business users while showing engineering discipline around safety and scope.
 
-## MVP Scope
+## 5. Key Workflows
 
-The MVP includes:
+### Upload and Sample Data
 
-- Local Streamlit app
-- Built-in sample product dataset
-- CSV and XLSX upload
-- Product data preview
-- Rule-based product data checks
-- Dashboard metrics
-- Multiple readiness scores
-- Product review status
-- Review task workflow
-- Manual review status override in Streamlit session state
-- CSV exports
-- Excel Management Export
-- Optional AI Suggestions for one selected product
-- Documentation for requirements, demo testing, screenshots, and portfolio use
+The app starts with a built-in sample product dataset so the workflow is immediately demoable. Users can also upload CSV or XLSX product files.
 
-The MVP intentionally does not include production deployment, user accounts, database persistence, marketplace integrations, or automatic publishing.
+The sample dataset includes realistic product categories and intentional quality issues, so the dashboard, issue detection, review tasks, and export flows are meaningful without external setup.
 
-## Key Features
+### Product Data Checks
 
-- Sample demo dataset with realistic product categories and intentional quality issues
-- CSV and Excel upload for user-provided product data
-- Product Data tab for source-data inspection
-- Rule-based issue detection with severity, field name, message, and recommended action
-- Dashboard metrics for product count, issue count, affected products, and average scores
-- Multiple readiness scores: data quality, marketplace readiness, translation readiness, compliance readiness, AI content readiness, and overall readiness
-- Review Tasks tab with task types, priorities, filters, and manual status override
-- CSV exports for operational follow-up
-- Excel Management Export with summary, scores, issues, tasks, AI suggestions, and source products
-- Optional AI Suggestions tab with API-key fallback and human-review warning
+The app checks product rows for common e-commerce data quality issues, including missing names, short descriptions, missing categories, missing or invalid EAN values, invalid prices, missing attributes, missing translations, suspicious image URLs, and missing warning notes for safety-relevant categories.
 
-## Product Decisions and Trade-Offs
-
-- **Streamlit first:** Streamlit was chosen to build a useful local MVP quickly instead of spending time on frontend/backend architecture.
-- **CSV/XLSX first:** Spreadsheet upload was prioritized because product-data teams often work with CSV exports, marketplace templates, and supplier spreadsheets.
-- **Rules before AI:** Rule-based checks make the audit transparent and explainable before adding AI suggestions.
-- **Human-in-the-loop AI:** AI Suggestions are limited to one selected product and are not automatically written back to source data.
-- **Session state before database:** Manual review overrides use Streamlit session state to keep the MVP simple and avoid premature persistence work.
-- **Excel export as business artifact:** The Management Export turns the audit into a file that business stakeholders can open and review outside the app.
-
-## User Workflow
-
-1. Start the local Streamlit app.
-2. Load the built-in sample dataset or upload a CSV/XLSX product file.
-3. Review dashboard metrics to understand catalog health.
-4. Inspect product data in the Product Data tab.
-5. Review detected issues and filter by severity.
-6. Compare readiness scores across products.
-7. Use Review Tasks to prioritize operational work.
-8. Apply a manual review status override during the current session.
-9. Open AI Suggestions to show the missing-key fallback or generate one product suggestion if an API key is configured.
-10. Download CSV exports or the Excel Management Export for follow-up.
-
-## Technical Approach
-
-The app is implemented in Python with Streamlit and Pandas.
-
-Product checks are grouped in helper functions inside `app.py` to keep the code approachable while avoiding a large rule-engine framework too early. This keeps the MVP easy to understand and modify.
-
-Detected issues use a stable structure:
+Each issue is represented with a stable structure:
 
 - `sku`
 - `issue_type`
@@ -128,73 +76,185 @@ Detected issues use a stable structure:
 - `message`
 - `recommended_action`
 
-Readiness scores are calculated from simple, explainable checks and combined into a weighted overall score. Review tasks are generated from detected issues, which keeps the workflow consistent across the UI and exports.
+This makes the output understandable for both UI display and exports.
 
-The Excel Management Export is generated in memory with `BytesIO`, Pandas, and OpenPyXL. AI Suggestions use an environment-based OpenAI API key when available and fall back safely when no key is configured.
+### Readiness Scoring
 
-## Quality and Documentation
+Product Data Copilot calculates multiple explainable readiness scores:
 
-The project includes supporting documentation to make the MVP understandable and testable:
+- `data_quality_score`
+- `marketplace_readiness_score`
+- `translation_readiness_score`
+- `compliance_readiness_score`
+- `ai_content_readiness_score`
+- `overall_readiness_score`
 
-- `README.md` for project overview, setup, features, scope, and roadmap
-- `docs/product_requirements.md` for requirements, acceptance criteria, risks, and scope
-- `docs/testing_notes.md` for technical and manual verification steps
-- `docs/demo_test_checklist.md` for repeatable demo validation
-- `docs/demo_script.md` for walkthrough preparation
-- `docs/screenshots_to_capture.md` for portfolio screenshot planning
-- `docs/commerce_readiness_ai_project_log.md` as the central project log
+The goal is not to create a black-box score. The score helps users quickly compare products while still being able to inspect the issues behind the result.
 
-## Results / Current MVP Status
+### Issues and Review Tasks
 
-The current MVP demonstrates a complete local product-data audit workflow:
+Detected issues are shown in an Issues table with severity filtering. The same issue data is used to generate Review Tasks with task types, priorities, recommended actions, and review statuses.
 
-- Load product data
-- Detect product-data issues
-- Explain why products are or are not ready
-- Score readiness across multiple dimensions
-- Create operational review tasks
-- Support manual review decisions in the session
-- Generate optional AI draft suggestions
-- Export operational and management-ready files
+This moves the workflow from "what is wrong?" to "what should the team do next?"
 
-The project is ready for GitHub/portfolio review and for final screenshots.
+### AI Suggestions and Smart Suggestions v2
 
-## Screenshots to Add
+AI Suggestions v1 supports draft content suggestions for one selected product. If no `OPENAI_API_KEY` is configured, the app shows a safe fallback instead of crashing.
 
-Detailed screenshot planning is tracked in `docs/screenshots_to_capture.md`.
+Smart Suggestions v2 adds a more structured experimental model for field-level suggestions. It uses schema-driven output, parser normalization, source fields, reasons, confidence/risk information, and safe statuses. A deterministic demo fixture lets the review workflow be tested without an API key.
 
-Recommended screenshots:
+AI suggestions remain draft recommendations. They are not applied automatically.
 
-- App overview / header
-- Sample data loaded
-- Dashboard metrics
-- Readiness Scores tab
-- Issues tab
-- Review Tasks tab
-- Manual Review Status Override
-- AI Suggestions tab
-- Management Export tab
-- Optional opened Excel export
+### Human Approval
 
-## What This Project Demonstrates
+Smart Suggestions v2 includes a session-only human review workflow. Users can review one suggestion at a time and mark it as approved or rejected. Blocked suggestions cannot be approved.
 
-This project demonstrates:
+Important boundaries:
 
-- Understanding of a real e-commerce operations problem
-- Requirements engineering and scope control
-- MVP product thinking
-- Rule-based data quality validation
-- Explainable scoring logic
-- Human-in-the-loop AI design
-- Streamlit and Pandas implementation skills
-- Business-friendly exports
-- Professional project documentation
+- AI cannot approve itself.
+- Approval is session-only in the current MVP.
+- Approved suggestions are export candidates only.
+- Product source data is not changed.
 
-## Next Steps
+### Improved Excel Export
 
-- Capture final screenshots and add selected images to the README or portfolio page
-- Improve Excel export formatting and column widths
-- Add accept/reject tracking for AI suggestions
-- Test the rule catalog with realistic merchant exports
-- Add optional persistence for review statuses if the workflow proves useful
-- Consider marketplace-specific rule presets later
+The improved export workflow groups Smart Suggestions v2 records into approved, pending, rejected, blocked, and unknown categories. The Excel download includes an original source snapshot so reviewers can compare improvement candidates against unchanged source data.
+
+The export is a business handoff artifact, not an automatic data update.
+
+## 6. Architecture Overview
+
+Product Data Copilot started as a Streamlit MVP and has been gradually structured into smaller, testable helper modules.
+
+High-level structure:
+
+- `app.py` remains the Streamlit runtime and main app flow.
+- `src/product_data_copilot/rules/` contains validation-oriented helpers.
+- `src/product_data_copilot/scoring/` contains scoring helpers.
+- `src/product_data_copilot/review/` contains review status and task mapping helpers.
+- `src/product_data_copilot/export/` contains export preparation helpers.
+- `src/product_data_copilot/ai/` contains prompt, schema, parser, and Smart Suggestions v2 helpers.
+- `src/product_data_copilot/ui/` contains small Streamlit presentation helpers.
+- `tests/` contains pytest coverage for pure helper logic.
+- `docs/` contains planning, QA, project status, workflow, and portfolio documentation.
+
+The architecture is intentionally pragmatic. The app is still local-first and Streamlit-based, but core helper logic has been extracted where it can be tested safely without launching the UI.
+
+## 7. AI Safety Design
+
+The AI design follows a human-in-the-loop approach.
+
+Safety principles:
+
+- No invented facts policy: AI should work from available source fields.
+- Source fields are required for structured suggestions.
+- Reasons and confidence/risk indicators are visible to the user.
+- Parser normalization prevents unsafe AI-supplied statuses from becoming approved automatically.
+- Blocked suggestions remain non-approvable.
+- Users must review suggestions before they become export candidates.
+- Approved suggestions do not update product data automatically.
+- Missing API keys and failed AI calls are handled safely.
+
+This is especially important because product data can affect marketplace publication, customer expectations, legal wording, and brand quality.
+
+## 8. Export Safety
+
+Export safety is a central design choice.
+
+The improved export workflow separates:
+
+- Source product data
+- Proposed AI suggestions
+- Approved improvements
+- Rejected suggestions
+- Blocked suggestions
+- Unknown or unsupported suggestion states
+
+The Excel workbook can include:
+
+- Export Summary
+- Approved Improvements
+- Pending Suggestions
+- Rejected Suggestions
+- Blocked Suggestions
+- Unknown Suggestions
+- Original Source Snapshot
+
+Approved suggestions are prepared as export candidates only. The original uploaded data remains unchanged, and the app does not write changes back to the source file.
+
+## 9. Testing and Quality
+
+The project includes automated tests and manual QA documentation.
+
+Quality practices include:
+
+- Pytest coverage for pure helper modules.
+- Tests for validators, scoring helpers, review helpers, export helpers, AI prompt helpers, Smart Suggestions v2 schema/parser behavior, and export preparation.
+- Deterministic Smart Suggestions v2 fixture data for testing approval states without an API key.
+- Manual QA checklists for demo flow, UX clarity, improved export behavior, and AI approval workflows.
+- Project logs and task backlog documents that track decisions and completed blocks.
+- Scope boundaries that prevent the MVP from drifting into SaaS, database, integrations, or automatic AI write-back too early.
+
+Current known test state from the project status is `122` passing pytest tests.
+
+## 10. Current Limitations
+
+The project is intentionally not presented as a finished enterprise platform.
+
+Current limitations:
+
+- It is not a SaaS product.
+- There is no production database.
+- There are no user accounts, login, roles, or multi-user workflows.
+- Marketplace integrations are not implemented.
+- Marketplace-specific rule presets are not implemented.
+- Smart Suggestions v2 approval state is session-only.
+- AI suggestions require human review.
+- AI correctness is not guaranteed.
+- There is no automatic product data write-back.
+- There is no legal compliance guarantee.
+
+These limitations are deliberate for the current local MVP. They keep the project focused, reviewable, and safe.
+
+## 11. Roadmap / Next Steps
+
+Near-term portfolio steps:
+
+1. Capture final screenshots for the case study.
+2. Add screenshot captions and visual references.
+3. Link the case study from the README if useful.
+4. Run a full manual demo QA pass.
+
+Potential product improvements:
+
+1. Expand pytest coverage around key business rules.
+2. Improve Excel workbook formatting and column sizing.
+3. Improve Smart Suggestions v2 result review UX after manual testing.
+4. Add optional persistence only after the session workflow is proven useful.
+5. Plan marketplace presets only after the generic rule workflow is stable.
+6. Keep integrations and production deployment as later productization work.
+
+## 12. Screenshots To Capture Later
+
+Screenshots should be added after final manual UI QA.
+
+Suggested placeholders:
+
+- TODO: Landing / upload area - show product name, local workflow, and sample/upload path.
+- TODO: Dashboard - show management-level readiness metrics.
+- TODO: Readiness Scores - show explainable product-level scores.
+- TODO: Issues Table - show rule-based product data problems and severity.
+- TODO: Review Tasks - show operational task prioritization.
+- TODO: AI Suggestions v1 - show draft AI support and safe API-key fallback or generated result.
+- TODO: Smart Suggestions v2 - show structured field-level suggestions.
+- TODO: Human Approval UI - show pending, approved, rejected, and blocked review states.
+- TODO: Improved Product Data Export Preview - show approved/pending/rejected/blocked grouping.
+- TODO: Excel Export Workbook - show workbook sheets and original source snapshot.
+
+Each screenshot should include a short caption explaining what the viewer should notice and why it matters.
+
+## 13. Summary
+
+Product Data Copilot is a local, portfolio-ready product prototype that combines e-commerce data quality checks, readiness scoring, review tasks, AI-assisted draft suggestions, human approval, and safe exports.
+
+The strongest part of the project is not only the feature list. It is the workflow discipline: rule-based checks before AI, human review before export, source data protection, tested helper modules, and clear documentation around limitations and next steps.
