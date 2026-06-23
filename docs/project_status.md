@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before UX Copy Polish v1: `6f20c5d Plan UX polish v1`
+- Current repo head before UX Manual QA v1: `e8f0dd7 Polish UX copy v1`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: UX Copy Polish v1 completed; UX manual QA is the next recommended block.
+- Current planning focus: UX Manual QA v1 completed; portfolio case study planning is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -40,6 +40,7 @@
 - Improved export manual QA checklist for verifying workbook sheets, approved export candidates, empty states, and unchanged source snapshots
 - UX Polish v1 plan for small copy, help text, empty-state, safety-message, Smart Suggestions v2, and improved export clarity improvements
 - UX Copy Polish v1 improved AI safety wording, Smart Suggestions v2 guidance, empty states, and improved export explanations without behavior changes
+- UX Manual QA v1 checklist for validating browser clarity, AI safety wording, review workflow, export safety, and portfolio presentation
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -76,6 +77,7 @@
 - Improved Export Manual QA v1 is documented in `docs/improved_export_manual_qa.md`.
 - UX Polish Planning v1 is documented in `docs/ux_polish_plan_v1.md`.
 - UX Copy Polish v1 updated in-app wording for clearer AI safety, Smart Suggestions v2 review flow, and improved export expectations.
+- UX Manual QA v1 is documented in `docs/ux_manual_qa_v1.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -87,12 +89,12 @@
 - Automatic acceptance or write-back of AI suggestions
 - Smart Suggestions v2 export integration
 - Improved Product Data Export implementation
-- UX Manual QA
+- Portfolio Case Study Planning
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. UX Manual QA v1
+1. Portfolio Case Study Planning v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

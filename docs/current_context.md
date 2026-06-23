@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before UX Copy Polish v1: `6f20c5d Plan UX polish v1`
+- Current repo head before UX Manual QA v1: `e8f0dd7 Polish UX copy v1`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: UX Copy Polish v1 completed.
-- Next block: `UX Manual QA v1`
+- Current roadmap position: UX Manual QA v1 completed.
+- Next block: `Portfolio Case Study Planning v1`
 
 ## Current App Capabilities
 
@@ -36,6 +36,7 @@
 - Improved export manual QA checklist for verifying workbook sheets, approved export candidates, empty states, and unchanged source snapshots
 - UX Polish v1 plan for small copy, help text, empty-state, safety-message, Smart Suggestions v2, and improved export clarity improvements
 - UX Copy Polish v1 improved AI safety wording, Smart Suggestions v2 guidance, empty states, and improved export explanations without behavior changes
+- UX Manual QA v1 checklist for validating browser clarity, AI safety wording, review workflow, export safety, and portfolio presentation
 
 ## Key Modules
 
