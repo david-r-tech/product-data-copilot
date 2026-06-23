@@ -54,11 +54,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 46 | UX Manual QA v1 | Done | Added a manual browser QA checklist for polished AI Suggestions, Smart Suggestions v2, review workflow, improved export wording, and portfolio presentation. |
 | 47 | Portfolio Case Study Planning v1 | Done | Planned the final portfolio case study structure, audience, story arc, screenshot needs, and claim boundaries before editing public-facing portfolio docs. |
 | 48 | Portfolio Case Study Draft v1 | Done | Drafted the portfolio case study markdown with honest claims, product workflow, architecture, AI safety, export safety, limitations, roadmap, and screenshot placeholders. |
-| 49 | Portfolio Screenshot Checklist v1 | NEXT | Prepare the final screenshot capture checklist and captions for the portfolio case study. |
-| 50 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 51 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 52 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 53 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 49 | Portfolio Screenshot Checklist v1 | Done | Created the final manual screenshot checklist with purpose, preparation steps, filenames, captions, and pass/fail notes. |
+| 50 | README Final Polish Planning v1 | NEXT | Plan the final README polish so the GitHub landing page links the case study and screenshot workflow without becoming too long. |
+| 51 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 52 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 53 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 54 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
