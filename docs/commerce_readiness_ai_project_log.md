@@ -782,6 +782,14 @@ Readiness status logic:
 * How to test: Run `python -m streamlit run app.py` and follow `docs/ux_manual_qa_v1.md`.
 * Next recommended step: Plan `Portfolio Case Study Planning v1`.
 
+### Portfolio Case Study Planning v1
+
+* Date: TODO
+* Change: Added `docs/portfolio_case_study_plan_v1.md` with the target audience, core story, suggested case study structure, screenshot plan, portfolio-worthy points, honest non-claims, and drafting phases.
+* Why it matters: Prepares the final portfolio case study so it can present the project strongly without exaggerating the current local MVP.
+* How to test: Review `docs/portfolio_case_study_plan_v1.md`, run `git diff --check`, and confirm no runtime code, tests, README, requirements, or data changed.
+* Next recommended step: Draft `Portfolio Case Study Draft v1`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
@@ -807,7 +815,7 @@ Current known limitations:
 
 ## 10. Next Recommended Steps
 
-1. Start `Portfolio Case Study Planning v1`
+1. Start `Portfolio Case Study Draft v1`
 2. Expand pytest coverage for key business rules after Smart Suggestions v2 stabilizes
 3. Plan UX Polish v1 after the AI suggestion model is clearer
 4. Capture screenshots using `docs/screenshots_to_capture.md`
@@ -815,7 +823,7 @@ Current known limitations:
 
 ## 11. Copy Context for Future Codex Prompts
 
-Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. Smart Suggestions v2 supports structured field-level draft suggestions, deterministic demo fixture records, and session-only human review. Improved Product Data Export Planning is complete, the app can create an in-memory improved Excel workbook for approved/pending/rejected/blocked/unknown suggestions and original source snapshots without source write-back, and a manual QA checklist now documents how to verify that workflow. UX Copy Polish v1 improved the in-app wording around AI safety, human review, empty states, and export candidates. UX Manual QA v1 now documents a browser checklist for validating clarity, trust, and portfolio readiness. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering.
+Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for e-commerce product data quality checks. The app loads `data/sample_products.csv` by default and also supports CSV and Excel upload. The current sample dataset has around 25 realistic demo products across multiple e-commerce categories with intentional data quality issues. The app displays product data, detects rule-based data quality issues, shows dashboard metrics, calculates multiple readiness scores, assigns product review statuses, creates a review task list, filters issues by severity, supports review task filters and manual review status overrides, exports readiness scores, issues, and review tasks as CSV files, creates a management-ready Excel workbook, and optionally generates structured AI suggestions for one selected product. Product Data Checks v2 adds checks for category, price, EAN validity, generic titles, image URLs, manufacturer, attributes, and expanded safety categories. Smart Suggestions v2 supports structured field-level draft suggestions, deterministic demo fixture records, and session-only human review. Improved Product Data Export Planning is complete, the app can create an in-memory improved Excel workbook for approved/pending/rejected/blocked/unknown suggestions and original source snapshots without source write-back, and a manual QA checklist now documents how to verify that workflow. UX Copy Polish v1 improved the in-app wording around AI safety, human review, empty states, and export candidates. UX Manual QA v1 documents a browser checklist for validating clarity, trust, and portfolio readiness. Portfolio Case Study Planning v1 now defines how to present the project professionally and honestly. The current layout uses tabs for Dashboard, Product Data, Scores, Issues, Review Tasks, Management Export, and AI Suggestions, plus sidebar controls for file upload and severity filtering.
 
 The current data columns are `sku`, `product_name`, `category`, `description`, `brand`, `manufacturer`, `attributes`, `ean`, `language`, `price`, `image_url`, `warning_notes`, `translation_de`, and `translation_en`.
 

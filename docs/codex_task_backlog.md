@@ -52,11 +52,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 44 | UX Polish Planning v1 | Done | Planned a focused usability polish pass without changing core data, export, AI, or review behavior yet. |
 | 45 | UX Copy Polish v1 | Done | Improved captions, help text, empty states, and safety wording without changing app behavior. |
 | 46 | UX Manual QA v1 | Done | Added a manual browser QA checklist for polished AI Suggestions, Smart Suggestions v2, review workflow, improved export wording, and portfolio presentation. |
-| 47 | Portfolio Case Study Planning v1 | NEXT | Plan the final portfolio case study structure and screenshot/story requirements before editing public-facing portfolio docs. |
-| 48 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 49 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 50 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 51 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 47 | Portfolio Case Study Planning v1 | Done | Planned the final portfolio case study structure, audience, story arc, screenshot needs, and claim boundaries before editing public-facing portfolio docs. |
+| 48 | Portfolio Case Study Draft v1 | NEXT | Draft the portfolio case study markdown using the approved plan, with honest claims and screenshot placeholders. |
+| 49 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 50 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 51 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 52 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
