@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before README Final Polish v1: `2027ed7 Plan README final polish v1`
+- Current repo head before Final Naming Cleanup Planning v1: `a974a97 Polish README for portfolio`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: README Final Polish v1 completed; final naming cleanup planning is the next recommended block.
+- Current planning focus: Final Naming Cleanup Planning v1 completed; safe naming cleanup is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -46,6 +46,7 @@
 - Portfolio Screenshot Checklist v1 defines the final manual screenshots, preparation steps, filenames, captions, and pass/fail notes for GitHub and portfolio presentation
 - README Final Polish Planning v1 defines the final README structure, screenshot placeholder strategy, case study links, test/run instructions, AI/export safety wording, limitations, and acceptance criteria
 - README Final Polish v1 updates the GitHub-facing README with a concise product pitch, screenshot placeholder, run/test commands, architecture overview, AI/export safety, case study links, limitations, and roadmap
+- Final Naming Cleanup Planning v1 defines how to move safely from the old working name and repository name toward Product Data Copilot without automatic repo/folder renaming
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -88,6 +89,7 @@
 - Portfolio Screenshot Checklist v1 is documented in `docs/portfolio_screenshot_checklist_v1.md`.
 - README Final Polish Planning v1 is documented in `docs/readme_final_polish_plan_v1.md`.
 - README Final Polish v1 updates the public `README.md`.
+- Final Naming Cleanup Planning v1 is documented in `docs/final_naming_cleanup_plan_v1.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -100,11 +102,12 @@
 - Permanent Smart Suggestions v2 approval persistence
 - Marketplace-ready export/write-back integration
 - Actual screenshot image files for the portfolio case study
+- Manual GitHub repository rename to `product-data-copilot`
 - Legal compliance guarantees
 
 ## Recommended Next Roadmap
 
-1. Final Naming Cleanup Planning v1
+1. Safe Naming Cleanup v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass

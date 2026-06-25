@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before README Final Polish v1: `2027ed7 Plan README final polish v1`
+- Current repo head before Final Naming Cleanup Planning v1: `a974a97 Polish README for portfolio`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: README Final Polish v1 completed.
-- Next block: `Final Naming Cleanup Planning v1`
+- Current roadmap position: Final Naming Cleanup Planning v1 completed.
+- Next block: `Safe Naming Cleanup v1`
 
 ## Current App Capabilities
 
@@ -42,6 +42,7 @@
 - Portfolio Screenshot Checklist v1 defines the final manual screenshots, preparation steps, filenames, captions, and pass/fail notes for GitHub and portfolio presentation
 - README Final Polish Planning v1 defines the final README structure, screenshot placeholder strategy, case study links, test/run instructions, AI/export safety wording, limitations, and acceptance criteria
 - README Final Polish v1 updates the GitHub-facing README with a concise product pitch, screenshot placeholder, run/test commands, architecture overview, AI/export safety, case study links, limitations, and roadmap
+- Final Naming Cleanup Planning v1 defines how to move safely from the old working name and repository name toward Product Data Copilot without automatic repo/folder renaming
 
 ## Key Modules
 
