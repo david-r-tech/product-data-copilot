@@ -56,11 +56,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 48 | Portfolio Case Study Draft v1 | Done | Drafted the portfolio case study markdown with honest claims, product workflow, architecture, AI safety, export safety, limitations, roadmap, and screenshot placeholders. |
 | 49 | Portfolio Screenshot Checklist v1 | Done | Created the final manual screenshot checklist with purpose, preparation steps, filenames, captions, and pass/fail notes. |
 | 50 | README Final Polish Planning v1 | Done | Planned the final README polish structure, screenshot placeholder, case study links, setup/test instructions, safety wording, limitations, and acceptance criteria. |
-| 51 | README Final Polish v1 | NEXT | Apply the final README polish while keeping the GitHub landing page concise and honest. |
-| 52 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 53 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 54 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 55 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 51 | README Final Polish v1 | Done | Updated the GitHub-facing README with a concise product pitch, screenshot placeholder, run/test commands, architecture overview, AI/export safety, case study links, limitations, and roadmap. |
+| 52 | Final Naming Cleanup Planning v1 | NEXT | Plan any final naming cleanup around repository name, file references, old working-name references, and public presentation without renaming anything yet. |
+| 53 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 54 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 55 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 56 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
