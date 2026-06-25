@@ -2,7 +2,7 @@
 
 AI-assisted product data quality and export workflow for E-commerce teams.
 
-Product Data Copilot, formerly Commerce Readiness AI, is a local Streamlit MVP for auditing product data before marketplace or shop publication. It helps product data managers, marketplace managers, E-commerce operations teams, and category teams find missing or weak product data, prioritize review work, generate human-reviewed AI draft suggestions, and export review-ready workbooks.
+Product Data Copilot is a local Streamlit MVP for auditing product data before marketplace or shop publication. It helps product data managers, marketplace managers, E-commerce operations teams, and category teams find missing or weak product data, prioritize review work, generate human-reviewed AI draft suggestions, and export review-ready workbooks.
 
 This project is a portfolio-grade local prototype. It is not a production SaaS product.
 

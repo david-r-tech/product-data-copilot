@@ -70,7 +70,6 @@ from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
 load_dotenv()
 
 APP_NAME = "Product Data Copilot"
-FORMER_APP_NAME = "Commerce Readiness AI"
 
 AI_SUGGESTION_TYPES = [
     "Improved Product Title",
@@ -927,8 +926,7 @@ def run_app():
     st.set_page_config(page_title=APP_NAME, layout="wide")
     st.title(APP_NAME)
     st.caption(
-        f"Formerly {FORMER_APP_NAME}. "
-        "CSV/XLSX-based product data quality checks for e-commerce readiness."
+        "CSV/XLSX-based product data quality, AI suggestion, review, and export workflow for e-commerce teams."
     )
 
     uploaded_file = render_data_input_section(st)
