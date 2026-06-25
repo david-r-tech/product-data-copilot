@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Portfolio Screenshot Checklist v1: `6e0a8df Draft portfolio case study v1`
+- Current repo head before README Final Polish Planning v1: `5b3539f Add portfolio screenshot checklist`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Portfolio Screenshot Checklist v1 completed.
-- Next block: `README Final Polish Planning v1`
+- Current roadmap position: README Final Polish Planning v1 completed.
+- Next block: `README Final Polish v1`
 
 ## Current App Capabilities
 
@@ -40,6 +40,7 @@
 - Portfolio Case Study Planning v1 defines the target audience, story arc, structure, screenshot needs, portfolio-worthy points, and honest claim boundaries for the final case study
 - Portfolio Case Study Draft v1 documents the product story, user problem, workflows, architecture, AI safety model, export safety, testing approach, limitations, roadmap, and screenshot placeholders
 - Portfolio Screenshot Checklist v1 defines the final manual screenshots, preparation steps, filenames, captions, and pass/fail notes for GitHub and portfolio presentation
+- README Final Polish Planning v1 defines the final README structure, screenshot placeholder strategy, case study links, test/run instructions, AI/export safety wording, limitations, and acceptance criteria
 
 ## Key Modules
 

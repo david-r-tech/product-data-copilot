@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Portfolio Screenshot Checklist v1: `6e0a8df Draft portfolio case study v1`
+- Current repo head before README Final Polish Planning v1: `5b3539f Add portfolio screenshot checklist`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Portfolio Screenshot Checklist v1 completed; README final polish planning is the next recommended block.
+- Current planning focus: README Final Polish Planning v1 completed; README final polish is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -44,6 +44,7 @@
 - Portfolio Case Study Planning v1 defines the target audience, story arc, structure, screenshot needs, portfolio-worthy points, and honest claim boundaries for the final case study
 - Portfolio Case Study Draft v1 documents the product story, user problem, workflows, architecture, AI safety model, export safety, testing approach, limitations, roadmap, and screenshot placeholders
 - Portfolio Screenshot Checklist v1 defines the final manual screenshots, preparation steps, filenames, captions, and pass/fail notes for GitHub and portfolio presentation
+- README Final Polish Planning v1 defines the final README structure, screenshot placeholder strategy, case study links, test/run instructions, AI/export safety wording, limitations, and acceptance criteria
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -84,6 +85,7 @@
 - Portfolio Case Study Planning v1 is documented in `docs/portfolio_case_study_plan_v1.md`.
 - Portfolio Case Study Draft v1 is documented in `docs/portfolio_case_study.md`.
 - Portfolio Screenshot Checklist v1 is documented in `docs/portfolio_screenshot_checklist_v1.md`.
+- README Final Polish Planning v1 is documented in `docs/readme_final_polish_plan_v1.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -100,7 +102,7 @@
 
 ## Recommended Next Roadmap
 
-1. README Final Polish Planning v1
+1. README Final Polish v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass
