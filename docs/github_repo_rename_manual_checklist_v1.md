@@ -4,6 +4,11 @@ This checklist documents the manual owner steps for renaming the GitHub reposito
 
 Codex must not rename the GitHub repository, change the local remote URL, or rename local folders in this block.
 
+Related docs:
+
+- [README](../README.md)
+- [Final Portfolio Release Checklist](final_portfolio_release_checklist_v1.md)
+
 ## 1. Rename Goal
 
 Current GitHub repository:
@@ -167,10 +172,10 @@ https://github.com/david-r-tech/commerce-readiness-ai
 - [ ] README and case study still render correctly.
 - [ ] Final screenshots do not accidentally show stale repository naming unless intentionally documented.
 
-## 9. Recommended Next Block
+## 9. Recommended Next Step
 
 ```text
-Final Portfolio Release Checklist v1
+Complete manual owner tasks from the Final Portfolio Release Checklist.
 ```
 
-This next block should verify the final presentation path before the project is shared publicly or linked in a portfolio.
+The repository rename itself remains an owner-only action.

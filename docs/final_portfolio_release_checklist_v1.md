@@ -4,6 +4,13 @@ This checklist is the final owner-facing readiness pass before Product Data Copi
 
 It does not rename the GitHub repository, change source code, or change app behavior. It documents the final checks and manual owner tasks.
 
+## Related Documentation
+
+- [README](../README.md)
+- [Portfolio Case Study](portfolio_case_study.md)
+- [Portfolio Screenshot Checklist](portfolio_screenshot_checklist_v1.md)
+- [GitHub Repo Rename Manual Checklist](github_repo_rename_manual_checklist_v1.md)
+
 ## 1. Code Readiness
 
 Confirm the repository is technically clean:
@@ -228,10 +235,10 @@ The project is portfolio-release ready when:
 
 ## 10. Recommended Next Step
 
-Next recommended block:
+Next recommended step:
 
 ```text
-Final Docs Link Polish v1
+Manual owner tasks for QA, screenshots, and optional GitHub repo rename
 ```
 
 Alternative: pause Codex work and complete manual owner tasks first:

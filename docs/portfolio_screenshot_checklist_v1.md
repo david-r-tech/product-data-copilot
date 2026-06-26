@@ -4,6 +4,12 @@ Screenshots are captured manually by the project owner after running the app loc
 
 Use this checklist after the app has passed the manual UX and export QA checks. The screenshots should support the portfolio case study and GitHub presentation without overstating the current MVP.
 
+Related docs:
+
+- [README](../README.md)
+- [Portfolio Case Study](portfolio_case_study.md)
+- [Final Portfolio Release Checklist](final_portfolio_release_checklist_v1.md)
+
 Recommended local start command:
 
 ```bash

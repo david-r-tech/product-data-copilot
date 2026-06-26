@@ -4,6 +4,12 @@ Product Data Copilot is a portfolio-grade product prototype for e-commerce produ
 
 The project is not positioned as a finished SaaS platform. It is a realistic local product workflow that demonstrates product thinking, professional Python structure, AI safety design, and practical e-commerce data operations.
 
+## Related Documentation
+
+- [README](../README.md)
+- [Portfolio Screenshot Checklist](portfolio_screenshot_checklist_v1.md)
+- [Final Portfolio Release Checklist](final_portfolio_release_checklist_v1.md)
+
 ## 1. Short Product Summary
 
 Product Data Copilot turns CSV/XLSX product data into a structured audit workflow. Users can load sample data or upload their own product file, review detected issues, compare readiness scores, work through review tasks, generate AI-assisted draft suggestions for selected products, and export results for business handoff.

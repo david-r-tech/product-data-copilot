@@ -183,10 +183,21 @@ The demo dataset contains 25 fictional products across categories such as Appare
 
 - [Portfolio Case Study](docs/portfolio_case_study.md)
 - [Portfolio Screenshot Checklist](docs/portfolio_screenshot_checklist_v1.md)
+- [Final Portfolio Release Checklist](docs/final_portfolio_release_checklist_v1.md)
+- [GitHub Repo Rename Manual Checklist](docs/github_repo_rename_manual_checklist_v1.md)
 - [Demo Test Checklist](docs/demo_test_checklist.md)
 - [Demo Script](docs/demo_script.md)
 - [Project Log](docs/commerce_readiness_ai_project_log.md)
 - [Current Context](docs/current_context.md)
+
+## Final Portfolio Docs
+
+Use these documents for the final portfolio handoff:
+
+- [Portfolio Case Study](docs/portfolio_case_study.md) - product story, workflow, architecture, AI safety, export safety, limitations, and roadmap.
+- [Portfolio Screenshot Checklist](docs/portfolio_screenshot_checklist_v1.md) - manual screenshot plan for GitHub and portfolio presentation.
+- [Final Portfolio Release Checklist](docs/final_portfolio_release_checklist_v1.md) - final go/no-go checklist before sharing the project.
+- [GitHub Repo Rename Manual Checklist](docs/github_repo_rename_manual_checklist_v1.md) - owner-only steps for the optional future repository rename.
 
 ## Current Status
 

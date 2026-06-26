@@ -61,11 +61,12 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 53 | Safe Naming Cleanup v1 | Done | Removed safe current-facing old product-name references from the app header and README while preserving historical references, package paths, filenames, and repo URLs. |
 | 54 | GitHub Repo Rename Manual Checklist v1 | Done | Created a manual owner checklist for renaming the GitHub repository and updating local remotes/public links safely. |
 | 55 | Final Portfolio Release Checklist v1 | Done | Created a final owner-facing checklist for sharing the project in a portfolio, CV, or GitHub review. |
-| 56 | Final Docs Link Polish v1 | NEXT | Verify final README/docs links and owner-facing references before screenshots, repo rename, and portfolio sharing. |
-| 57 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 58 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 59 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 60 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 56 | Final Docs Link Polish v1 | Done | Connected final README, case study, screenshot, release, and repo rename docs with concise relative links. |
+| 57 | Manual Owner Tasks | NEXT | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
+| 58 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 59 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
+| 60 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 61 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
