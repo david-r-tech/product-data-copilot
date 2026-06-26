@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before GitHub Repo Rename Manual Checklist v1: `46647f4 Clean up Product Data Copilot naming`
+- Current repo head before Final Portfolio Release Checklist v1: `644166d Add GitHub repo rename checklist`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: GitHub Repo Rename Manual Checklist v1 completed.
-- Next block: `Final Portfolio Release Checklist v1`
+- Current roadmap position: Final Portfolio Release Checklist v1 completed.
+- Next block: `Final Docs Link Polish v1` or manual owner tasks
 
 ## Current App Capabilities
 
@@ -45,6 +45,7 @@
 - Final Naming Cleanup Planning v1 defines how to move safely from the old working name and repository name toward Product Data Copilot without automatic repo/folder renaming
 - Safe Naming Cleanup v1 removes safe current-facing old product-name references from the app header and README while keeping historical references, package paths, generated filenames, and repository URLs unchanged
 - GitHub Repo Rename Manual Checklist v1 documents the owner-only steps for renaming the GitHub repository to `product-data-copilot`, updating local remotes, and checking external links later
+- Final Portfolio Release Checklist v1 documents final code readiness, manual QA, AI safety, export safety, portfolio readiness, CV readiness, known limitations, and owner tasks before sharing
 
 ## Key Modules
 
