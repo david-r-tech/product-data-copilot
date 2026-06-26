@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Safe Naming Cleanup v1: `36f8506 Plan final naming cleanup v1`
+- Current repo head before GitHub Repo Rename Manual Checklist v1: `46647f4 Clean up Product Data Copilot naming`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Safe Naming Cleanup v1 completed; GitHub repo rename manual checklist is the next recommended block.
+- Current planning focus: GitHub Repo Rename Manual Checklist v1 completed; Final Portfolio Release Checklist v1 is the next recommended block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -48,6 +48,7 @@
 - README Final Polish v1 updates the GitHub-facing README with a concise product pitch, screenshot placeholder, run/test commands, architecture overview, AI/export safety, case study links, limitations, and roadmap
 - Final Naming Cleanup Planning v1 defines how to move safely from the old working name and repository name toward Product Data Copilot without automatic repo/folder renaming
 - Safe Naming Cleanup v1 removes safe current-facing old product-name references from the app header and README while keeping historical references, package paths, generated filenames, and repository URLs unchanged
+- GitHub Repo Rename Manual Checklist v1 documents the owner-only repository rename steps, local remote update commands, external link checks, risks, and acceptance criteria
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -92,6 +93,7 @@
 - README Final Polish v1 updates the public `README.md`.
 - Final Naming Cleanup Planning v1 is documented in `docs/final_naming_cleanup_plan_v1.md`.
 - Safe Naming Cleanup v1 updates current-facing app/README naming without repository, package, or filename renames.
+- GitHub Repo Rename Manual Checklist v1 is documented in `docs/github_repo_rename_manual_checklist_v1.md`.
 
 ## Intentionally Not Implemented Yet
 
@@ -109,7 +111,7 @@
 
 ## Recommended Next Roadmap
 
-1. GitHub Repo Rename Manual Checklist v1
+1. Final Portfolio Release Checklist v1
 2. Tests Expansion v1
 3. UX Polish v1
 4. Public GitHub Readiness / portfolio presentation pass
