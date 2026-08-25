@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Final Docs Link Polish v1: `305b94b Add final portfolio release checklist`
+- Current repo head before German Demo Text Tab v1: `cef9180 Polish final documentation links`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Final Docs Link Polish v1 completed; manual owner tasks for QA, screenshots, and optional GitHub repo rename are the next recommended step.
+- Current planning focus: German Demo Bug Fix v1 completed; German Demo UX Polish v1 is the next recommended step.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -29,6 +29,8 @@
 - Separate Smart Suggestions v2 generation button with parser-normalized review-required rows
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Smart Suggestions v2 demo fixture loader for deterministic local review testing without an API key
+- German `DE Demo` tab for no-cost furniture Excel/CSV upload, missing description/bulletpoint/translation filling, preview, and download; `data/moebel_demo_upload.xlsx` is the ready-to-use 10-product German furniture upload file
+- German demo dtype bug fix so empty Excel text columns can be filled with generated German text without a `float64` assignment crash
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
@@ -51,6 +53,7 @@
 - GitHub Repo Rename Manual Checklist v1 documents the owner-only repository rename steps, local remote update commands, external link checks, risks, and acceptance criteria
 - Final Portfolio Release Checklist v1 documents final code readiness, manual QA, AI safety, export safety, GitHub/portfolio readiness, CV readiness, known limitations, and manual owner tasks
 - Final Docs Link Polish v1 adds final GitHub-friendly navigation links between README, case study, screenshot checklist, final release checklist, and repo rename checklist
+- German Furniture Demo Export v1 adds a presentation-focused offline upload/fill/download demo for descriptions, bulletpoints, and English translations
 - Documentation, demo checklist, demo script, and portfolio case-study draft
 
 ## Completed Architecture / Refactor Milestones
@@ -98,6 +101,7 @@
 - GitHub Repo Rename Manual Checklist v1 is documented in `docs/github_repo_rename_manual_checklist_v1.md`.
 - Final Portfolio Release Checklist v1 is documented in `docs/final_portfolio_release_checklist_v1.md`.
 - Final Docs Link Polish v1 connects the final portfolio documents for easier reviewer navigation.
+- German Furniture Demo Export v1 adds a small extra Streamlit tab for a shorter German presentation path.
 
 ## Intentionally Not Implemented Yet
 

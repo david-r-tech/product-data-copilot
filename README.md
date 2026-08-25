@@ -33,6 +33,7 @@ Product Data Copilot turns a product file into a structured review workflow:
 - AI Suggestions v1 for one selected product
 - Smart Suggestions v2 with structured field-level suggestions
 - Human Approval UI for approve/reject/pending/blocked review states
+- German furniture demo export for no-cost description, bulletpoint, and translation filling
 - Improved Excel export for approved/pending/rejected/blocked suggestion groups
 - Excel Management Export for business review
 - Pytest-backed helper modules under `src/product_data_copilot/`
@@ -49,6 +50,8 @@ Product Data Copilot turns a product file into a structured review workflow:
 8. Approve, reject, or leave suggestions pending during the current session.
 9. Preview the improved product data export groups.
 10. Download the improved Excel workbook or the management workbook.
+
+For a short German presentation without API costs, open the `DE Demo` tab, upload `data/moebel_demo_upload.xlsx`, click `Demo-Liste erstellen`, and download `moebel_demo_export.xlsx`. The demo fills empty description, bulletpoint, and English translation fields without calling OpenAI.
 
 ## Installation
 
@@ -215,6 +218,7 @@ It is not intended to publish products automatically or replace legal/compliance
 - No marketplace-specific rule presets
 - Session-only approval state
 - AI suggestions require human review
+- German furniture demo export is deterministic demo output, not live AI generation
 - No automatic product data write-back
 - No legal compliance guarantees
 

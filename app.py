@@ -622,6 +622,177 @@ def get_product_option(row):
     return f"{sku} - {product_name} - Score {score}"
 
 
+def clean_demo_text(value, fallback="Nicht angegeben"):
+    if is_blank(value):
+        return fallback
+
+    return str(value).strip()
+
+
+def find_first_column(dataframe, possible_columns, fallback_column):
+    column_lookup = {str(column).lower(): column for column in dataframe.columns}
+
+    for column_name in possible_columns:
+        matching_column = column_lookup.get(str(column_name).lower())
+        if matching_column is not None:
+            return matching_column
+
+        if column_name in dataframe.columns:
+            return column_name
+
+    return fallback_column
+
+
+def get_demo_row_value(row, possible_columns, fallback=""):
+    column_lookup = {str(column).lower(): column for column in row.index}
+
+    for column_name in possible_columns:
+        matching_column = column_lookup.get(str(column_name).lower())
+        if matching_column is not None and not is_blank(row[matching_column]):
+            return clean_demo_text(row[matching_column], fallback)
+
+        if column_name in row.index and not is_blank(row[column_name]):
+            return clean_demo_text(row[column_name], fallback)
+
+    return fallback
+
+
+def build_furniture_description(row):
+    product_name = get_demo_row_value(
+        row,
+        ["product_name", "product name", "produktname", "artikelname", "name"],
+        "Dieses Möbelstück",
+    )
+    category = get_demo_row_value(
+        row,
+        ["category", "kategorie", "produktkategorie"],
+        "Möbel",
+    )
+    material = get_demo_row_value(row, ["material", "Material"], "ausgewählten Materialien")
+    color = get_demo_row_value(row, ["color", "farbe", "Farbe"], "zeitloser Optik")
+    dimensions = get_demo_row_value(row, ["dimensions", "maße", "masse", "Maße"], "")
+
+    dimension_text = f" Die Maße betragen {dimensions}." if dimensions else ""
+
+    return (
+        f"{product_name} ist ein Möbelstück aus der Kategorie {category}. "
+        f"Es überzeugt durch {color}, {material} und eine klare Formensprache."
+        f"{dimension_text} "
+        "Der Artikel eignet sich für Wohnräume, Gästezimmer oder Arbeitsbereiche "
+        "und lässt sich gut mit verschiedenen Einrichtungsstilen kombinieren."
+    )
+
+
+def build_furniture_bulletpoints(row):
+    product_name = get_demo_row_value(
+        row,
+        ["product_name", "product name", "produktname", "artikelname", "name"],
+        "Möbelstück",
+    )
+    category = get_demo_row_value(row, ["category", "kategorie"], "Möbel")
+    material = get_demo_row_value(row, ["material", "Material"], "pflegeleichtes Material")
+    color = get_demo_row_value(row, ["color", "farbe", "Farbe"], "zeitlose Farbe")
+    dimensions = get_demo_row_value(row, ["dimensions", "maße", "masse", "Maße"], "kompakte Maße")
+
+    return "\n".join(
+        [
+            f"Geeignet für {category} und moderne Wohnbereiche",
+            f"{product_name} mit klarer, alltagstauglicher Gestaltung",
+            f"Material: {material}",
+            f"Farbe/Optik: {color}",
+            f"Maße/Format: {dimensions}",
+        ]
+    )
+
+
+def build_furniture_translation(row, german_description):
+    product_name = get_demo_row_value(
+        row,
+        ["product_name", "product name", "produktname", "artikelname", "name"],
+        "This furniture item",
+    )
+    category = get_demo_row_value(row, ["category", "kategorie"], "furniture")
+
+    return (
+        f"{product_name} is a furniture item in the {category} category. "
+        "It is designed for everyday use in living rooms, guest rooms, or work areas. "
+        "The product information should be reviewed before publication."
+    )
+
+
+def build_furniture_demo_export(input_dataframe):
+    demo_dataframe = input_dataframe.copy()
+
+    description_column = find_first_column(
+        demo_dataframe,
+        ["description", "beschreibung", "beschreibung_de", "produkttext", "text_de"],
+        "beschreibung_de",
+    )
+    bulletpoints_column = find_first_column(
+        demo_dataframe,
+        ["bulletpoints", "bullet_points", "bullets"],
+        "bulletpoints",
+    )
+    translation_column = find_first_column(
+        demo_dataframe,
+        [
+            "translation_en",
+            "uebersetzung_en",
+            "übersetzung_en",
+            "englische_uebersetzung",
+            "englische uebersetzung",
+            "englische übersetzung",
+        ],
+        "translation_en",
+    )
+
+    for column_name in [description_column, bulletpoints_column, translation_column]:
+        if column_name not in demo_dataframe.columns:
+            demo_dataframe[column_name] = ""
+        else:
+            demo_dataframe = demo_dataframe.astype({column_name: "object"})
+
+    demo_statuses = []
+
+    for row_index, row in demo_dataframe.iterrows():
+        filled_fields = []
+
+        if is_blank(row[description_column]):
+            description = build_furniture_description(row)
+            demo_dataframe.at[row_index, description_column] = description
+            filled_fields.append(description_column)
+        else:
+            description = clean_demo_text(row[description_column], "")
+
+        if is_blank(row[bulletpoints_column]):
+            demo_dataframe.at[row_index, bulletpoints_column] = build_furniture_bulletpoints(row)
+            filled_fields.append(bulletpoints_column)
+
+        if is_blank(row[translation_column]):
+            demo_dataframe.at[row_index, translation_column] = build_furniture_translation(
+                row,
+                description,
+            )
+            filled_fields.append(translation_column)
+
+        if filled_fields:
+            demo_statuses.append("Demo-Felder gefüllt: " + ", ".join(filled_fields))
+        else:
+            demo_statuses.append("Keine leeren Demo-Felder gefunden")
+
+    demo_dataframe["demo_status"] = demo_statuses
+    return demo_dataframe
+
+
+def create_furniture_demo_excel(dataframe):
+    output = BytesIO()
+
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        dataframe.to_excel(writer, sheet_name="Moebel Demo Export", index=False)
+
+    return output.getvalue()
+
+
 def get_ai_product_context(product, product_score):
     return {
         "sku": product_score.get("sku", get_value(product, "sku")),
@@ -973,6 +1144,7 @@ def run_app():
             "Review Tasks",
             "Management Export",
             "AI Suggestions",
+            "DE Demo",
         ]
     )
 
@@ -1781,6 +1953,93 @@ def run_app():
         if smart_suggestions_v2_raw_response:
             with st.expander("Raw Smart Suggestions v2 response"):
                 st.text(smart_suggestions_v2_raw_response)
+
+    with tabs[7]:
+        st.subheader("Möbel-Demo: Texte, Bulletpoints und Übersetzung")
+        st.caption(
+            "Kurze Präsentationsdemo: Excel hochladen, leere Textfelder füllen, fertige Liste herunterladen."
+        )
+        st.info(
+            "Demo-Modus ohne API-Kosten. Die Originaldatei wird nicht überschrieben."
+        )
+
+        furniture_demo_file = st.file_uploader(
+            "Möbel-Excel hochladen",
+            type=["xlsx", "csv"],
+            key="furniture_demo_upload",
+            help="Erwartete Felder: Produktname, Kategorie, Beschreibung/Text, Bulletpoints und englische Übersetzung. Fehlende Textspalten werden für die Demo ergänzt.",
+        )
+
+        if furniture_demo_file is None:
+            st.write("1. Möbel-Datei als Excel oder CSV hochladen.")
+            st.write("2. `Demo-Liste erstellen` klicken.")
+            st.write("3. Gefüllte Excel-Datei herunterladen.")
+            st.caption(
+                "Gefüllt werden leere Felder für Beschreibung, Bulletpoints und englische Übersetzung."
+            )
+        else:
+            try:
+                if furniture_demo_file.name.endswith(".xlsx"):
+                    furniture_demo_input = pd.read_excel(furniture_demo_file)
+                else:
+                    furniture_demo_input = pd.read_csv(furniture_demo_file)
+
+                st.write("Hochgeladene Datei")
+                st.dataframe(
+                    make_display_safe(furniture_demo_input.head(10)),
+                    width="stretch",
+                )
+
+                if st.button("Demo-Liste erstellen", key="create_furniture_demo_export"):
+                    st.session_state["furniture_demo_export"] = (
+                        build_furniture_demo_export(furniture_demo_input)
+                    )
+                    st.session_state["furniture_demo_filename"] = furniture_demo_file.name
+
+                demo_export_is_ready = (
+                    "furniture_demo_export" in st.session_state
+                    and st.session_state.get("furniture_demo_filename")
+                    == furniture_demo_file.name
+                )
+
+                if demo_export_is_ready:
+                    furniture_demo_export = st.session_state["furniture_demo_export"]
+                    filled_rows = len(
+                        furniture_demo_export[
+                            furniture_demo_export["demo_status"].str.contains(
+                                "gefüllt",
+                                na=False,
+                            )
+                        ]
+                    )
+
+                    metric_columns = st.columns(3)
+                    metric_columns[0].metric("Produkte", len(furniture_demo_export))
+                    metric_columns[1].metric("Zeilen ergänzt", filled_rows)
+                    metric_columns[2].metric(
+                        "Spalten",
+                        len(furniture_demo_export.columns),
+                    )
+
+                    st.write("Fertige Demo-Liste")
+                    st.dataframe(
+                        make_display_safe(furniture_demo_export),
+                        width="stretch",
+                    )
+                    st.download_button(
+                        "Möbel Demo Excel herunterladen",
+                        create_furniture_demo_excel(furniture_demo_export),
+                        "moebel_demo_export.xlsx",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    )
+                else:
+                    st.info(
+                        "Klicke auf `Demo-Liste erstellen`, um die leeren Textfelder zu füllen."
+                    )
+            except Exception as error:
+                st.error("Die Demo-Datei konnte nicht gelesen werden.")
+                with st.expander("Technische Details"):
+                    st.write(str(error))
 
 
 run_app()

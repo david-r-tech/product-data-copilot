@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Final Docs Link Polish v1: `305b94b Add final portfolio release checklist`
+- Current repo head before German Demo Text Tab v1: `cef9180 Polish final documentation links`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Final Docs Link Polish v1 completed.
-- Next recommended step: manual owner tasks for QA, screenshots, and optional GitHub repo rename
+- Current roadmap position: German Demo Bug Fix v1 completed.
+- Next recommended step: German Demo UX Polish v1
 
 ## Current App Capabilities
 
@@ -25,6 +25,8 @@
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Smart Suggestions v2 session-only approval UI for one-suggestion review with blocked rows non-approvable
 - Smart Suggestions v2 demo fixture loader for deterministic local approval UI testing without an API key
+- German `DE Demo` tab for no-cost furniture Excel/CSV upload, missing description/bulletpoint/translation filling, preview, and download; `data/moebel_demo_upload.xlsx` is the ready-to-use 10-product German furniture upload file
+- German demo dtype bug fix so empty Excel text columns can be filled with generated German text without a `float64` assignment crash
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
@@ -47,6 +49,7 @@
 - GitHub Repo Rename Manual Checklist v1 documents the owner-only steps for renaming the GitHub repository to `product-data-copilot`, updating local remotes, and checking external links later
 - Final Portfolio Release Checklist v1 documents final code readiness, manual QA, AI safety, export safety, portfolio readiness, CV readiness, known limitations, and owner tasks before sharing
 - Final Docs Link Polish v1 improves navigation between README, case study, screenshot checklist, final release checklist, and repo rename checklist without changing app behavior
+- German Furniture Demo Export v1 adds a simple presentation-focused upload/fill/download flow without OpenAI calls or costs
 
 ## Key Modules
 

@@ -62,11 +62,17 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 54 | GitHub Repo Rename Manual Checklist v1 | Done | Created a manual owner checklist for renaming the GitHub repository and updating local remotes/public links safely. |
 | 55 | Final Portfolio Release Checklist v1 | Done | Created a final owner-facing checklist for sharing the project in a portfolio, CV, or GitHub review. |
 | 56 | Final Docs Link Polish v1 | Done | Connected final README, case study, screenshot, release, and repo rename docs with concise relative links. |
-| 57 | Manual Owner Tasks | NEXT | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
-| 58 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 59 | UX Polish v1 | Planned | Improve broader app usability after the core Smart Suggestions v2 flow is clearer. |
-| 60 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 61 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 57 | German Furniture Demo Export v1 | Done | Added a simple no-cost German demo tab for furniture file upload, missing text filling, preview, and Excel download without OpenAI calls. |
+| 58 | UI and Demo Product Backlog v1 | Done | Created a prioritized product backlog from screenshot feedback covering the German demo bug, clearer demo flow, larger primary actions, tab guidance, table readability, and future language switching. |
+| 59 | German Demo Bug Fix v1 | Done | Fixed the dtype crash in the German furniture demo and added a ready-to-use furniture Excel upload file. |
+| 60 | German Demo UX Polish v1 | NEXT | Make the `DE Demo` tab simpler, clearer, and more presentation-ready with stronger primary actions and three-step guidance. |
+| 61 | Main App Navigation Clarity v1 | Planned | Improve tab-level guidance, page intro, and user orientation without redesigning the whole app. |
+| 62 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
+| 63 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
+| 64 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
+| 65 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 66 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 67 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
