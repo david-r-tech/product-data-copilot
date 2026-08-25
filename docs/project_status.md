@@ -3,12 +3,12 @@
 ## Current Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before German Demo UX Polish v1: `c10e959 Fix German demo Excel text handling`
+- Current repo head before Final German Demo Content & Review Polish v1: `709b2d0 Polish German demo presentation flow`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
-- Current test count: `122` passing pytest tests
+- Current test count: `129` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: German Demo UX Polish v1 completed; Main App Navigation Clarity v1 is the next recommended step.
+- Current planning focus: Final German Demo Content & Review Polish v1 completed; presentation freeze / manual live-demo rehearsal is the next recommended step.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -32,6 +32,7 @@
 - German `DE Demo` tab for no-cost furniture Excel/CSV upload, missing description/bulletpoint/translation filling, preview, and download; `data/moebel_demo_upload.xlsx` is the ready-to-use 10-product German furniture upload file
 - German demo dtype bug fix so empty Excel text columns can be filled with generated German text without a `float64` assignment crash
 - German demo UX polish with a guided five-step presentation flow, compact product selection, content preview tabs, session-only demo review status, and clearer export safety wording
+- Final German demo content polish with prepared offline A/B content variants, cleaned German umlauts in the furniture upload file, simplified Freigeben/Neu vorschlagen review flow, and XLSX Unicode safety tests
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back

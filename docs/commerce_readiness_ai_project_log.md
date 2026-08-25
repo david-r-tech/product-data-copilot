@@ -894,6 +894,14 @@ Readiness status logic:
 * How to test: Run `python -m streamlit run app.py`, open `DE Demo`, upload `data/moebel_demo_upload.xlsx`, choose a product, prepare content suggestions, review the bulletpoints/German/English previews, set a review status, and download the Excel export.
 * Next recommended step: Improve main app navigation clarity outside the demo tab.
 
+### Final German Demo Content & Review Polish v1
+
+* Date: TODO
+* Change: Added prepared offline A/B content variants for the 10 furniture demo SKUs, improved German/English content quality, cleaned visible German umlaut spellings in the demo upload file, simplified the demo review flow to `Freigeben` and `Neu vorschlagen`, and added focused tests for demo content and XLSX Unicode handling.
+* Why it matters: Makes the short German presentation path stronger and safer: product data is uploaded, realistic content is proposed, a human reviews it, an alternative variant can be shown, and the approved export remains offline and deterministic.
+* How to test: Run `python -m streamlit run app.py`, open `DE Demo`, upload `data/moebel_demo_upload.xlsx`, use `PDC-MOB-001`, prepare content, click `Neu vorschlagen`, verify the content changes, click `Freigeben`, export the workbook, and confirm Umlaute plus review status remain readable.
+* Next recommended step: Freeze the presentation build and rehearse the live demo manually.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
