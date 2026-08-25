@@ -65,8 +65,8 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 57 | German Furniture Demo Export v1 | Done | Added a simple no-cost German demo tab for furniture file upload, missing text filling, preview, and Excel download without OpenAI calls. |
 | 58 | UI and Demo Product Backlog v1 | Done | Created a prioritized product backlog from screenshot feedback covering the German demo bug, clearer demo flow, larger primary actions, tab guidance, table readability, and future language switching. |
 | 59 | German Demo Bug Fix v1 | Done | Fixed the dtype crash in the German furniture demo and added a ready-to-use furniture Excel upload file. |
-| 60 | German Demo UX Polish v1 | NEXT | Make the `DE Demo` tab simpler, clearer, and more presentation-ready with stronger primary actions and three-step guidance. |
-| 61 | Main App Navigation Clarity v1 | Planned | Improve tab-level guidance, page intro, and user orientation without redesigning the whole app. |
+| 60 | German Demo UX Polish v1 | Done | Made the `DE Demo` tab simpler, clearer, and more presentation-ready with a guided flow, compact product selection, content preview tabs, demo review status, and stronger export wording. |
+| 61 | Main App Navigation Clarity v1 | NEXT | Improve tab-level guidance, page intro, and user orientation without redesigning the whole app. |
 | 62 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
 | 63 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
 | 64 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |

@@ -886,6 +886,14 @@ Readiness status logic:
 * How to test: Run `python -m streamlit run app.py`, open `DE Demo`, upload `data/moebel_demo_upload.xlsx`, click `Demo-Liste erstellen`, and confirm the finished table and download button appear without a red error.
 * Next recommended step: Polish the German demo tab UI so the three-step flow and primary buttons are clearer for the live presentation.
 
+### German Demo UX Polish v1
+
+* Date: TODO
+* Change: Polished the `DE Demo` tab into a guided five-step presentation flow with compact upload feedback, product selection, focused content preview tabs, session-only demo review status, and clearer Excel export wording.
+* Why it matters: Makes the short German furniture demo easier to present live without exposing the audience to the larger product audit workflow.
+* How to test: Run `python -m streamlit run app.py`, open `DE Demo`, upload `data/moebel_demo_upload.xlsx`, choose a product, prepare content suggestions, review the bulletpoints/German/English previews, set a review status, and download the Excel export.
+* Next recommended step: Improve main app navigation clarity outside the demo tab.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
