@@ -72,9 +72,10 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 64 | Remove German Furniture Demo v1 | Done | Removed the completed presentation-only German furniture demo from the active product workflow, including tab, demo helpers, demo data, and demo-only tests. |
 | 65 | UX Polish Phase 1 - Core Product | Done | Improved the normal Product Data Copilot workflow with workflow orientation, clearer upload guidance, dashboard/readiness interpretation, business-friendly review wording, AI section grouping, and export-purpose copy. |
 | 66 | Core UX Manual QA v1 | Done | Added a manual browser QA checklist for the polished core Product Data Copilot workflow after German demo removal. |
-| 67 | Data Table Readability v1 | NEXT | Reduce visual overload in product data/table views with compact previews and full raw data access. |
-| 68 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
-| 69 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
+| 67 | Data Table Readability v1 | Done | Improved visible table scanning with display-only column ordering, business-friendly labels, hidden indexes, simple column sizing, and controlled table heights. |
+| 68 | Manual Core UX Browser Walkthrough | NEXT | Run the app locally and follow `docs/core_ux_manual_qa_v1.md` to confirm the polished tables and core workflow in the browser. |
+| 69 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
+| 70 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
 | 68 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
 | 69 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
 | 70 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |

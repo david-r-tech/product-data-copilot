@@ -942,6 +942,14 @@ Readiness status logic:
 * How to test: Run the automated checks, then start `python -m streamlit run app.py` and follow the checklist.
 * Next recommended step: Start `Data Table Readability v1`.
 
+### Data Table Readability v1
+
+* Date: 2026-09-01
+* Change: Improved visible table readability with display-only column ordering, business-friendly labels, hidden indexes, Streamlit column sizing, and controlled table heights across product data, scores, issues, review tasks, AI suggestion context, Smart Suggestions v2, review details, management summary, and improved export previews.
+* Why it matters: Makes the core product workflow easier to scan for business users without changing product checks, scoring, AI behavior, approval state, exports, or source data structures.
+* How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually start `python -m streamlit run app.py` and inspect the major tables.
+* Next recommended step: Run a manual browser walkthrough with `docs/core_ux_manual_qa_v1.md`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

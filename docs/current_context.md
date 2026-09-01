@@ -7,8 +7,8 @@
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Core UX Manual QA v1 documented.
-- Next recommended step: Data Table Readability v1
+- Current roadmap position: Data Table Readability v1 completed.
+- Next recommended step: manual browser walkthrough with `docs/core_ux_manual_qa_v1.md`
 
 ## Current App Capabilities
 
@@ -28,6 +28,7 @@
 - Product logo integrated into the Streamlit app header from `assets/product_data_copilot_logo.png` with embedded display and text fallback
 - UX Polish Phase 1 - Core Product adds a compact workflow orientation, clearer upload guidance, dashboard/readiness interpretation, business-friendly review status wording, clearer AI section grouping, and export-purpose copy without changing product logic.
 - Core UX Manual QA v1 provides a browser checklist for validating the polished core workflow after the German demo removal.
+- Data Table Readability v1 improves visible table scanning with display-only column ordering, business-friendly labels, hidden indexes, simple column sizing, and controlled table heights while keeping internal/export DataFrames unchanged.
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back

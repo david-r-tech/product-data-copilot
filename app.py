@@ -117,6 +117,168 @@ def make_display_safe(dataframe):
     return display_dataframe
 
 
+DISPLAY_COLUMN_LABELS = {
+    "sku": "SKU",
+    "product_name": "Product Name",
+    "category": "Category",
+    "description": "Description",
+    "brand": "Brand",
+    "manufacturer": "Manufacturer",
+    "attributes": "Attributes",
+    "ean": "EAN",
+    "language": "Language",
+    "price": "Price",
+    "image_url": "Image URL",
+    "warning_notes": "Warning Notes",
+    "translation_de": "Translation DE",
+    "translation_en": "Translation EN",
+    "data_quality_score": "Data Quality",
+    "marketplace_readiness_score": "Marketplace Readiness",
+    "translation_readiness_score": "Translation Readiness",
+    "compliance_readiness_score": "Compliance Readiness",
+    "ai_content_readiness_score": "AI Content Readiness",
+    "overall_readiness_score": "Overall Score",
+    "readiness_status": "Readiness Status",
+    "review_status": "Review Status",
+    "issue_type": "Issue Type",
+    "field_name": "Field",
+    "severity": "Severity",
+    "message": "Issue",
+    "recommended_action": "Recommended Action",
+    "task_type": "Task Type",
+    "priority": "Priority",
+    "products": "Products",
+    "tasks": "Tasks",
+    "metric": "Metric",
+    "value": "Value",
+    "target_field": "Field",
+    "field": "Field",
+    "current_value": "Current Value",
+    "proposed_value": "Suggested Value",
+    "suggested_value": "Suggested Value",
+    "original_value": "Original Value",
+    "approved_value": "Approved Value",
+    "source_fields": "Source Fields",
+    "reason": "Reason",
+    "confidence": "Confidence",
+    "risk_level": "Risk",
+    "human_review_status": "Human Review Status",
+    "suggestion_status": "Suggestion State",
+    "approval_status": "Approval Status",
+    "export_status": "Export Status",
+    "suggestion_id": "Suggestion ID",
+    "source": "Source",
+}
+
+TEXT_HEAVY_COLUMNS = {
+    "Description",
+    "Attributes",
+    "Image URL",
+    "Warning Notes",
+    "Translation DE",
+    "Translation EN",
+    "Issue",
+    "Recommended Action",
+    "Reason",
+    "Source Fields",
+    "Suggested Value",
+    "Original Value",
+    "Approved Value",
+    "Current Value",
+    "Value",
+    "Source",
+}
+SMALL_COLUMNS = {
+    "SKU",
+    "EAN",
+    "Price",
+    "Language",
+    "Severity",
+    "Priority",
+    "Risk",
+    "Confidence",
+    "Products",
+    "Tasks",
+    "Export Status",
+}
+SCORE_COLUMNS = {
+    "Data Quality",
+    "Marketplace Readiness",
+    "Translation Readiness",
+    "Compliance Readiness",
+    "AI Content Readiness",
+    "Overall Score",
+}
+
+
+def prepare_display_dataframe(dataframe, preferred_columns=None):
+    """Return a display-only copy with business labels and prioritized columns."""
+    display_dataframe = make_display_safe(dataframe)
+
+    if preferred_columns:
+        preferred_existing_columns = [
+            column for column in preferred_columns if column in display_dataframe.columns
+        ]
+        remaining_columns = [
+            column
+            for column in display_dataframe.columns
+            if column not in preferred_existing_columns
+        ]
+        display_dataframe = display_dataframe[
+            preferred_existing_columns + remaining_columns
+        ]
+
+    return display_dataframe.rename(columns=DISPLAY_COLUMN_LABELS)
+
+
+def get_display_column_config(display_dataframe):
+    """Return Streamlit column config for readable, display-only tables."""
+    column_config = {}
+
+    for column_name in display_dataframe.columns:
+        if column_name in SCORE_COLUMNS:
+            column_config[column_name] = st.column_config.NumberColumn(
+                column_name,
+                format="%d",
+                width="small",
+            )
+        elif column_name in TEXT_HEAVY_COLUMNS:
+            column_config[column_name] = st.column_config.TextColumn(
+                column_name,
+                width="large",
+            )
+        elif column_name in SMALL_COLUMNS:
+            column_config[column_name] = st.column_config.TextColumn(
+                column_name,
+                width="small",
+            )
+        else:
+            column_config[column_name] = st.column_config.TextColumn(
+                column_name,
+                width="medium",
+            )
+
+    return column_config
+
+
+def render_readable_dataframe(
+    dataframe,
+    preferred_columns=None,
+    height=420,
+    container=None,
+):
+    """Render a DataFrame with display-only labels, ordering, and hidden index."""
+    streamlit_target = container or st
+    display_dataframe = prepare_display_dataframe(dataframe, preferred_columns)
+    streamlit_target.dataframe(
+        display_dataframe,
+        width="stretch",
+        hide_index=True,
+        height=height,
+        column_config=get_display_column_config(display_dataframe),
+    )
+
+
 def add_issue(issues, sku, issue_type, field_name, severity, message, recommended_action):
     issues.append(
         {
@@ -1057,14 +1219,48 @@ def run_app():
             "Review the loaded source data. This table is not changed automatically by AI suggestions or exports."
         )
         render_dataset_summary(st, row_count, column_count)
-        st.dataframe(make_display_safe(products), width="stretch")
+        render_readable_dataframe(
+            products,
+            preferred_columns=[
+                "sku",
+                "product_name",
+                "category",
+                "brand",
+                "manufacturer",
+                "price",
+                "ean",
+                "description",
+                "attributes",
+                "translation_de",
+                "translation_en",
+                "image_url",
+                "warning_notes",
+                "language",
+            ],
+            height=430,
+        )
 
     with tabs[2]:
         st.subheader("Product Readiness Scores")
         st.caption(
             "Scores summarize how ready each product is for review and export. Higher scores mean fewer detected data-quality gaps."
         )
-        st.dataframe(make_display_safe(readiness_scores), width="stretch")
+        render_readable_dataframe(
+            readiness_scores,
+            preferred_columns=[
+                "sku",
+                "product_name",
+                "review_status",
+                "readiness_status",
+                "overall_readiness_score",
+                "data_quality_score",
+                "marketplace_readiness_score",
+                "translation_readiness_score",
+                "compliance_readiness_score",
+                "ai_content_readiness_score",
+            ],
+            height=430,
+        )
         st.download_button(
             "Download Product Readiness Scores",
             readiness_scores.to_csv(index=False),
@@ -1080,7 +1276,18 @@ def run_app():
         render_issues_summary(st, len(issues), len(filtered_issues))
 
         if len(filtered_issues) > 0:
-            st.dataframe(make_display_safe(filtered_issues), width="stretch")
+            render_readable_dataframe(
+                filtered_issues,
+                preferred_columns=[
+                    "sku",
+                    "severity",
+                    "field_name",
+                    "issue_type",
+                    "message",
+                    "recommended_action",
+                ],
+                height=430,
+            )
         elif len(issues) > 0:
             render_no_matching_issues_notice(st)
         else:
@@ -1141,11 +1348,26 @@ def run_app():
 
         summary_columns = st.columns(3)
         summary_columns[0].write("Products by review status")
-        summary_columns[0].dataframe(make_display_safe(status_counts), width="stretch")
+        render_readable_dataframe(
+            status_counts,
+            preferred_columns=["review_status", "products"],
+            height=180,
+            container=summary_columns[0],
+        )
         summary_columns[1].write("Tasks by priority")
-        summary_columns[1].dataframe(make_display_safe(priority_counts), width="stretch")
+        render_readable_dataframe(
+            priority_counts,
+            preferred_columns=["priority", "tasks"],
+            height=180,
+            container=summary_columns[1],
+        )
         summary_columns[2].write("Top task types")
-        summary_columns[2].dataframe(make_display_safe(task_type_counts), width="stretch")
+        render_readable_dataframe(
+            task_type_counts,
+            preferred_columns=["task_type", "tasks"],
+            height=180,
+            container=summary_columns[2],
+        )
 
         st.markdown("#### Set Product Review Status")
         st.caption(
@@ -1217,7 +1439,20 @@ def run_app():
         render_review_tasks_summary(st, len(review_tasks), len(filtered_review_tasks))
 
         if len(filtered_review_tasks) > 0:
-            st.dataframe(make_display_safe(filtered_review_tasks), width="stretch")
+            render_readable_dataframe(
+                filtered_review_tasks,
+                preferred_columns=[
+                    "sku",
+                    "product_name",
+                    "priority",
+                    "task_type",
+                    "review_status",
+                    "field_name",
+                    "issue_type",
+                    "recommended_action",
+                ],
+                height=430,
+            )
         elif len(review_tasks) > 0:
             render_no_matching_review_tasks_notice(st)
         else:
@@ -1250,7 +1485,11 @@ def run_app():
         st.caption(
             "Use this preview to confirm the management report context before downloading the workbook."
         )
-        st.dataframe(make_display_safe(management_summary), width="stretch")
+        render_readable_dataframe(
+            management_summary,
+            preferred_columns=["metric", "value"],
+            height=240,
+        )
 
         st.download_button(
             "Download Excel Management Export",
@@ -1318,11 +1557,37 @@ def run_app():
         )
 
         st.markdown("##### Selected Product Context")
-        st.dataframe(make_display_safe(pd.DataFrame([selected_product_context])), width="stretch")
+        render_readable_dataframe(
+            pd.DataFrame([selected_product_context]),
+            preferred_columns=[
+                "sku",
+                "product_name",
+                "review_status",
+                "readiness_status",
+                "overall_readiness_score",
+                "category",
+                "brand",
+                "manufacturer",
+                "description",
+                "attributes",
+            ],
+            height=180,
+        )
 
         st.markdown("##### Current Issues for This Product")
         if len(selected_issues) > 0:
-            st.dataframe(make_display_safe(selected_issues), width="stretch")
+            render_readable_dataframe(
+                selected_issues,
+                preferred_columns=[
+                    "sku",
+                    "severity",
+                    "field_name",
+                    "issue_type",
+                    "message",
+                    "recommended_action",
+                ],
+                height=260,
+            )
         else:
             st.success("No issues found for this product.")
 
@@ -1637,7 +1902,23 @@ def run_app():
             smart_suggestions_v2_display_columns
         ].rename(columns=smart_suggestions_v2_display_labels)
 
-        st.dataframe(make_display_safe(smart_suggestions_v2_display_df), width="stretch")
+        render_readable_dataframe(
+            smart_suggestions_v2_display_df,
+            preferred_columns=[
+                "SKU",
+                "Product",
+                "Field",
+                "Human Review Status",
+                "Risk",
+                "Confidence",
+                "Suggested Value",
+                "Current Value",
+                "Reason",
+                "Source Fields",
+                "Suggestion State",
+            ],
+            height=430,
+        )
         if len(smart_suggestions_v2_df) == 0:
             if smart_suggestions_v2_raw_response:
                 st.warning(
@@ -1664,7 +1945,20 @@ def run_app():
             parser_errors_df = smart_suggestions_v2_to_dataframe(
                 smart_suggestions_v2_error
             )
-            st.dataframe(make_display_safe(parser_errors_df), width="stretch")
+            render_readable_dataframe(
+                parser_errors_df,
+                preferred_columns=[
+                    "sku",
+                    "product_name",
+                    "target_field",
+                    "suggestion_status",
+                    "risk_level",
+                    "confidence",
+                    "reason",
+                    "source_fields",
+                ],
+                height=280,
+            )
         elif isinstance(smart_suggestions_v2_error, str) and smart_suggestions_v2_error:
             st.warning(
                 "Smart Suggestions v2 generation returned an error. No suggestion was approved automatically."
@@ -1726,7 +2020,7 @@ def run_app():
                     }
                 ]
             )
-            st.dataframe(make_display_safe(review_details), width="stretch")
+            render_readable_dataframe(review_details, height=220)
 
             if selected_review_status == "blocked":
                 st.warning(
@@ -1831,9 +2125,22 @@ def run_app():
                         f"{group_label} ({len(group_dataframe)})",
                         expanded=status_group == "approved",
                     ):
-                        st.dataframe(
-                            make_display_safe(group_dataframe),
-                            width="stretch",
+                        render_readable_dataframe(
+                            group_dataframe,
+                            preferred_columns=[
+                                "sku",
+                                "product_name",
+                                "field",
+                                "approval_status",
+                                "export_status",
+                                "risk_level",
+                                "confidence",
+                                "suggested_value",
+                                "current_value",
+                                "reason",
+                                "source",
+                            ],
+                            height=320,
                         )
 
             st.markdown("##### Download Improved Product Data Export")
