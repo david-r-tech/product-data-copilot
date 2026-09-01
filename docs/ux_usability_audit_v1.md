@@ -4,7 +4,7 @@
 
 This audit reviews the current Streamlit app from a product and usability perspective. It is analysis only. No runtime behavior, business logic, AI logic, export logic, or navigation behavior was changed in this block.
 
-The current app already has strong functional coverage: upload, product checks, scores, issues, review tasks, AI suggestions, Smart Suggestions v2, human approval, management export, improved export, and a focused German furniture demo. The main UX opportunity is not adding more capability, but making the existing workflow easier to understand.
+The current app already has strong functional coverage: upload, product checks, scores, issues, review tasks, AI suggestions, Smart Suggestions v2, human approval, management export, and improved export. The completed German furniture presentation demo has been removed from the active product workflow, so the next UX work should focus only on the core Product Data Copilot app.
 
 ## Target User Journey
 
@@ -12,14 +12,13 @@ The intended workflow should be immediately recognizable:
 
 `Upload -> Data Check -> Review -> AI Improvements -> Approval -> Export`
 
-Today, this workflow exists in the product, but it is spread across many tabs and several different export/AI concepts. A new user can use the tool, but needs guidance to understand which path is for the full audit workflow and which path is for the simplified German demo.
+Today, this workflow exists in the product, but it is spread across many tabs and several different export/AI concepts. A new user can use the tool, but needs guidance to understand the normal audit-to-export workflow.
 
 ## Current UX Strengths
 
 - Clear final product branding with Product Data Copilot.
 - Useful end-to-end capabilities for a local MVP.
 - Strong safety positioning: AI suggestions are drafts, human review is required, and source product data is not overwritten automatically.
-- Dedicated `DE Demo` tab gives a focused presentation path for furniture content generation without an API key.
 - Smart Suggestions v2 includes source/reason/confidence and review-required states, which makes the AI workflow more credible.
 - Export workflows are intentionally separate from source data mutation.
 - Tests and documentation make the project look more disciplined than a typical one-file demo.
@@ -46,19 +45,19 @@ Today, this workflow exists in the product, but it is spread across many tabs an
 
 ### 3. Export purpose is split across multiple places
 
-- Problem: There are several downloads: product scores CSV, issues CSV, review tasks CSV, management workbook, AI suggestions CSV, improved product data workbook, and German demo workbook.
+- Problem: There are several downloads: product scores CSV, issues CSV, review tasks CSV, management workbook, AI suggestions CSV, and improved product data workbook.
 - Why it matters: Users may not understand which export is for management, which is for review work, and which is for improved product data.
-- Improvement idea: Add short purpose text beside each major export. For example: `Management Export = audit report`, `Improved Export = approved suggestion candidates`, `DE Demo Export = presentation furniture content`.
+- Improvement idea: Add short purpose text beside each major export. For example: `Management Export = audit report`, `Improved Export = approved suggestion candidates`.
 - Affected area / file: `app.py`, export-related sections.
 - Effort: Small
 - Risk: Low
 
-### 4. Review workflow differs between main app and German demo
+### 4. Review workflow should clearly separate task review and AI suggestion review
 
-- Problem: The main `Review Tasks` tab uses task/status filters and manual overrides, while the `DE Demo` uses a focused 3-step content approval per product.
-- Why it matters: Both are valid, but users may not understand that one is the broad audit workflow and one is a simplified presentation workflow.
-- Improvement idea: Add a short distinction: `Main Review Tasks = audit task management`, `DE Demo Review = content-specific live demo review`.
-- Affected area / file: `app.py`, `Review Tasks` and `DE Demo` tabs.
+- Problem: The `Review Tasks` tab manages product data audit tasks, while Smart Suggestions v2 has its own session-only suggestion approval flow.
+- Why it matters: Both are valid, but users may not immediately understand the difference between reviewing issues and approving AI suggestion candidates.
+- Improvement idea: Add a short distinction: `Review Tasks = audit task management`, `Smart Suggestions v2 Review = suggestion approval before export candidates`.
+- Affected area / file: `app.py`, `Review Tasks` and `AI Suggestions` tabs.
 - Effort: Small
 - Risk: Low
 
@@ -68,7 +67,7 @@ Today, this workflow exists in the product, but it is spread across many tabs an
 
 - Problem: Upload/sample data works, but the next best step is not always obvious.
 - Why it matters: New users need immediate confidence after loading data.
-- Improvement idea: Add one short line after data source notice: `Next: open Scores or Issues to see what needs attention. For the furniture presentation, use DE Demo.`
+- Improvement idea: Add one short line after data source notice: `Next: open Scores or Issues to see what needs attention.`
 - Affected area / file: `app.py`, top data input/status area.
 - Effort: Small
 - Risk: Low
@@ -100,25 +99,16 @@ Today, this workflow exists in the product, but it is spread across many tabs an
 - Effort: Small
 - Risk: Low
 
-### 5. DE Demo is the strongest presentation path and should be visually treated as such
-
-- Problem: The demo is useful, but still appears as one tab among many.
-- Why it matters: For presentations, the user wants a simple "wow" path without explaining the full audit product.
-- Improvement idea: Add a short intro in `DE Demo` that says this is the simplified furniture content flow: upload, fill missing content, review 3/3, export.
-- Affected area / file: `app.py`, `DE Demo` tab.
-- Effort: Small
-- Risk: Low
-
-### 6. Button hierarchy could be clearer
+### 5. Button hierarchy could be clearer
 
 - Problem: Some primary actions and secondary actions compete visually, especially in AI/export areas.
 - Why it matters: Users should know which button to click next.
 - Improvement idea: Keep only the main step action as `type="primary"` in each section and treat secondary actions as normal buttons.
-- Affected area / file: `app.py`, `AI Suggestions`, `DE Demo`, export areas.
+- Affected area / file: `app.py`, `AI Suggestions` and export areas.
 - Effort: Small
 - Risk: Low
 
-### 7. Smart Suggestions v2 safety details are good but technical
+### 6. Smart Suggestions v2 safety details are good but technical
 
 - Problem: Concepts such as parser output, fixture data, raw response, and blocked records are useful but can dominate the business story.
 - Why it matters: A non-technical user needs the simple trust model first: source, reason, confidence, human approval.
@@ -131,7 +121,7 @@ Today, this workflow exists in the product, but it is spread across many tabs an
 
 ### 1. Language toggle would improve accessibility but is lower priority
 
-- Problem: The app mixes English main workflow with German demo content.
+- Problem: The app is primarily English, which may be less comfortable for German-speaking business users.
 - Why it matters: German business users may prefer a fully German UI.
 - Improvement idea: Plan a later lightweight language mode for visible copy only. Avoid translating internal field names or data model keys too early.
 - Affected area / file: likely `app.py` and future UI copy helpers.
@@ -151,7 +141,7 @@ Today, this workflow exists in the product, but it is spread across many tabs an
 
 - Problem: Current tabs are feature names, not workflow steps.
 - Why it matters: A task-based workflow may be easier for new users.
-- Improvement idea: Later consider labels like `1 Data`, `2 Scores`, `3 Review`, `4 AI`, `5 Export`, `DE Demo`. Do not change now before presentation.
+- Improvement idea: Later consider labels like `1 Data`, `2 Scores`, `3 Review`, `4 AI`, `5 Export`. Do not change navigation in the first polish pass.
 - Affected area / file: `app.py`.
 - Effort: Small
 - Risk: Medium because it changes navigation familiarity.
@@ -178,7 +168,6 @@ Today, this workflow exists in the product, but it is spread across many tabs an
 
 - Management Export should be described as the audit/reporting workbook.
 - Improved Product Data Export should be described as approved suggestion candidates only.
-- DE Demo Export should be described as the presentation-focused furniture content export.
 - The safest UX principle: exports should always say whether they are reporting, reviewing, or preparing improved data.
 
 ## AI Suggestions Notes
@@ -190,7 +179,6 @@ Today, this workflow exists in the product, but it is spread across many tabs an
 
 ## Review Workflow Notes
 
-- The `DE Demo` 3/3 review flow is directionally strong because it makes completion visible.
 - The main review workflow would benefit from similarly clear "what remains" language.
 - Export should continue to show only final business status where appropriate, while detailed review state stays inside the tool.
 
@@ -201,10 +189,9 @@ Phase 1 should stay small and avoid business logic, AI logic, export logic, and 
 ### Included improvements
 
 1. Add a compact workflow orientation below the app header: `Upload -> Check -> Review -> Improve -> Export`.
-2. Add short purpose labels for the three major export concepts: Management Export, Improved Product Data Export, and DE Demo Export.
+2. Add short purpose labels for the two major export concepts: Management Export and Improved Product Data Export.
 3. Improve visible section headings in the `AI Suggestions` tab so V1, Smart Suggestions v2, Human Review, and Improved Export Preview are easier to distinguish.
 4. Improve `Review Tasks` copy from internal override language toward business review language while keeping state keys unchanged.
-5. Add a concise `DE Demo` intro that explains the live-demo flow in one sentence.
 
 ### Explicit exclusions for Phase 1
 
@@ -220,7 +207,7 @@ Phase 1 should stay small and avoid business logic, AI logic, export logic, and 
 ### Acceptance criteria for Phase 1
 
 - A new user can understand the workflow in under 30 seconds.
-- The difference between audit workflow, AI workflow, and German furniture demo is clearer.
+- The difference between audit task review, AI suggestion review, and export candidates is clearer.
 - No existing button behavior changes.
 - No session-state keys change.
 - Existing tests still pass.

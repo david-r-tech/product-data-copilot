@@ -3,12 +3,12 @@
 ## Snapshot
 
 - Product name: Product Data Copilot
-- Current repo head before Final German Demo Content & Review Polish v1: `709b2d0 Polish German demo presentation flow`
+- Current repo head before German demo removal: `3272459 feat: finalize German demo presentation checkpoint`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
-- Test count: `134` passing pytest tests
+- Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Pre-UX baseline cleanup / presentation demo checkpoint completed.
-- Next recommended step: UX Polish Phase 1
+- Current roadmap position: German Furniture Demo removed from the active product workflow.
+- Next recommended step: UX Polish Phase 1 - Core Product
 
 ## Current App Capabilities
 
@@ -25,10 +25,6 @@
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Smart Suggestions v2 session-only approval UI for one-suggestion review with blocked rows non-approvable
 - Smart Suggestions v2 demo fixture loader for deterministic local approval UI testing without an API key
-- German `DE Demo` tab for no-cost furniture Excel/CSV upload, missing description/bulletpoint/translation filling, preview, and download; `data/moebel_demo_upload.xlsx` is the ready-to-use 10-product German furniture upload file
-- German demo dtype bug fix so empty Excel text columns can be filled with generated German text without a `float64` assignment crash
-- German demo UX polish with guided five-step presentation flow, compact product selection, clearer content preview tabs, session-only demo review status, and safer export wording
-- Final German demo content polish with prepared offline A/B content variants, cleaner German umlauts in the furniture upload file, 3/3 section approval for Bullet Points, HTML Deutsch, and HTML English, single final `review_status` export, and XLSX Unicode safety tests
 - Product logo integrated into the Streamlit app header from `assets/product_data_copilot_logo.png` with embedded display and text fallback
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
@@ -52,7 +48,7 @@
 - GitHub Repo Rename Manual Checklist v1 documents the owner-only steps for renaming the GitHub repository to `product-data-copilot`, updating local remotes, and checking external links later
 - Final Portfolio Release Checklist v1 documents final code readiness, manual QA, AI safety, export safety, portfolio readiness, CV readiness, known limitations, and owner tasks before sharing
 - Final Docs Link Polish v1 improves navigation between README, case study, screenshot checklist, final release checklist, and repo rename checklist without changing app behavior
-- German Furniture Demo Export v1 adds a simple presentation-focused upload/fill/download flow without OpenAI calls or costs
+- German Furniture Demo was a temporary presentation workflow and has been removed from the active product after completion.
 
 ## Key Modules
 
@@ -67,7 +63,7 @@
 - `src/product_data_copilot/ai/suggestion_parser.py`: Smart Suggestions v2 parser/normalization helpers
 - `src/product_data_copilot/ai/suggestion_prompt_adapter.py`: Smart Suggestions v2 prompt adapter
 - `src/product_data_copilot/ui/streamlit_layout.py`: small Streamlit presentation helpers
-- `tests/`: pytest coverage for extracted helpers
+- `tests/`: pytest coverage for extracted helpers and core product behavior
 
 ## Current Non-Goals
 

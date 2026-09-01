@@ -69,8 +69,9 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 61 | Final German Demo Content & Review Polish v1 | Done | Added prepared offline A/B furniture content, cleaned visible German umlauts, added 3/3 section approval, kept only one final `review_status` in the demo export, and added focused tests. |
 | 62 | Product Logo Integration v1 | Done | Added the Product Data Copilot logo as a project asset and displayed it embedded in the Streamlit app header with a text-title fallback. |
 | 63 | Pre-UX Baseline Cleanup / Checkpoint | Done | Reviewed and finalized the existing demo/logo working tree, verified tests, and prepared a clean baseline before UX polish. |
-| 64 | UX Polish Phase 1 | NEXT | Implement the small improvements recommended in `docs/ux_usability_audit_v1.md`: workflow orientation, clearer export purposes, AI section labels, review wording, and DE Demo intro. |
-| 65 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
+| 64 | Remove German Furniture Demo v1 | Done | Removed the completed presentation-only German furniture demo from the active product workflow, including tab, demo helpers, demo data, and demo-only tests. |
+| 65 | UX Polish Phase 1 - Core Product | NEXT | Improve the normal Product Data Copilot workflow only: workflow orientation, clearer export purposes, AI section labels, review wording, and table guidance. |
+| 66 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
 | 66 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
 | 67 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
 | 68 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
