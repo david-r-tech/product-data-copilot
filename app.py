@@ -1,3 +1,4 @@
+import base64
 import html
 import json
 import os
@@ -59,7 +60,16 @@ from product_data_copilot.demo.furniture_demo_content import (  # noqa: E402
     FURNITURE_DEMO_DEFAULT_SKU,
     FURNITURE_DEMO_REVIEW_APPROVED,
     FURNITURE_DEMO_REVIEW_OPEN,
+    FURNITURE_DEMO_REVIEW_SECTION_KEYS,
+    FURNITURE_DEMO_REVIEW_SECTION_LABELS,
+    approve_furniture_demo_review_section,
+    count_approved_furniture_demo_sections,
+    get_furniture_demo_final_review_status,
     get_furniture_demo_content,
+    get_next_furniture_demo_position,
+    normalize_furniture_demo_review_decisions,
+    reset_furniture_demo_review_decisions,
+    should_advance_furniture_demo_product,
     toggle_furniture_demo_variant,
 )
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
@@ -78,6 +88,7 @@ from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
 load_dotenv()
 
 APP_NAME = "Product Data Copilot"
+APP_LOGO_PATH = Path(__file__).resolve().parent / "assets" / "product_data_copilot_logo.png"
 
 AI_SUGGESTION_TYPES = [
     "Improved Product Title",
@@ -96,6 +107,15 @@ SMART_SUGGESTIONS_V2_DEMO_FIXTURE_PATH = (
     / "fixtures"
     / "smart_suggestions_v2_demo_response.json"
 )
+
+
+def get_image_data_uri(image_path):
+    """Return a base64 data URI for a local PNG image."""
+    if not image_path.exists():
+        return ""
+
+    encoded_image = base64.b64encode(image_path.read_bytes()).decode("ascii")
+    return f"data:image/png;base64,{encoded_image}"
 
 
 def get_value(row, field_name):
@@ -856,13 +876,27 @@ def build_furniture_demo_export(
     else:
         demo_dataframe = demo_dataframe.astype({"demo_content_variant": "object"})
 
-    if "human_review_status" not in demo_dataframe.columns:
-        demo_dataframe["human_review_status"] = FURNITURE_DEMO_REVIEW_OPEN
+    if "review_status" not in demo_dataframe.columns:
+        demo_dataframe["review_status"] = FURNITURE_DEMO_REVIEW_OPEN
     else:
-        demo_dataframe = demo_dataframe.astype({"human_review_status": "object"})
-        demo_dataframe["human_review_status"] = demo_dataframe[
-            "human_review_status"
-        ].apply(normalize_furniture_demo_review_status)
+        demo_dataframe = demo_dataframe.astype({"review_status": "object"})
+        demo_dataframe["review_status"] = demo_dataframe["review_status"].apply(
+            normalize_furniture_demo_review_status
+        )
+
+    internal_review_columns = [
+        "human_review_status",
+        "bullet_points_review_status",
+        "html_de_review_status",
+        "html_en_review_status",
+    ]
+    demo_dataframe = demo_dataframe.drop(
+        columns=[
+            column_name
+            for column_name in internal_review_columns
+            if column_name in demo_dataframe.columns
+        ]
+    )
 
     demo_statuses = []
 
@@ -873,14 +907,17 @@ def build_furniture_demo_export(
         if variant_by_sku is not None:
             variant = variant_by_sku.get(sku, "variant_a")
 
-        review_status = demo_dataframe.at[row_index, "human_review_status"]
+        review_decisions = None
         if review_status_by_sku is not None and sku in review_status_by_sku:
-            review_status = normalize_furniture_demo_review_status(
+            review_decisions = normalize_furniture_demo_review_decisions(
                 review_status_by_sku[sku]
             )
+        else:
+            review_decisions = demo_dataframe.at[row_index, "review_status"]
+        review_status = get_furniture_demo_final_review_status(review_decisions)
 
         demo_dataframe.at[row_index, "demo_content_variant"] = variant
-        demo_dataframe.at[row_index, "human_review_status"] = review_status
+        demo_dataframe.at[row_index, "review_status"] = review_status
 
         if is_blank(row[description_column]):
             description = build_furniture_description(row, variant)
@@ -1224,7 +1261,24 @@ def create_improved_excel_export(suggestions, products):
 def run_app():
     """Run the Streamlit app."""
     st.set_page_config(page_title=APP_NAME, layout="wide")
-    st.title(APP_NAME)
+
+    logo_data_uri = get_image_data_uri(APP_LOGO_PATH)
+    if logo_data_uri:
+        st.markdown(
+            f"""
+            <div style="max-width: 560px; margin: 0 0 0.75rem 0;">
+                <img
+                    src="{logo_data_uri}"
+                    alt="{APP_NAME} logo"
+                    style="width: 100%; height: auto; display: block;"
+                />
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.title(APP_NAME)
+
     st.caption(
         "CSV/XLSX-based product data quality, AI suggestion, review, and export workflow for e-commerce teams."
     )
@@ -2088,9 +2142,6 @@ def run_app():
         st.caption(
             "Vom strukturierten Produktdatensatz zum kontrollierten Content-Export"
         )
-        st.info(
-            "Offline Demo Mode – vorbereitete AI-Ergebnisse, kein API-Key erforderlich"
-        )
         st.markdown("**KI schlägt vor – der Mensch entscheidet.**")
 
         step_columns = st.columns(5)
@@ -2147,6 +2198,26 @@ def run_app():
                         default_demo_position = position
                         break
 
+                auto_advance_position = st.session_state.pop(
+                    "furniture_demo_auto_advance_position",
+                    None,
+                )
+                if auto_advance_position is not None and 0 <= auto_advance_position < len(
+                    furniture_demo_input
+                ):
+                    default_demo_position = auto_advance_position
+                    st.session_state["furniture_demo_selected_position"] = (
+                        default_demo_position
+                    )
+                elif (
+                    "furniture_demo_selected_position" not in st.session_state
+                    or st.session_state["furniture_demo_selected_position"]
+                    >= len(furniture_demo_input)
+                ):
+                    st.session_state["furniture_demo_selected_position"] = (
+                        default_demo_position
+                    )
+
                 selected_demo_position = st.selectbox(
                     "Produkt für die Live-Demo auswählen",
                     list(range(len(furniture_demo_input))),
@@ -2158,6 +2229,15 @@ def run_app():
                     key="furniture_demo_selected_position",
                 )
                 selected_demo_row = furniture_demo_input.iloc[selected_demo_position]
+                completed_demo_product = st.session_state.pop(
+                    "furniture_demo_last_completed_product",
+                    "",
+                )
+                if completed_demo_product:
+                    st.success(
+                        f"✓ Produkt vollständig freigegeben: {completed_demo_product}. "
+                        "Das nächste Produkt wurde geöffnet."
+                    )
 
                 product_details = {
                     "Produktname": get_demo_row_value(
@@ -2267,21 +2347,22 @@ def run_app():
                             )
                         ]
                     )
-                    review_status = get_demo_row_value(
-                        selected_export_row,
-                        ["human_review_status"],
-                        "Pending",
+                    review_decisions = normalize_furniture_demo_review_decisions(
+                        st.session_state["furniture_demo_review_statuses"].get(
+                            selected_demo_sku
+                        )
+                    )
+                    approved_sections = count_approved_furniture_demo_sections(
+                        review_decisions
+                    )
+                    review_status = get_furniture_demo_final_review_status(
+                        review_decisions
                     )
 
                     metric_columns = st.columns(3)
                     metric_columns[0].metric("Produkte", len(furniture_demo_export))
                     metric_columns[1].metric("Zeilen ergänzt", filled_rows)
-                    metric_columns[2].metric(
-                        "Review-Status",
-                        "✓ Freigegeben"
-                        if review_status == FURNITURE_DEMO_REVIEW_APPROVED
-                        else FURNITURE_DEMO_REVIEW_OPEN,
-                    )
+                    metric_columns[2].metric("Review-Fortschritt", f"{approved_sections}/3")
                     st.caption(
                         "Für die Präsentation werden vorbereitete Content-Varianten verwendet."
                     )
@@ -2325,34 +2406,85 @@ def run_app():
 
                     st.subheader("4. Human Review")
                     st.caption(
-                        "Prüfen Sie den Vorschlag und geben Sie ihn frei oder lassen Sie eine alternative Formulierung anzeigen."
+                        "Geben Sie alle drei Content-Bereiche einzeln frei. Erst bei 3/3 gilt das Produkt als vollständig freigegeben."
+                    )
+                    st.progress(
+                        approved_sections / len(FURNITURE_DEMO_REVIEW_SECTION_KEYS),
+                        text=f"Fortschritt: {approved_sections}/3 Freigaben",
                     )
                     st.write(
-                        "**Status:** "
+                        "**Produktstatus:** "
                         + (
-                            "✓ Freigegeben"
+                            "✓ Produkt vollständig freigegeben"
                             if review_status == FURNITURE_DEMO_REVIEW_APPROVED
-                            else FURNITURE_DEMO_REVIEW_OPEN
+                            else "Noch nicht vollständig freigegeben"
                         )
                     )
-                    review_columns = st.columns(2)
-                    if review_columns[0].button("✓ Freigeben", key="approve_furniture_demo"):
-                        st.session_state["furniture_demo_review_statuses"][
-                            selected_demo_sku
-                        ] = FURNITURE_DEMO_REVIEW_APPROVED
-                        st.session_state["furniture_demo_export"] = build_furniture_demo_export(
-                            furniture_demo_input,
-                            st.session_state["furniture_demo_variants"],
-                            st.session_state["furniture_demo_review_statuses"],
+
+                    section_columns = st.columns(3)
+                    for section_index, section_key in enumerate(
+                        FURNITURE_DEMO_REVIEW_SECTION_KEYS
+                    ):
+                        section_label = FURNITURE_DEMO_REVIEW_SECTION_LABELS[section_key]
+                        section_is_approved = (
+                            review_decisions[section_key]
+                            == FURNITURE_DEMO_REVIEW_APPROVED
                         )
-                        st.rerun()
-                    if review_columns[1].button("↻ Neu vorschlagen", key="retry_furniture_demo"):
+                        section_columns[section_index].markdown(
+                            f"**{section_label}**  \n"
+                            + (
+                                "✓ Freigegeben"
+                                if section_is_approved
+                                else "Offen"
+                            )
+                        )
+                        if section_columns[section_index].button(
+                            f"✓ {section_label} freigeben",
+                            key=f"approve_furniture_demo_{section_key}",
+                            disabled=section_is_approved,
+                        ):
+                            updated_review_decisions = (
+                                approve_furniture_demo_review_section(
+                                    review_decisions,
+                                    section_key,
+                                )
+                            )
+                            st.session_state["furniture_demo_review_statuses"][
+                                selected_demo_sku
+                            ] = updated_review_decisions
+                            st.session_state["furniture_demo_export"] = (
+                                build_furniture_demo_export(
+                                    furniture_demo_input,
+                                    st.session_state["furniture_demo_variants"],
+                                    st.session_state["furniture_demo_review_statuses"],
+                                )
+                            )
+                            if should_advance_furniture_demo_product(
+                                updated_review_decisions
+                            ):
+                                next_demo_position = get_next_furniture_demo_position(
+                                    selected_demo_position,
+                                    len(furniture_demo_input),
+                                )
+                                if next_demo_position != selected_demo_position:
+                                    st.session_state[
+                                        "furniture_demo_auto_advance_position"
+                                    ] = next_demo_position
+                                st.session_state[
+                                    "furniture_demo_last_completed_product"
+                                ] = get_furniture_demo_label(
+                                    selected_demo_position,
+                                    selected_export_row,
+                                )
+                            st.rerun()
+
+                    if st.button("↻ Neu vorschlagen", key="retry_furniture_demo"):
                         st.session_state["furniture_demo_variants"][
                             selected_demo_sku
                         ] = toggle_furniture_demo_variant(current_variant)
                         st.session_state["furniture_demo_review_statuses"][
                             selected_demo_sku
-                        ] = FURNITURE_DEMO_REVIEW_OPEN
+                        ] = reset_furniture_demo_review_decisions()
                         st.session_state["furniture_demo_export"] = build_furniture_demo_export(
                             furniture_demo_input,
                             st.session_state["furniture_demo_variants"],
@@ -2380,7 +2512,7 @@ def run_app():
                         bulletpoints_column,
                         translation_column,
                         "demo_content_variant",
-                        "human_review_status",
+                        "review_status",
                         "demo_status",
                     ]
                     visible_preview_columns = [
@@ -2414,4 +2546,5 @@ def run_app():
                     st.write(str(error))
 
 
-run_app()
+if __name__ == "__main__":
+    run_app()

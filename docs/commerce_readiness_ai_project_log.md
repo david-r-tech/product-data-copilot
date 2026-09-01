@@ -308,7 +308,7 @@ Readiness status logic:
 
 ### Demo Dataset & Portfolio Polish v1
 
-* Date: TODO
+* Date: 2026-09-01
 * Change: Expanded the sample dataset to 25 realistic demo products across apparel, electronics, home and kitchen, sports, office, toys, beauty, and pet supplies. Improved the README for portfolio use, added a portfolio case study draft, added a demo script, and refreshed the demo test checklist.
 * Changed files: `data/sample_products.csv`, `README.md`, `docs/portfolio_case_study.md`, `docs/demo_script.md`, `docs/demo_test_checklist.md`, `docs/commerce_readiness_ai_project_log.md`, `.gitignore`.
 * Why it matters: Makes the project easier to understand for GitHub visitors, recruiters, and interview walkthroughs while keeping the app focused on the existing MVP workflow.
@@ -318,7 +318,7 @@ Readiness status logic:
 
 ### Streamlit Compatibility & DataFrame Type Cleanup v1
 
-* Date: TODO
+* Date: 2026-09-01
 * Change: Replaced deprecated `use_container_width` dataframe parameters with `width="stretch"` and added a small display-safety helper for Streamlit dataframe rendering.
 * Why it matters: Removes noisy compatibility and Arrow serialization warnings so the local MVP feels cleaner and more professional during demos.
 * How to test: Run `python -m streamlit run app.py`, open the main tabs, and confirm the previous `use_container_width` and mixed `value` column warnings no longer appear.
@@ -326,7 +326,7 @@ Readiness status logic:
 
 ### Final GitHub Readiness v1
 
-* Date: TODO
+* Date: 2026-09-01
 * Change: Finalized README clarity, strengthened the demo test checklist, added `docs/screenshots_to_capture.md`, clarified the project log as the current source of truth, and extended `.gitignore` for local generated exports.
 * Changed files: `README.md`, `.gitignore`, `docs/demo_test_checklist.md`, `docs/screenshots_to_capture.md`, `docs/portfolio_case_study.md`, `docs/commerce_readiness_ai_project_log.md`.
 * Why it matters: Makes the repository easier to review on GitHub and more reliable for portfolio or interview walkthroughs.
@@ -896,11 +896,27 @@ Readiness status logic:
 
 ### Final German Demo Content & Review Polish v1
 
-* Date: TODO
-* Change: Added prepared offline A/B content variants for the 10 furniture demo SKUs, improved German/English content quality, cleaned visible German umlaut spellings in the demo upload file, simplified the demo review flow to `Freigeben` and `Neu vorschlagen`, and added focused tests for demo content and XLSX Unicode handling.
-* Why it matters: Makes the short German presentation path stronger and safer: product data is uploaded, realistic content is proposed, a human reviews it, an alternative variant can be shown, and the approved export remains offline and deterministic.
-* How to test: Run `python -m streamlit run app.py`, open `DE Demo`, upload `data/moebel_demo_upload.xlsx`, use `PDC-MOB-001`, prepare content, click `Neu vorschlagen`, verify the content changes, click `Freigeben`, export the workbook, and confirm Umlaute plus review status remain readable.
+* Date: 2026-09-01
+* Change: Added prepared offline A/B content variants for the 10 furniture demo SKUs, improved German/English content quality, cleaned visible German umlaut spellings in the demo upload file, changed the demo review flow to three internal approvals for Bullet Points, HTML Deutsch, and HTML English, kept only one final `review_status` in the export, and added focused tests for demo content, 3/3 approval, export status, and XLSX Unicode handling.
+* Why it matters: Makes the short German presentation path stronger and safer: product data is uploaded, realistic content is proposed, a human reviews every content area, an alternative variant can be shown, and the approved export remains offline and deterministic.
+* How to test: Run `python -m streamlit run app.py`, open `DE Demo`, upload `data/moebel_demo_upload.xlsx`, use `PDC-MOB-001`, prepare content, click `Neu vorschlagen`, approve Bullet Points, HTML Deutsch, and HTML English, confirm the product becomes `Freigegeben` only at 3/3, export the workbook, and confirm Umlaute plus the single final `review_status` remain readable.
 * Next recommended step: Freeze the presentation build and rehearse the live demo manually.
+
+### Product Logo Integration v1
+
+* Date: 2026-09-01
+* Change: Added the Product Data Copilot logo as `assets/product_data_copilot_logo.png` and displayed it embedded in the Streamlit app header with a fallback text title if the asset is missing.
+* Why it matters: Gives the local demo a clearer product identity for presentation and portfolio screenshots without changing product behavior.
+* How to test: Run `python -m streamlit run app.py` and confirm the logo appears above the app caption.
+* Next recommended step: Freeze the presentation build and rehearse the live demo manually.
+
+### Pre-UX Baseline Cleanup / Checkpoint
+
+* Date: 2026-09-01
+* Change: Reviewed and finalized the existing German demo, logo, export-status, and test changes before starting the UX polish work.
+* Why it matters: Creates a clear tested baseline so UX improvements can be made in a controlled follow-up block.
+* How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually run `python -m streamlit run app.py` for the presentation flow.
+* Next recommended step: Start `UX Polish Phase 1` from `docs/ux_usability_audit_v1.md`.
 
 ## 8. Product Decisions
 

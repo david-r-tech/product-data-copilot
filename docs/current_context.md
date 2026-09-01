@@ -5,10 +5,10 @@
 - Product name: Product Data Copilot
 - Current repo head before Final German Demo Content & Review Polish v1: `709b2d0 Polish German demo presentation flow`
 - Runtime baseline: `348213d Harden smart suggestion normalization`
-- Test count: `129` passing pytest tests
+- Test count: `134` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Final German Demo Content & Review Polish v1 completed.
-- Next recommended step: Presentation freeze / manual live-demo rehearsal
+- Current roadmap position: Pre-UX baseline cleanup / presentation demo checkpoint completed.
+- Next recommended step: UX Polish Phase 1
 
 ## Current App Capabilities
 
@@ -28,7 +28,8 @@
 - German `DE Demo` tab for no-cost furniture Excel/CSV upload, missing description/bulletpoint/translation filling, preview, and download; `data/moebel_demo_upload.xlsx` is the ready-to-use 10-product German furniture upload file
 - German demo dtype bug fix so empty Excel text columns can be filled with generated German text without a `float64` assignment crash
 - German demo UX polish with guided five-step presentation flow, compact product selection, clearer content preview tabs, session-only demo review status, and safer export wording
-- Final German demo content polish with prepared offline A/B content variants, cleaner German umlauts in the furniture upload file, simplified Freigeben/Neu vorschlagen review flow, and XLSX Unicode safety tests
+- Final German demo content polish with prepared offline A/B content variants, cleaner German umlauts in the furniture upload file, 3/3 section approval for Bullet Points, HTML Deutsch, and HTML English, single final `review_status` export, and XLSX Unicode safety tests
+- Product logo integrated into the Streamlit app header from `assets/product_data_copilot_logo.png` with embedded display and text fallback
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back

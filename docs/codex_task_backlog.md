@@ -66,15 +66,16 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 58 | UI and Demo Product Backlog v1 | Done | Created a prioritized product backlog from screenshot feedback covering the German demo bug, clearer demo flow, larger primary actions, tab guidance, table readability, and future language switching. |
 | 59 | German Demo Bug Fix v1 | Done | Fixed the dtype crash in the German furniture demo and added a ready-to-use furniture Excel upload file. |
 | 60 | German Demo UX Polish v1 | Done | Made the `DE Demo` tab simpler, clearer, and more presentation-ready with a guided flow, compact product selection, content preview tabs, demo review status, and stronger export wording. |
-| 61 | Final German Demo Content & Review Polish v1 | Done | Added prepared offline A/B furniture content, cleaned visible German umlauts, simplified demo review to Freigeben/Neu vorschlagen, and added focused tests for content quality and XLSX Unicode. |
-| 62 | Presentation Freeze / Manual Live-Demo Rehearsal | NEXT | Run the final local presentation path manually and avoid new changes unless a real blocker appears. |
-| 63 | Main App Navigation Clarity v1 | Planned | Improve tab-level guidance, page intro, and user orientation without redesigning the whole app. |
-| 64 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
-| 65 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
-| 66 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
-| 67 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
-| 68 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
-| 69 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
+| 61 | Final German Demo Content & Review Polish v1 | Done | Added prepared offline A/B furniture content, cleaned visible German umlauts, added 3/3 section approval, kept only one final `review_status` in the demo export, and added focused tests. |
+| 62 | Product Logo Integration v1 | Done | Added the Product Data Copilot logo as a project asset and displayed it embedded in the Streamlit app header with a text-title fallback. |
+| 63 | Pre-UX Baseline Cleanup / Checkpoint | Done | Reviewed and finalized the existing demo/logo working tree, verified tests, and prepared a clean baseline before UX polish. |
+| 64 | UX Polish Phase 1 | NEXT | Implement the small improvements recommended in `docs/ux_usability_audit_v1.md`: workflow orientation, clearer export purposes, AI section labels, review wording, and DE Demo intro. |
+| 65 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
+| 66 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
+| 67 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
+| 68 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
+| 69 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
+| 70 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |
 
 ## Backlog Rules
 
