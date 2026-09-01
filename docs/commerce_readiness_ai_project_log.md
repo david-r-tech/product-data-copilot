@@ -934,6 +934,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually start `python -m streamlit run app.py` and walk through Upload, Dashboard, Scores, Issues, Review Tasks, AI Suggestions, and exports.
 * Next recommended step: Run `Core UX Manual QA v1`.
 
+### Core UX Manual QA v1
+
+* Date: 2026-09-01
+* Change: Added `docs/core_ux_manual_qa_v1.md` with a practical browser QA checklist for the active Product Data Copilot workflow after UX Polish Phase 1.
+* Why it matters: Gives the owner or reviewer a clear pass/fail path for checking upload, dashboard, scores, issues, review tasks, AI suggestions, Smart Suggestions v2, approval, and exports without considering the removed German demo.
+* How to test: Run the automated checks, then start `python -m streamlit run app.py` and follow the checklist.
+* Next recommended step: Start `Data Table Readability v1`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

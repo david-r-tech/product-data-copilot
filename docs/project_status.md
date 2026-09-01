@@ -8,7 +8,7 @@
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: UX Polish Phase 1 - Core Product completed; Core UX Manual QA v1 is the next recommended step.
+- Current planning focus: Core UX Manual QA v1 documented; Data Table Readability v1 is the next recommended step.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -31,6 +31,7 @@
 - Smart Suggestions v2 demo fixture loader for deterministic local review testing without an API key
 - Product logo integrated into the Streamlit app header from `assets/product_data_copilot_logo.png` with embedded display and text fallback
 - UX Polish Phase 1 - Core Product adds clearer workflow orientation, upload guidance, dashboard/readiness interpretation, business-friendly review status wording, AI section grouping, and export-purpose copy without behavior changes.
+- Core UX Manual QA v1 documents how to manually verify the polished core workflow in the browser.
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
@@ -121,5 +122,5 @@
 
 1. Manual owner tasks for QA, screenshots, and optional GitHub repo rename
 2. Tests Expansion v1
-3. UX Polish Phase 1 - Core Product
+3. Data Table Readability v1
 4. Public GitHub Readiness / portfolio presentation pass

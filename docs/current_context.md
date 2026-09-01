@@ -7,8 +7,8 @@
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: UX Polish Phase 1 - Core Product completed.
-- Next recommended step: Core UX Manual QA v1
+- Current roadmap position: Core UX Manual QA v1 documented.
+- Next recommended step: Data Table Readability v1
 
 ## Current App Capabilities
 
@@ -27,6 +27,7 @@
 - Smart Suggestions v2 demo fixture loader for deterministic local approval UI testing without an API key
 - Product logo integrated into the Streamlit app header from `assets/product_data_copilot_logo.png` with embedded display and text fallback
 - UX Polish Phase 1 - Core Product adds a compact workflow orientation, clearer upload guidance, dashboard/readiness interpretation, business-friendly review status wording, clearer AI section grouping, and export-purpose copy without changing product logic.
+- Core UX Manual QA v1 provides a browser checklist for validating the polished core workflow after the German demo removal.
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
