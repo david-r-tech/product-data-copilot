@@ -7,8 +7,8 @@
 - Runtime baseline: `348213d Harden smart suggestion normalization`
 - Test count: `122` passing pytest tests
 - App start command: `python -m streamlit run app.py`
-- Current roadmap position: Data Table Readability v1 completed.
-- Next recommended step: manual browser walkthrough with `docs/core_ux_manual_qa_v1.md`
+- Current roadmap position: UX Polish Phase 3 - Actions, Status & Empty States completed.
+- Next recommended step: Language Switch Planning v1
 
 ## Current App Capabilities
 
@@ -29,6 +29,7 @@
 - UX Polish Phase 1 - Core Product adds a compact workflow orientation, clearer upload guidance, dashboard/readiness interpretation, business-friendly review status wording, clearer AI section grouping, and export-purpose copy without changing product logic.
 - Core UX Manual QA v1 provides a browser checklist for validating the polished core workflow after the German demo removal.
 - Data Table Readability v1 improves visible table scanning with display-only column ordering, business-friendly labels, hidden indexes, simple column sizing, and controlled table heights while keeping internal/export DataFrames unchanged.
+- UX Polish Phase 3 improves action hierarchy, button wording, empty states, AI workflow feedback, review status context, and export completion messaging without changing product logic.
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back

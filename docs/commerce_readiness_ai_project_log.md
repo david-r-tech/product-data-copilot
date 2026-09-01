@@ -950,6 +950,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually start `python -m streamlit run app.py` and inspect the major tables.
 * Next recommended step: Run a manual browser walkthrough with `docs/core_ux_manual_qa_v1.md`.
 
+### UX Polish Phase 3 - Actions, Status & Empty States
+
+* Date: 2026-09-01
+* Change: Improved visible action hierarchy, button labels, empty-state guidance, AI workflow status, review status context, and export completion messaging in the core app.
+* Why it matters: Helps users understand what is available, what still needs attention, and which action to take next without changing product logic, AI behavior, approval rules, or export data.
+* How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually start `python -m streamlit run app.py` and review the core workflow actions and empty states.
+* Next recommended step: Plan `Language Switch Planning v1`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

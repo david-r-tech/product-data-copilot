@@ -8,7 +8,7 @@
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: Data Table Readability v1 completed; the next recommended step is a manual browser walkthrough with the existing core UX QA checklist.
+- Current planning focus: UX Polish Phase 3 - Actions, Status & Empty States completed; Language Switch Planning v1 is the next recommended Codex block.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -33,6 +33,7 @@
 - UX Polish Phase 1 - Core Product adds clearer workflow orientation, upload guidance, dashboard/readiness interpretation, business-friendly review status wording, AI section grouping, and export-purpose copy without behavior changes.
 - Core UX Manual QA v1 documents how to manually verify the polished core workflow in the browser.
 - Data Table Readability v1 improves visible table scanning with display-only column ordering, business-friendly labels, hidden indexes, simple column sizing, and controlled table heights without changing export or source data structures.
+- UX Polish Phase 3 improves action hierarchy, button wording, empty states, AI workflow feedback, review status context, and export completion messaging without changing product logic.
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back
@@ -123,5 +124,5 @@
 
 1. Manual owner tasks for QA, screenshots, and optional GitHub repo rename
 2. Tests Expansion v1
-3. Data Table Readability v1
+3. Language Switch Planning v1
 4. Public GitHub Readiness / portfolio presentation pass

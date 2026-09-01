@@ -1262,7 +1262,7 @@ def run_app():
             height=430,
         )
         st.download_button(
-            "Download Product Readiness Scores",
+            "Download Scores CSV",
             readiness_scores.to_csv(index=False),
             "product_readiness_scores.csv",
             "text/csv",
@@ -1294,7 +1294,7 @@ def run_app():
             render_no_data_quality_issues_notice(st)
 
         st.download_button(
-            "Download Data Quality Issues",
+            "Download Issues CSV",
             issues.to_csv(index=False),
             "data_quality_issues.csv",
             "text/csv",
@@ -1392,9 +1392,10 @@ def run_app():
             index=REVIEW_STATUS_OPTIONS.index(current_manual_status),
             key="manual_review_status",
         )
+        st.caption(f"Current saved status for this product: {current_manual_status}")
 
         action_columns = st.columns(2)
-        if action_columns[0].button("Save Review Status"):
+        if action_columns[0].button("Save Review Status", type="primary"):
             st.session_state["manual_review_status_overrides"][
                 selected_review_sku
             ] = manual_status
@@ -1459,7 +1460,7 @@ def run_app():
             render_no_review_tasks_notice(st)
 
         st.download_button(
-            "Download Review Tasks",
+            "Download Filtered Review Tasks CSV",
             filtered_review_tasks.to_csv(index=False),
             "review_tasks.csv",
             "text/csv",
@@ -1492,7 +1493,7 @@ def run_app():
         )
 
         st.download_button(
-            "Download Excel Management Export",
+            "Download Management Export Workbook",
             create_excel_management_export(
                 data_source,
                 products,
@@ -1503,6 +1504,7 @@ def run_app():
             ),
             MANAGEMENT_EXPORT_FILENAME,
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            type="primary",
         )
 
     with tabs[6]:
@@ -1607,7 +1609,8 @@ def run_app():
         elif len(selected_suggestion_types) == 0:
             st.info("Select at least one suggestion type to generate AI suggestions.")
         elif st.button(
-            "Generate AI Suggestions",
+            "Generate AI Suggestions v1",
+            type="primary",
         ):
             with st.spinner("Generating AI suggestions..."):
                 try:
@@ -1631,6 +1634,9 @@ def run_app():
             "ai_suggestions" in st.session_state
             and st.session_state.get("ai_suggestions_sku") == selected_sku
         ):
+            st.success(
+                "AI Suggestions v1 are available for this product. Treat them as drafts for human review."
+            )
             suggestions = st.session_state["ai_suggestions"]
             bulletpoints = suggestions.get("bullet_points", "")
 
@@ -1665,10 +1671,14 @@ def run_app():
                     st.text(suggestions["raw_response"])
 
             st.download_button(
-                "Download AI Suggestions",
+                "Download AI Suggestions CSV",
                 suggestions_to_dataframe(selected_sku, suggestions).to_csv(index=False),
                 "ai_suggestions.csv",
                 "text/csv",
+            )
+        elif os.getenv("OPENAI_API_KEY") and len(selected_suggestion_types) > 0:
+            st.info(
+                "No AI Suggestions v1 have been generated for this product yet. Use the generate button above to create a draft."
             )
 
         st.divider()
@@ -1736,7 +1746,7 @@ def run_app():
             st.info(
                 "Smart Suggestions v2 generation is disabled because OPENAI_API_KEY is missing. Demo records and prompt preview are still available."
             )
-        elif st.button("Generate Smart Suggestions v2"):
+        elif st.button("Generate Smart Suggestions v2", type="primary"):
             with st.spinner("Generating Smart Suggestions v2..."):
                 try:
                     smart_suggestions_v2_raw_response = generate_smart_suggestions_v2(
@@ -1831,6 +1841,9 @@ def run_app():
         )
 
         if len(smart_suggestions_v2_df) > 0:
+            st.success(
+                "Structured Smart Suggestions v2 are available. Review decisions are still required before export use."
+            )
             approved_count = len(
                 smart_suggestions_v2_df[
                     smart_suggestions_v2_df["human_review_status"] == "approved"
@@ -2028,7 +2041,10 @@ def run_app():
                 )
             else:
                 review_action_columns = st.columns(3)
-                if review_action_columns[0].button("Approve selected suggestion"):
+                if review_action_columns[0].button(
+                    "Approve",
+                    type="primary",
+                ):
                     smart_suggestions_v2_review_decisions[selected_review_key] = {
                         "sku": selected_review_suggestion.get("sku", ""),
                         "target_field": selected_review_suggestion.get(
@@ -2040,7 +2056,7 @@ def run_app():
                     }
                     st.rerun()
 
-                if review_action_columns[1].button("Reject selected suggestion"):
+                if review_action_columns[1].button("Reject"):
                     smart_suggestions_v2_review_decisions[selected_review_key] = {
                         "sku": selected_review_suggestion.get("sku", ""),
                         "target_field": selected_review_suggestion.get(
@@ -2052,7 +2068,7 @@ def run_app():
                     }
                     st.rerun()
 
-                if review_action_columns[2].button("Mark as pending"):
+                if review_action_columns[2].button("Mark Pending"):
                     smart_suggestions_v2_review_decisions.pop(
                         selected_review_key,
                         None,
@@ -2105,6 +2121,10 @@ def run_app():
                 st.caption(
                     "You can still download the workbook for review context; Approved Improvements will be empty."
                 )
+            else:
+                st.success(
+                    "Approved export candidates are ready for the improved workbook. Source product data will stay unchanged."
+                )
 
             export_preview_labels = {
                 "approved": "Approved Export Candidates",
@@ -2155,10 +2175,11 @@ def run_app():
                 products,
             )
             st.download_button(
-                "Download Improved Product Data Export",
+                "Download Improved Product Data Workbook",
                 improved_excel_export,
                 IMPROVED_EXCEL_EXPORT_FILENAME,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                type="primary",
             )
 
         if smart_suggestions_v2_raw_response:
