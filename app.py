@@ -956,8 +956,15 @@ def run_app():
     st.caption(
         "CSV/XLSX-based product data quality, AI suggestion, review, and export workflow for e-commerce teams."
     )
+    st.markdown("**Workflow:** Upload -> Check -> Review -> Improve -> Approve -> Export")
+    st.caption(
+        "Load product data, find quality gaps, review AI-assisted improvements, and export safe workbook outputs without changing the source file."
+    )
 
     uploaded_file = render_data_input_section(st)
+    st.sidebar.caption(
+        "Upload CSV/XLSX product data or use the built-in sample data. After loading, the app checks data quality, creates review tasks, and prepares safe improvement/export options."
+    )
 
     if uploaded_file is not None:
         if uploaded_file.name.endswith(".xlsx"):
@@ -1006,6 +1013,9 @@ def run_app():
 
     with tabs[0]:
         st.subheader("Dashboard")
+        st.caption(
+            "Quick business overview of product data readiness, issue volume, and products that need attention."
+        )
 
         metric_columns = st.columns(3)
         metric_columns[0].metric("Total products", row_count)
@@ -1028,14 +1038,32 @@ def run_app():
             "Average marketplace readiness",
             round(readiness_scores["marketplace_readiness_score"].mean()),
         )
+        if critical_issues > 0:
+            st.warning(
+                f"{critical_issues} critical issues should be reviewed before product data is used for export or publication."
+            )
+        elif products_affected > 0:
+            st.info(
+                f"{products_affected} products need review. Start with Scores or Issues to see where attention is needed."
+            )
+        else:
+            st.success(
+                "No product data issues were found in the current dataset."
+            )
 
     with tabs[1]:
         st.subheader("Product Data")
+        st.caption(
+            "Review the loaded source data. This table is not changed automatically by AI suggestions or exports."
+        )
         render_dataset_summary(st, row_count, column_count)
         st.dataframe(make_display_safe(products), width="stretch")
 
     with tabs[2]:
         st.subheader("Product Readiness Scores")
+        st.caption(
+            "Scores summarize how ready each product is for review and export. Higher scores mean fewer detected data-quality gaps."
+        )
         st.dataframe(make_display_safe(readiness_scores), width="stretch")
         st.download_button(
             "Download Product Readiness Scores",
@@ -1046,6 +1074,9 @@ def run_app():
 
     with tabs[3]:
         st.subheader("Data Quality Issues")
+        st.caption(
+            "Detected issues are grouped by severity so teams can focus on the highest-risk product data first."
+        )
         render_issues_summary(st, len(issues), len(filtered_issues))
 
         if len(filtered_issues) > 0:
@@ -1064,9 +1095,12 @@ def run_app():
 
     with tabs[4]:
         st.subheader("Review Tasks")
+        st.caption(
+            "Turn detected issues into practical work items for product data cleanup and business review."
+        )
         render_review_tasks_intro(st)
 
-        st.write("Product Review Overview")
+        st.markdown("#### Product Review Overview")
         high_priority_tasks = len(review_tasks[review_tasks["priority"] == "High"])
         medium_priority_tasks = len(review_tasks[review_tasks["priority"] == "Medium"])
         low_priority_tasks = len(review_tasks[review_tasks["priority"] == "Low"])
@@ -1113,7 +1147,10 @@ def run_app():
         summary_columns[2].write("Top task types")
         summary_columns[2].dataframe(make_display_safe(task_type_counts), width="stretch")
 
-        st.write("Manual Review Status Override")
+        st.markdown("#### Set Product Review Status")
+        st.caption(
+            "Use this session-only status to mark the current business review outcome for a product. It does not change source product data."
+        )
         product_options = {
             get_product_option(row): row["sku"] for _, row in readiness_scores.iterrows()
         }
@@ -1128,24 +1165,27 @@ def run_app():
             "Needs Review",
         )
         manual_status = st.selectbox(
-            "Manual review status",
+            "Review status",
             REVIEW_STATUS_OPTIONS,
             index=REVIEW_STATUS_OPTIONS.index(current_manual_status),
             key="manual_review_status",
         )
 
         action_columns = st.columns(2)
-        if action_columns[0].button("Save Manual Review Status"):
+        if action_columns[0].button("Save Review Status"):
             st.session_state["manual_review_status_overrides"][
                 selected_review_sku
             ] = manual_status
             st.rerun()
 
-        if action_columns[1].button("Clear Manual Review Status"):
+        if action_columns[1].button("Clear Review Status"):
             st.session_state["manual_review_status_overrides"].pop(selected_review_sku, None)
             st.rerun()
 
-        st.write("Task Filters")
+        st.markdown("#### Filter Review Tasks")
+        st.caption(
+            "Filter the task list by priority, task type, or review status before downloading the current view."
+        )
         filter_columns = st.columns(3)
         priority_options = get_filter_options(review_tasks, "priority")
         task_type_options = get_filter_options(review_tasks, "task_type")
@@ -1193,7 +1233,7 @@ def run_app():
     with tabs[5]:
         st.subheader("Management Export")
         st.caption(
-            "Download one Excel workbook with summary metrics, scores, issues, review tasks, AI suggestions, and source products."
+            "Management Export is the audit/reporting workbook for overview, readiness scores, issues, review tasks, AI suggestions, and the source product snapshot."
         )
 
         ai_suggestions_export = get_ai_suggestions_export_dataframe()
@@ -1206,7 +1246,10 @@ def run_app():
             ai_suggestions_export,
         )
 
-        st.write("Management Summary Preview")
+        st.markdown("#### Management Summary Preview")
+        st.caption(
+            "Use this preview to confirm the management report context before downloading the workbook."
+        )
         st.dataframe(make_display_safe(management_summary), width="stretch")
 
         st.download_button(
@@ -1226,7 +1269,7 @@ def run_app():
     with tabs[6]:
         st.subheader("AI Suggestions")
         st.caption(
-            "Draft content support for one selected product. Suggestions are never applied automatically."
+            "AI support is split into classic suggestions, structured Smart Suggestions, human review, and improved export candidates."
         )
         st.warning(
             "AI suggestions are draft recommendations. A human must review them before use."
@@ -1258,6 +1301,11 @@ def run_app():
         selected_product_context = get_ai_product_context(selected_product, selected_score)
         selected_review_tasks = review_tasks[review_tasks["sku"] == selected_sku]
 
+        st.markdown("#### Classic AI Suggestions (v1)")
+        st.caption(
+            "Generate draft content for one selected product. This flow stays separate from Smart Suggestions v2 approval and export candidates."
+        )
+
         selected_suggestion_types = st.multiselect(
             "Select suggestion types",
             AI_SUGGESTION_TYPES,
@@ -1269,10 +1317,10 @@ def run_app():
             ],
         )
 
-        st.write("Selected product context")
+        st.markdown("##### Selected Product Context")
         st.dataframe(make_display_safe(pd.DataFrame([selected_product_context])), width="stretch")
 
-        st.write("Current issues for this product")
+        st.markdown("##### Current Issues for This Product")
         if len(selected_issues) > 0:
             st.dataframe(make_display_safe(selected_issues), width="stretch")
         else:
@@ -1348,8 +1396,8 @@ def run_app():
             st.write(suggestions.get("human_review_notes", ""))
 
             if suggestions.get("raw_response"):
-                st.markdown("### Raw AI response")
-                st.text(suggestions["raw_response"])
+                with st.expander("Raw AI response"):
+                    st.text(suggestions["raw_response"])
 
             st.download_button(
                 "Download AI Suggestions",
@@ -1465,7 +1513,7 @@ def run_app():
                     st.session_state["smart_suggestions_v2_sku"] = selected_sku
                     st.session_state["smart_suggestions_v2_source"] = ""
 
-        st.write("Structured Smart Suggestions v2")
+        st.markdown("#### Smart Suggestions v2 Results")
         st.caption(
             "Current Value is the source/reference value. Suggested Value is a draft recommendation. Human Review Status is your session-only decision."
         )

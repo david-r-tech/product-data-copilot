@@ -8,7 +8,7 @@
 - Current test count: `122` passing pytest tests
 - Local start command: `python -m streamlit run app.py`
 - Current state: local Streamlit MVP with a growing import-safe helper module foundation
-- Current planning focus: German Furniture Demo removed from the active product workflow; UX Polish Phase 1 - Core Product is the next recommended step.
+- Current planning focus: UX Polish Phase 1 - Core Product completed; Core UX Manual QA v1 is the next recommended step.
 - Workflow note: Future Codex prompts should reference `docs/current_context.md` instead of repeating the full project history.
 
 ## Implemented Capabilities
@@ -30,6 +30,7 @@
 - Smart Suggestions v2 business-friendly result labels, empty states, status help, and summary metrics
 - Smart Suggestions v2 demo fixture loader for deterministic local review testing without an API key
 - Product logo integrated into the Streamlit app header from `assets/product_data_copilot_logo.png` with embedded display and text fallback
+- UX Polish Phase 1 - Core Product adds clearer workflow orientation, upload guidance, dashboard/readiness interpretation, business-friendly review status wording, AI section grouping, and export-purpose copy without behavior changes.
 - Smart Suggestions v2 fixture QA documentation with manual smoke-test checklist
 - Visible app and README branding aligned around Product Data Copilot
 - Improved Product Data Export plan for safe approved-suggestion export without write-back

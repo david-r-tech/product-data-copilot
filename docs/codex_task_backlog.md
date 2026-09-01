@@ -70,10 +70,11 @@ Work on one block at a time. Do not start the next block unless the user explici
 | 62 | Product Logo Integration v1 | Done | Added the Product Data Copilot logo as a project asset and displayed it embedded in the Streamlit app header with a text-title fallback. |
 | 63 | Pre-UX Baseline Cleanup / Checkpoint | Done | Reviewed and finalized the existing demo/logo working tree, verified tests, and prepared a clean baseline before UX polish. |
 | 64 | Remove German Furniture Demo v1 | Done | Removed the completed presentation-only German furniture demo from the active product workflow, including tab, demo helpers, demo data, and demo-only tests. |
-| 65 | UX Polish Phase 1 - Core Product | NEXT | Improve the normal Product Data Copilot workflow only: workflow orientation, clearer export purposes, AI section labels, review wording, and table guidance. |
-| 66 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
-| 66 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
-| 67 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
+| 65 | UX Polish Phase 1 - Core Product | Done | Improved the normal Product Data Copilot workflow with workflow orientation, clearer upload guidance, dashboard/readiness interpretation, business-friendly review wording, AI section grouping, and export-purpose copy. |
+| 66 | Core UX Manual QA v1 | NEXT | Manually verify the polished core workflow in the browser without changing app behavior. |
+| 67 | Data Table Readability v1 | Planned | Reduce visual overload in product data/table views with compact previews and full raw data access. |
+| 68 | Language Switch Planning v1 | Planned | Plan English/German UI language switching safely before implementation. |
+| 69 | Manual Owner Tasks | Planned | Run browser QA, capture screenshots, optionally rename the GitHub repo manually, and update CV/portfolio links. |
 | 68 | Tests Expansion v1 | Planned | Expand pytest coverage for extracted helper modules and key business rules. |
 | 69 | Public GitHub Readiness / Portfolio Presentation Pass | Planned | Prepare the project presentation after the product and helper architecture are stable. |
 | 70 | Codex Workflow Optimization v1 | Done | Added compact workflow/context docs so future prompts can reference high-signal state instead of repeating full project history. |

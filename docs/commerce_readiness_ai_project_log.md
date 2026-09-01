@@ -926,6 +926,14 @@ Readiness status logic:
 * How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually start the app and confirm the normal tabs still render without the `DE Demo` tab.
 * Next recommended step: Start `UX Polish Phase 1 - Core Product`.
 
+### UX Polish Phase 1 - Core Product
+
+* Date: 2026-09-01
+* Change: Added a compact workflow orientation, clearer upload guidance, dashboard/readiness interpretation, business-friendly review status wording, clearer AI section grouping, and export-purpose copy.
+* Why it matters: Makes the normal Product Data Copilot workflow easier to understand without adding features, changing product logic, or reintroducing the removed German demo.
+* How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually start `python -m streamlit run app.py` and walk through Upload, Dashboard, Scores, Issues, Review Tasks, AI Suggestions, and exports.
+* Next recommended step: Run `Core UX Manual QA v1`.
+
 ## 8. Product Decisions
 
 Important product decisions so far:
