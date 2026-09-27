@@ -19,7 +19,8 @@ Use this checklist just before including Product Data Copilot in an application.
 ## Manual acceptance
 
 - [ ] Launch the app with fictional sample data, inspect each tab at a normal laptop width, and confirm labels and tables are readable.
-- [ ] Download the management and improved workbooks and open them in Microsoft Excel. Confirm the intended sheets, source snapshot, readable layout, and text cells. The improved workbook may contain no suggestions until a V2 response is generated.
+- [ ] Download the management workbook and open it in Microsoft Excel. Confirm the intended sheets, source snapshot, readable layout, and text cells.
+- [ ] If a live V2 response is generated with an API key, download the improved workbook and inspect its approved/pending/blocked groups and source snapshot in Microsoft Excel. Without V2 suggestions, the app does not offer this download.
 - [ ] If an OpenAI key is available **and** fictional data may be sent, generate one V2 response. Check the proposed claim/translation and source fields yourself; approve a valid row, then regenerate and verify the approval clears. Do not treat a structurally valid response as factually proven.
 
 No login, database, deployment, marketplace integration, automatic write-back, or compliance certification is promised for this local MVP. Old plan/fixture documents in `docs/` record development history and are not current manual test instructions.

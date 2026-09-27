@@ -6,7 +6,7 @@ The latest local automated run passed **186 tests** in a fresh virtual environme
 
 ## Before using the repository as a job-application reference
 
-1. Finish manual visual checks of downloaded workbooks in Microsoft Excel and, if desired, one live AI response with fictional data.
+1. Finish a manual visual check of the management workbook in Microsoft Excel. If an API key is available, use fictional data for one live V2 response and inspect the improved workbook too.
 2. The owner now intends to publish the repository for job applications. The latest code has been pushed, but the page returned 404 in a signed-out browser before the visibility change. Verify anonymous access before adding the URL to an application.
 3. Check any CV, portfolio, or social description against the current README. Links to those publications have not yet been supplied.
 

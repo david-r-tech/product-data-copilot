@@ -997,6 +997,7 @@ Readiness status logic:
 * Change: The owner changed the GitHub access goal from invitation-only to public for job applications. Current-facing documentation records that intent without claiming the visibility setting has changed. Added a read-only GitHub Actions workflow for dependency, syntax, and test checks on Windows.
 * Why it matters: An expert reviewer should see the same core checks run on pushed code, and application materials should not describe a private repository as a public reference before anonymous access is confirmed.
 * How to test: Run the checks locally, inspect the GitHub workflow result after pushing, then confirm the repository opens without authentication after its visibility is changed.
+* Acceptance note: The management workbook can be downloaded without an API key. The improved workbook appears only after V2 suggestions exist; the manual Excel checklist now reflects that UI condition.
 
 ## 8. Product Decisions
 
