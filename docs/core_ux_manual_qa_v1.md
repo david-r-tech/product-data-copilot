@@ -1,5 +1,7 @@
 # Core UX Manual QA v1
 
+> Historical QA procedure. The demo-fixture loader described below was removed from the app. Use [final_portfolio_release_checklist_v1.md](final_portfolio_release_checklist_v1.md) for current manual acceptance.
+
 ## Purpose
 
 This checklist verifies the normal Product Data Copilot workflow after UX Polish Phase 1. It focuses on clarity, trust, and safe product workflow communication.

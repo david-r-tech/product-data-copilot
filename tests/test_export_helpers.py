@@ -61,6 +61,7 @@ def test_ai_suggestions_export_columns_are_stable():
         "translation",
         "compliance_safety_review_note",
         "human_review_notes",
+        "review_status",
     ]
 
 
@@ -233,6 +234,7 @@ def test_rejected_and_blocked_suggestions_are_separated_correctly():
 
 
 def test_missing_or_unknown_status_is_handled_safely():
+    assert normalize_improved_export_status({"approval_status": "approved"}) == "pending"
     assert normalize_improved_export_status({}) == "unknown"
     assert normalize_improved_export_status({"approval_status": "not sure"}) == "unknown"
 

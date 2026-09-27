@@ -1,5 +1,7 @@
 # UX Manual QA v1 Checklist
 
+> Historical QA procedure. The demo-fixture loader described below was removed from the app. Use [final_portfolio_release_checklist_v1.md](final_portfolio_release_checklist_v1.md) for current manual acceptance.
+
 This checklist verifies the current Product Data Copilot UI after `UX Copy Polish v1`.
 
 The goal is to confirm that the app communicates product value, AI safety, review workflow, and export safety clearly in a real browser walkthrough.

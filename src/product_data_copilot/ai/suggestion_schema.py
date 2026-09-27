@@ -1,5 +1,7 @@
 """Pure helpers for future field-level Smart Suggestions records."""
 
+from product_data_copilot.rules.validators import is_blank, normalize_text as source_text
+
 UNKNOWN_FIELD_VALUES = {"", "-", "n/a", "na", "none", "null", "unknown"}
 
 CONFIDENCE_LOW = "low"
@@ -79,7 +81,7 @@ UNSUPPORTED_FACT_TARGET_FIELDS = [
 
 def normalize_text(value):
     """Return a stripped text value, treating common placeholders as blank."""
-    if value is None:
+    if is_blank(value):
         return ""
 
     text = str(value).strip()
@@ -162,11 +164,11 @@ def normalize_suggestion_record(record):
     for field_name in REQUIRED_SUGGESTION_FIELDS:
         normalized[field_name] = record.get(field_name, "")
 
-    normalized["sku"] = normalize_text(normalized["sku"])
+    normalized["sku"] = source_text(normalized["sku"])
     normalized["product_name"] = normalize_text(normalized["product_name"])
     normalized["target_field"] = normalize_text(normalized["target_field"])
-    normalized["current_value"] = normalize_text(normalized["current_value"])
-    normalized["proposed_value"] = normalize_text(normalized["proposed_value"])
+    normalized["current_value"] = source_text(normalized["current_value"])
+    normalized["proposed_value"] = source_text(normalized["proposed_value"])
     normalized["source_fields"] = normalize_source_fields(normalized["source_fields"])
     normalized["reason"] = normalize_text(normalized["reason"])
     normalized["confidence"] = normalize_confidence(normalized["confidence"])
@@ -185,7 +187,9 @@ def normalize_suggestion_record(record):
 def validate_suggestion_record(record):
     """Return True when a suggestion has the minimum review-ready structure."""
     normalized = normalize_suggestion_record(record)
-    required_text_fields = ["sku", "target_field", "reason"]
+    if not normalized["sku"]:
+        return False
+    required_text_fields = ["target_field", "reason"]
 
     for field_name in required_text_fields:
         if normalize_text(normalized.get(field_name)) == "":

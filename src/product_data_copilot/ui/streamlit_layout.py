@@ -7,12 +7,12 @@ and easy to test without launching Streamlit.
 
 def configure_page(st):
     """Configure the Streamlit page."""
-    st.set_page_config(page_title="Commerce Readiness AI", layout="wide")
+    st.set_page_config(page_title="Product Data Copilot", layout="wide")
 
 
 def render_app_intro(st):
     """Render the app title and short intro caption."""
-    st.title("Commerce Readiness AI")
+    st.title("Product Data Copilot")
     st.caption("CSV-based product data quality checks for e-commerce readiness.")
 
 
@@ -25,7 +25,7 @@ def render_data_input_section(st):
     """Render the sidebar data upload input and return the uploaded file."""
     render_sidebar_intro(st)
     return st.sidebar.file_uploader(
-        "Upload a CSV or Excel file", type=["csv", "xlsx"]
+        "Upload a CSV or Excel file", type=["csv", "xlsx"], max_upload_size=10
     )
 
 

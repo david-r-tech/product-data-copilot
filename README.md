@@ -1,232 +1,46 @@
 # Product Data Copilot
 
-AI-assisted product data quality and export workflow for E-commerce teams.
+Product Data Copilot is a local Streamlit application for reviewing e-commerce product data before publication. It turns a CSV or XLSX file into visible quality issues, explainable readiness scores, prioritized review tasks, optional AI drafts, and safe handoff exports. The intended users are product-data and e-commerce operations teams.
 
-Product Data Copilot is a local Streamlit MVP for auditing product data before marketplace or shop publication. It helps product data managers, marketplace managers, E-commerce operations teams, and category teams find missing or weak product data, prioritize review work, generate human-reviewed AI draft suggestions, and export review-ready workbooks.
+The product question is: **Which product records need attention, why, and what can a reviewer safely hand off next?** The app supports that decision; it does not publish listings or certify compliance.
 
-This project is a portfolio-grade local prototype. It is not a production SaaS product.
+## Try the workflow
 
-<!-- Screenshot placeholder: add final app screenshot here -->
+1. Install Python and the dependencies: `python -m pip install -r requirements.txt`.
+2. Start the app: `python -m streamlit run app.py`. On Windows, `start_app.bat` also starts it using the project's virtual environment when available.
+3. The app opens with 25 fictional sample products. Inspect the Dashboard, Scores, Issues, and Review Tasks tabs, or upload your own file.
+4. Download the management workbook or CSV tables. With an `OPENAI_API_KEY`, optionally generate suggestions for one selected product, review structured suggestions, and download an improvement workbook.
 
-## What It Does
+The sample file at [data/sample_products.csv](data/sample_products.csv) is fictional and deliberately contains quality gaps. No API key is needed for the core audit and export workflow.
 
-Product Data Copilot turns a product file into a structured review workflow:
+## Input contract
 
-- Product data can be loaded from CSV/XLSX or from the built-in sample dataset.
-- Missing or problematic product data can be detected with rule-based checks.
-- Products receive explainable readiness scores.
-- Issues are converted into practical review tasks.
-- AI can suggest product data improvements based on available source information.
-- Human review is required before suggestions are used.
-- Approved suggestions can be prepared for Excel export.
-- Original uploaded data is not overwritten automatically.
+- UTF-8 CSV with comma, semicolon, or tab delimiter, or the first worksheet of an XLSX file. File extension is case-insensitive.
+- Required columns: `sku` and `product_name`. Other supported fields include `category`, `description`, `brand`, `manufacturer`, `attributes`, `ean`, `language`, `price`, `image_url`, `warning_notes`, `translation_de`, and `translation_en`.
+- Every SKU must be non-empty and unique. The app rejects ambiguous files before it assigns issues, decisions, or suggestions to products.
+- Limits for this local MVP: 10 MB, 1,000 products, and 100 columns. Invalid and empty files show a recoverable error.
+- Identifiers are read as text, so leading zeros in CSV are preserved. In Excel, format SKU and EAN cells as text **before** entering them; zeros already removed by Excel cannot be recovered.
 
-## Key Features
+## What the results mean
 
-- CSV/XLSX upload
-- Built-in sample data for demos
-- Product data preview
-- Product data checks for missing, weak, or suspicious fields
-- Multiple readiness scores
-- Issues table with severity filtering
-- Review workflow with task filters and session-only manual status override
-- AI Suggestions v1 for one selected product
-- Smart Suggestions v2 with structured field-level suggestions
-- Human Approval UI for approve/reject/pending/blocked review states
-- Improved Excel export for approved/pending/rejected/blocked suggestion groups
-- Excel Management Export for business review
-- Pytest-backed helper modules under `src/product_data_copilot/`
+Checks identify missing or weak titles/descriptions, missing fields and translations, invalid prices or EAN/GTIN checksums, suspicious image URLs, and missing warning notes for selected safety-relevant categories. Issues include their affected SKU, field, severity, reason, and recommended action. Review Tasks make these issues actionable.
 
-## Demo Workflow
+The five component scores cover data quality, marketplace readiness, translations, compliance-related completeness, and AI-content readiness. Overall readiness combines them with weights of 35%, 25%, 15%, 15%, and 10%. Scores are prioritization indicators, **not** marketplace acceptance or legal compliance decisions. A critical issue forces the status to Critical; another open issue prevents a Ready label even when the numeric score is high. Manual export-ready review statuses cannot override those gates.
 
-1. Start the app.
-2. Load the built-in sample data or upload a CSV/XLSX file.
-3. Review product checks, dashboard metrics, and readiness scores.
-4. Open Issues to inspect detected product data problems.
-5. Open Review Tasks to filter operational work and apply session-only review status overrides.
-6. Open AI Suggestions and use Smart Suggestions v2.
-7. Generate or load demo Smart Suggestions v2 records.
-8. Approve, reject, or leave suggestions pending during the current session.
-9. Preview the improved product data export groups.
-10. Download the improved Excel workbook or the management workbook.
+## AI and review boundary
 
-## Installation
+The default audit runs locally. AI calls occur only when the user clicks a generation button and has configured `OPENAI_API_KEY` in an ignored `.env` file (see [.env.example](.env.example)). The selected product's fields, issue context, and review context are sent to OpenAI. `OPENAI_MODEL` can override the configured model. There is no automatic bulk generation.
 
-Install dependencies:
+The classic AI output (v1) is an **unreviewed draft** in the management export. Structured Smart Suggestions (v2) are checked against the selected SKU, existing source fields, editable target field, and current value. Invalid or unsupported suggestions are blocked. Every fresh generation starts with no inherited approvals. A person can approve a valid suggestion for export, but approval lasts only for the current Streamlit session and does not alter the source file. These checks establish provenance and prevent simple mismatches; they cannot prove that a generated claim or translation is factually correct. A reviewer must verify content before use.
 
-```bash
-pip install -r requirements.txt
-```
+## Exports and data handling
 
-## Run Locally
+The management workbook contains an overview, scores, issues, tasks, optional v1 drafts, and an original source snapshot. The improvement workbook groups v2 suggestions by approved, pending, rejected, blocked, and unknown status and also includes the source snapshot. User-provided text is serialized so spreadsheet software does not evaluate it as a formula; numeric score cells can remain numeric. Exports are generated in memory and downloaded locally; the app does not write back to an uploaded product file. Review state is session-only.
 
-Start the Streamlit app:
+## Engineering notes
 
-```bash
-python -m streamlit run app.py
-```
+`app.py` owns the Streamlit flow. Import-safe modules under `src/product_data_copilot/` implement input validation, rules, scoring, review state, AI parsing and source validation, and export serialization. The app is deliberately a local MVP; it has no accounts, database, deployment, marketplace integration, automatic approval, or automatic publication.
 
-Then open the local URL shown in the terminal.
+Run the automated suite with `python -m pytest`. The latest local verification on 27 September 2026 passed **185 tests** in a fresh virtual environment. Browser checks covered the normal sample-data experience; a live OpenAI response and a manual Microsoft Excel visual check are still separate acceptance checks. See [requirements and verification](docs/requirements_traceability.md) for the scope and evidence, and the [case study](docs/portfolio_case_study.md) for the product reasoning.
 
-### Start on Windows
-
-Windows users can also double-click:
-
-```text
-start_app.bat
-```
-
-If modules are missing, run this once in the project folder:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Tests
-
-Run the test suite:
-
-```bash
-python -m pytest
-```
-
-Current known test state:
-
-```text
-122 passed
-```
-
-## Architecture Overview
-
-The app is intentionally local-first and Streamlit-based, but core helper logic has been extracted into import-safe modules.
-
-```text
-app.py
-src/product_data_copilot/
-  rules/
-  scoring/
-  review/
-  export/
-  ai/
-  ui/
-tests/
-docs/
-data/
-```
-
-Key areas:
-
-- `app.py` - Streamlit runtime and main app flow
-- `src/product_data_copilot/rules/` - validation helpers
-- `src/product_data_copilot/scoring/` - readiness scoring helpers
-- `src/product_data_copilot/review/` - review status and task mapping helpers
-- `src/product_data_copilot/export/` - export preparation helpers
-- `src/product_data_copilot/ai/` - prompt, schema, parser, and Smart Suggestions v2 helpers
-- `src/product_data_copilot/ui/` - small Streamlit presentation helpers
-- `tests/` - pytest coverage for pure helper logic
-- `docs/` - planning, QA, project status, and portfolio documentation
-
-## AI Safety / Human Review
-
-AI suggestions are draft recommendations only.
-
-Safety rules:
-
-- No invented facts policy: suggestions should be based on available source fields.
-- Structured suggestions include source, reason, confidence, and risk context.
-- User approval is required.
-- AI cannot approve itself.
-- Blocked suggestions cannot be approved.
-- Approved means export candidate, not automatic source mutation.
-- Missing API keys are handled safely.
-
-To enable OpenAI-backed suggestions locally:
-
-1. Copy `.env.example` to `.env`.
-2. Set `OPENAI_API_KEY` in `.env`.
-3. Restart the app.
-
-Never commit `.env` or real API keys.
-
-## Export Safety
-
-The improved Excel export is a review handoff artifact.
-
-- Original uploaded data remains unchanged.
-- Approved suggestions are separated from pending, rejected, blocked, and unknown suggestions.
-- The workbook includes an original source snapshot.
-- No source file is overwritten.
-- No automatic write-back is performed.
-- Review decisions are session-only in the current MVP.
-
-The improved export workbook is generated locally in memory as:
-
-```text
-product_data_copilot_improved_export.xlsx
-```
-
-The Management Export workbook is also available for audit summaries:
-
-```text
-commerce_readiness_ai_management_export.xlsx
-```
-
-Generated export files are local outputs and should not be committed to the repository.
-
-## Sample Data
-
-The app loads `data/sample_products.csv` when no file is uploaded.
-
-The demo dataset contains 25 fictional products across categories such as Apparel, Electronics, Home & Kitchen, Sports & Outdoors, Office, Toys, Beauty / Personal Care, and Pet Supplies. It intentionally includes realistic product data issues so checks, scores, review tasks, AI suggestions, and exports can be demonstrated immediately.
-
-## Case Study and Documentation
-
-- [Portfolio Case Study](docs/portfolio_case_study.md)
-- [Portfolio Screenshot Checklist](docs/portfolio_screenshot_checklist_v1.md)
-- [Final Portfolio Release Checklist](docs/final_portfolio_release_checklist_v1.md)
-- [GitHub Repo Rename Manual Checklist](docs/github_repo_rename_manual_checklist_v1.md)
-- [Demo Test Checklist](docs/demo_test_checklist.md)
-- [Demo Script](docs/demo_script.md)
-- [Project Log](docs/commerce_readiness_ai_project_log.md)
-- [Current Context](docs/current_context.md)
-
-## Final Portfolio Docs
-
-Use these documents for the final portfolio handoff:
-
-- [Portfolio Case Study](docs/portfolio_case_study.md) - product story, workflow, architecture, AI safety, export safety, limitations, and roadmap.
-- [Portfolio Screenshot Checklist](docs/portfolio_screenshot_checklist_v1.md) - manual screenshot plan for GitHub and portfolio presentation.
-- [Final Portfolio Release Checklist](docs/final_portfolio_release_checklist_v1.md) - final go/no-go checklist before sharing the project.
-- [GitHub Repo Rename Manual Checklist](docs/github_repo_rename_manual_checklist_v1.md) - owner-only steps for the optional future repository rename.
-
-## Current Status
-
-Product Data Copilot is a local MVP and portfolio prototype. It is designed to demonstrate a practical product-data audit workflow with AI safety thinking, human review, tested helper modules, and safe exports.
-
-It is not intended to publish products automatically or replace legal/compliance review.
-
-## Current Limitations
-
-- Not SaaS
-- No deployment or hosted backend
-- No database
-- No login or multi-user roles
-- No marketplace integrations
-- No marketplace-specific rule presets
-- Session-only approval state
-- AI suggestions require human review
-- No automatic product data write-back
-- No legal compliance guarantees
-
-## Roadmap / Next Steps
-
-- Capture final screenshots
-- Run final manual QA
-- Plan GitHub repository naming cleanup
-- Prepare portfolio release v0.1
-- Expand pytest coverage around key business rules
-- Improve workbook formatting and column widths
-
-## License
-
-No license file has been added yet. Treat the repository as a private portfolio project unless a license is added later.
+The repository has no license file. Availability of the GitHub repository to an unauthenticated reviewer must be checked by the owner before using its link in an application.

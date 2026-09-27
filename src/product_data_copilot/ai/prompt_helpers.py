@@ -1,5 +1,7 @@
 """Small, pure helpers for safe AI prompt preparation."""
 
+from product_data_copilot.rules.validators import is_blank
+
 UNKNOWN_FIELD_VALUES = {"", "-", "n/a", "na", "none", "null", "unknown"}
 
 CONFIDENCE_LOW = "low"
@@ -51,7 +53,7 @@ DEFAULT_PRODUCT_CONTEXT_FIELDS = [
 
 def normalize_prompt_value(value):
     """Return a clean string value for prompt context."""
-    if value is None:
+    if is_blank(value):
         return ""
 
     text = str(value).strip()

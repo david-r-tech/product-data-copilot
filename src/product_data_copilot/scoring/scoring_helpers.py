@@ -26,9 +26,15 @@ def is_score_in_range(score):
     return 0 <= numeric_score <= 100
 
 
-def readiness_status_from_score(score):
-    """Return the readiness status label for a numeric score."""
+def readiness_status_from_score(score, severities=()):
+    """Combine the numeric indicator with issues that cannot be averaged away."""
     score = clamp_score(score)
+
+    severities = list(severities)
+    if "Critical" in severities:
+        return READINESS_CRITICAL
+    if severities and score >= 60:
+        return READINESS_NEEDS_REVIEW
 
     if score >= 85:
         return READINESS_READY
@@ -68,4 +74,3 @@ def score_after_issue_penalties(start_score, severities):
     """Apply severity penalties to a score and keep it in the valid range."""
     penalty_total = sum(penalty_for_severity(severity) for severity in severities)
     return clamp_score(start_score - penalty_total)
-

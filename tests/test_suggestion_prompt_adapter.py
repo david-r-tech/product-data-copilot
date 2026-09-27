@@ -162,7 +162,7 @@ def test_smart_suggestion_prompt_blocks_unsupported_fact_categories():
 
 def test_prompt_uses_empty_state_when_context_has_no_usable_values():
     prompt = build_smart_suggestion_prompt(
-        {"sku": "unknown", "product_name": ""},
+        {"sku": "", "product_name": ""},
         issue_records=[],
         review_task_records=[],
     )

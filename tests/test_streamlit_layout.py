@@ -32,8 +32,8 @@ class FakeSidebar:
     def header(self, text):
         self.headers.append(text)
 
-    def file_uploader(self, label, type):
-        self.file_uploaders.append({"label": label, "type": type})
+    def file_uploader(self, label, type, max_upload_size):
+        self.file_uploaders.append({"label": label, "type": type, "max_upload_size": max_upload_size})
         return self.uploaded_file
 
 
@@ -84,7 +84,7 @@ def test_configure_page_sets_expected_streamlit_page_config():
     configure_page(fake_st)
 
     assert fake_st.page_config == {
-        "page_title": "Commerce Readiness AI",
+        "page_title": "Product Data Copilot",
         "layout": "wide",
     }
 
@@ -94,7 +94,7 @@ def test_render_app_intro_preserves_title_and_caption():
 
     render_app_intro(fake_st)
 
-    assert fake_st.titles == ["Commerce Readiness AI"]
+    assert fake_st.titles == ["Product Data Copilot"]
     assert fake_st.captions == [
         "CSV-based product data quality checks for e-commerce readiness."
     ]
@@ -117,7 +117,7 @@ def test_render_data_input_section_preserves_upload_widget():
     assert uploaded_file is fake_st.sidebar.uploaded_file
     assert fake_st.sidebar.headers == ["Input"]
     assert fake_st.sidebar.file_uploaders == [
-        {"label": "Upload a CSV or Excel file", "type": ["csv", "xlsx"]}
+        {"label": "Upload a CSV or Excel file", "type": ["csv", "xlsx"], "max_upload_size": 10}
     ]
 
 

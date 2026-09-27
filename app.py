@@ -2,7 +2,6 @@ import base64
 import json
 import os
 import sys
-from io import BytesIO
 from pathlib import Path
 
 import pandas as pd
@@ -22,6 +21,7 @@ from product_data_copilot.rules.validators import (  # noqa: E402
     is_suspicious_image_url,
     is_valid_ean,
     is_valid_price,
+    normalize_text as source_text,
 )
 from product_data_copilot.scoring.scoring_helpers import (  # noqa: E402
     readiness_status_from_score as get_readiness_status,
@@ -50,6 +50,7 @@ from product_data_copilot.ai.suggestion_parser import (  # noqa: E402
     parse_and_normalize_suggestions,
 )
 from product_data_copilot.ai.suggestion_prompt_adapter import (  # noqa: E402
+    DEFAULT_PRODUCT_CONTEXT_FIELDS,
     build_smart_suggestion_prompt,
 )
 from product_data_copilot.ai.suggestion_schema import (  # noqa: E402
@@ -68,7 +69,25 @@ from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     render_review_tasks_summary,
 )
 
-load_dotenv()
+from product_data_copilot.data.product_input import (  # noqa: E402
+    ProductInputError,
+    dataset_fingerprint,
+    load_product_file,
+    validate_product_identity,
+)
+from product_data_copilot.export.serialization import (  # noqa: E402
+    ExportError,
+    safe_csv_bytes,
+    workbook_bytes,
+)
+from product_data_copilot.review.session_state import (  # noqa: E402
+    bind_dataset,
+    replace_smart_response,
+    suggestion_review_key,
+)
+from product_data_copilot.ai.source_validation import (  # noqa: E402
+    validate_suggestions_against_product,
+)
 
 APP_NAME = "Product Data Copilot"
 APP_LOGO_PATH = Path(__file__).resolve().parent / "assets" / "product_data_copilot_logo.png"
@@ -84,12 +103,7 @@ AI_SUGGESTION_TYPES = [
 ]
 
 SMART_SUGGESTIONS_V2_COLUMNS = REQUIRED_SUGGESTION_FIELDS
-SMART_SUGGESTIONS_V2_DEMO_FIXTURE_PATH = (
-    Path(__file__).resolve().parent
-    / "tests"
-    / "fixtures"
-    / "smart_suggestions_v2_demo_response.json"
-)
+SAMPLE_DATA_PATH = Path(__file__).resolve().parent / "data" / "sample_products.csv"
 
 
 def get_image_data_uri(image_path):
@@ -535,6 +549,7 @@ def add_media_checks(issues, row, sku):
 
 
 def find_product_issues(products):
+    validate_product_identity(products)
     issues = []
 
     for row_number, row in products.iterrows():
@@ -659,6 +674,7 @@ def calculate_product_scores(row):
 
 
 def calculate_readiness_scores(products, issues):
+    validate_product_identity(products)
     scores = []
 
     for row_number, row in products.iterrows():
@@ -671,7 +687,7 @@ def calculate_readiness_scores(products, issues):
         product_issues = issues[issues["sku"] == sku]
         product_scores = calculate_product_scores(row)
         readiness_status = get_readiness_status(
-            product_scores["overall_readiness_score"]
+            product_scores["overall_readiness_score"], product_issues["severity"]
         )
         review_status = get_review_status(product_issues, readiness_status)
 
@@ -708,8 +724,11 @@ def apply_manual_review_overrides(readiness_scores):
     updated_scores = readiness_scores.copy()
 
     for sku, manual_status in st.session_state["manual_review_status_overrides"].items():
+        product_mask = updated_scores["sku"] == sku
+        if manual_status in {"OK", "Ready for Export"}:
+            product_mask &= updated_scores["readiness_status"] == "Ready"
         updated_scores.loc[
-            updated_scores["sku"] == sku,
+            product_mask,
             "review_status",
         ] = manual_status
 
@@ -770,18 +789,11 @@ def get_filter_options(dataframe, column_name):
 
 
 def filter_review_tasks(review_tasks, selected_priorities, selected_task_types, selected_statuses):
-    filtered_tasks = review_tasks.copy()
-
-    if len(selected_priorities) > 0:
-        filtered_tasks = filtered_tasks[filtered_tasks["priority"].isin(selected_priorities)]
-
-    if len(selected_task_types) > 0:
-        filtered_tasks = filtered_tasks[filtered_tasks["task_type"].isin(selected_task_types)]
-
-    if len(selected_statuses) > 0:
-        filtered_tasks = filtered_tasks[filtered_tasks["review_status"].isin(selected_statuses)]
-
-    return filtered_tasks
+    return review_tasks[
+        review_tasks["priority"].isin(selected_priorities)
+        & review_tasks["task_type"].isin(selected_task_types)
+        & review_tasks["review_status"].isin(selected_statuses)
+    ].copy()
 
 
 def get_product_option(row):
@@ -796,18 +808,13 @@ def get_product_option(row):
 
 
 def get_ai_product_context(product, product_score):
-    return {
-        "sku": product_score.get("sku", get_value(product, "sku")),
-        "product_name": get_value(product, "product_name"),
-        "category": get_value(product, "category"),
-        "brand": get_value(product, "brand"),
-        "manufacturer": get_value(product, "manufacturer"),
-        "description": get_value(product, "description"),
-        "attributes": get_value(product, "attributes"),
-        "overall_readiness_score": product_score.get("overall_readiness_score", ""),
-        "readiness_status": product_score.get("readiness_status", ""),
-        "review_status": product_score.get("review_status", ""),
+    context = {
+        field: source_text(get_value(product, field))
+        for field in DEFAULT_PRODUCT_CONTEXT_FIELDS
     }
+    for field in ("sku", "overall_readiness_score", "readiness_status", "review_status"):
+        context[field] = source_text(product_score.get(field, context.get(field, "")))
+    return context
 
 
 def build_ai_prompt(product, product_issues, product_score, selected_suggestion_types):
@@ -853,19 +860,23 @@ Current scores:
 
 
 def generate_ai_suggestions(product, product_issues, product_score, selected_suggestion_types):
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=30.0, max_retries=1)
     model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
     prompt = build_ai_prompt(product, product_issues, product_score, selected_suggestion_types)
 
     response = client.responses.create(
         model=model,
         input=prompt,
+        max_output_tokens=3000,
     )
 
     response_text = response.output_text.strip()
 
     try:
-        return json.loads(response_text)
+        suggestions = json.loads(response_text)
+        if not isinstance(suggestions, dict):
+            raise ValueError("The AI response must be a JSON object.")
+        return suggestions
     except json.JSONDecodeError:
         return {
             "improved_product_title": "",
@@ -880,19 +891,16 @@ def generate_ai_suggestions(product, product_issues, product_score, selected_sug
 
 
 def generate_smart_suggestions_v2(prompt):
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=30.0, max_retries=1)
     model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 
     response = client.responses.create(
         model=model,
         input=prompt,
+        max_output_tokens=3000,
     )
 
     return response.output_text.strip()
-
-
-def load_smart_suggestions_v2_demo_response():
-    return SMART_SUGGESTIONS_V2_DEMO_FIXTURE_PATH.read_text(encoding="utf-8")
 
 
 def suggestions_to_dataframe(sku, suggestions):
@@ -916,6 +924,7 @@ def suggestions_to_dataframe(sku, suggestions):
                     "compliance_safety_review_note", ""
                 ),
                 "human_review_notes": suggestions.get("human_review_notes", ""),
+                "review_status": "unreviewed_draft",
             }
         ]
     )
@@ -943,8 +952,7 @@ def smart_suggestions_v2_to_dataframe(suggestions):
 
 
 def get_smart_suggestion_v2_review_key(suggestion):
-    key_fields = ["sku", "target_field", "current_value", "proposed_value"]
-    return " | ".join([str(suggestion.get(field, "")) for field in key_fields])
+    return suggestion_review_key(suggestion)
 
 
 def get_smart_suggestion_v2_review_status(suggestion, review_decisions):
@@ -1039,70 +1047,31 @@ def get_ai_suggestions_export_dataframe():
 
 
 def create_excel_management_export(
-    data_source,
-    products,
-    readiness_scores,
-    issues,
-    review_tasks,
-    ai_suggestions,
+    data_source, products, readiness_scores, issues, review_tasks, ai_suggestions,
 ):
-    output = BytesIO()
     management_summary = create_management_summary(
-        data_source,
-        products,
-        issues,
-        readiness_scores,
-        review_tasks,
-        ai_suggestions,
+        data_source, products, issues, readiness_scores, review_tasks, ai_suggestions,
     )
-
-    with pd.ExcelWriter(output, engine="openpyxl") as writer:
-        (
-            management_summary_sheet,
-            product_scores_sheet,
-            issues_sheet,
-            review_tasks_sheet,
-            ai_suggestions_sheet,
-            source_products_sheet,
-        ) = MANAGEMENT_EXPORT_SHEETS
-
-        management_summary.to_excel(
-            writer, sheet_name=management_summary_sheet, index=False
-        )
-        readiness_scores.to_excel(writer, sheet_name=product_scores_sheet, index=False)
-        issues.to_excel(writer, sheet_name=issues_sheet, index=False)
-        review_tasks.to_excel(writer, sheet_name=review_tasks_sheet, index=False)
-        ai_suggestions.to_excel(writer, sheet_name=ai_suggestions_sheet, index=False)
-        products.to_excel(writer, sheet_name=source_products_sheet, index=False)
-
-    output.seek(0)
-    return output.getvalue()
+    return workbook_bytes(dict(zip(
+        MANAGEMENT_EXPORT_SHEETS,
+        [management_summary, readiness_scores, issues, review_tasks, ai_suggestions, products],
+    )))
 
 
 def create_improved_excel_export(suggestions, products):
-    output = BytesIO()
-    improved_export_sheets = build_improved_excel_export_sheets(
-        suggestions,
-        source_products=products,
-    )
-
-    with pd.ExcelWriter(output, engine="openpyxl") as writer:
-        for sheet_name, sheet_dataframe in improved_export_sheets.items():
-            sheet_dataframe.to_excel(writer, sheet_name=sheet_name, index=False)
-
-    output.seek(0)
-    return output.getvalue()
+    return workbook_bytes(build_improved_excel_export_sheets(suggestions, source_products=products))
 
 
 def run_app():
     """Run the Streamlit app."""
+    load_dotenv(Path(__file__).resolve().parent / ".env")
     st.set_page_config(page_title=APP_NAME, layout="wide")
 
     logo_data_uri = get_image_data_uri(APP_LOGO_PATH)
     if logo_data_uri:
         st.markdown(
             f"""
-            <div style="max-width: 560px; margin: 0 0 0.75rem 0;">
+            <div style="max-width: 400px; margin: 0 0 0.75rem 0;">
                 <img
                     src="{logo_data_uri}"
                     alt="{APP_NAME} logo"
@@ -1128,15 +1097,27 @@ def run_app():
         "Upload CSV/XLSX product data or use the built-in sample data. After loading, the app checks data quality, creates review tasks, and prepares safe improvement/export options."
     )
 
-    if uploaded_file is not None:
-        if uploaded_file.name.endswith(".xlsx"):
-            products = pd.read_excel(uploaded_file)
+    st.sidebar.caption(
+        "Required columns: sku, product_name. SKUs must be unique and non-empty. "
+        "UTF-8 CSV (comma, semicolon or tab) or the first XLSX sheet. "
+        "Up to 1,000 products / 10 MB. Store SKU and EAN cells as text in Excel."
+    )
+    try:
+        if uploaded_file is not None:
+            file_bytes = uploaded_file.getvalue()
+            filename = uploaded_file.name
+            data_source = "Uploaded file"
         else:
-            products = pd.read_csv(uploaded_file)
-        data_source = "Uploaded file"
-    else:
-        products = pd.read_csv("data/sample_products.csv")
-        data_source = "Sample data"
+            file_bytes = SAMPLE_DATA_PATH.read_bytes()
+            filename = SAMPLE_DATA_PATH.name
+            data_source = "Sample data (fictional products)"
+        products = load_product_file(file_bytes, filename)
+    except (ProductInputError, OSError) as error:
+        bind_dataset(st.session_state, None)
+        st.error(str(error) if isinstance(error, ProductInputError) else "The sample file could not be loaded.")
+        st.info("Correct the file and upload it again. No product decisions or exports were created.")
+        return
+    bind_dataset(st.session_state, dataset_fingerprint(file_bytes, data_source + ":" + filename))
 
     row_count, column_count = products.shape
 
@@ -1243,7 +1224,8 @@ def run_app():
     with tabs[2]:
         st.subheader("Product Readiness Scores")
         st.caption(
-            "Scores summarize how ready each product is for review and export. Higher scores mean fewer detected data-quality gaps."
+            "Scores are completeness indicators. Critical issues always block readiness; other open issues require review. "
+            "Ready means these local rules found no issues, not marketplace certification."
         )
         render_readable_dataframe(
             readiness_scores,
@@ -1263,7 +1245,7 @@ def run_app():
         )
         st.download_button(
             "Download Scores CSV",
-            readiness_scores.to_csv(index=False),
+            safe_csv_bytes(readiness_scores),
             "product_readiness_scores.csv",
             "text/csv",
         )
@@ -1295,7 +1277,7 @@ def run_app():
 
         st.download_button(
             "Download Issues CSV",
-            issues.to_csv(index=False),
+            safe_csv_bytes(issues),
             "data_quality_issues.csv",
             "text/csv",
         )
@@ -1382,17 +1364,25 @@ def run_app():
             key="manual_review_product",
         )
         selected_review_sku = product_options[selected_review_product]
-        current_manual_status = st.session_state["manual_review_status_overrides"].get(
-            selected_review_sku,
-            "Needs Review",
-        )
+        selected_review_score = readiness_scores.loc[readiness_scores["sku"] == selected_review_sku].iloc[0]
+        current_manual_status = selected_review_score["review_status"]
+        allowed_manual_statuses = [
+            status for status in REVIEW_STATUS_OPTIONS
+            if selected_review_score["readiness_status"] == "Ready" or status not in {"OK", "Ready for Export"}
+        ]
+        if st.session_state.get("manual_status_product") != selected_review_sku:
+            st.session_state["manual_review_status"] = current_manual_status
+            st.session_state["manual_status_product"] = selected_review_sku
+        if st.session_state.get("manual_review_status") not in allowed_manual_statuses:
+            st.session_state["manual_review_status"] = current_manual_status
         manual_status = st.selectbox(
             "Review status",
-            REVIEW_STATUS_OPTIONS,
-            index=REVIEW_STATUS_OPTIONS.index(current_manual_status),
+            allowed_manual_statuses,
             key="manual_review_status",
         )
-        st.caption(f"Current saved status for this product: {current_manual_status}")
+        st.caption(f"Current effective status: {current_manual_status}")
+        if selected_review_score["readiness_status"] != "Ready":
+            st.caption("Open issues prevent a Ready for Export override. Correct the source data and upload it again to resolve them.")
 
         action_columns = st.columns(2)
         if action_columns[0].button("Save Review Status", type="primary"):
@@ -1403,6 +1393,7 @@ def run_app():
 
         if action_columns[1].button("Clear Review Status"):
             st.session_state["manual_review_status_overrides"].pop(selected_review_sku, None)
+            st.session_state.pop("manual_status_product", None)
             st.rerun()
 
         st.markdown("#### Filter Review Tasks")
@@ -1461,7 +1452,7 @@ def run_app():
 
         st.download_button(
             "Download Filtered Review Tasks CSV",
-            filtered_review_tasks.to_csv(index=False),
+            safe_csv_bytes(filtered_review_tasks),
             "review_tasks.csv",
             "text/csv",
         )
@@ -1492,19 +1483,20 @@ def run_app():
             height=240,
         )
 
-        st.download_button(
-            "Download Management Export Workbook",
-            create_excel_management_export(
-                data_source,
-                products,
-                readiness_scores,
-                issues,
-                review_tasks,
-                ai_suggestions_export,
-            ),
-            MANAGEMENT_EXPORT_FILENAME,
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            type="primary",
+        try:
+            management_bytes = create_excel_management_export(
+                data_source, products, readiness_scores, issues, review_tasks, ai_suggestions_export,
+            )
+        except ExportError as error:
+            st.error(str(error))
+        else:
+            st.download_button(
+                "Download Management Export Workbook", management_bytes, MANAGEMENT_EXPORT_FILENAME,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary",
+            )
+        st.caption(
+            "Text is exported as text, never as executable formulas. Unsupported control characters are shown as "
+            "\\uXXXX. The source snapshot contains the loaded table, not original workbook formatting or other sheets."
         )
 
     with tabs[6]:
@@ -1513,7 +1505,11 @@ def run_app():
             "AI support is split into classic suggestions, structured Smart Suggestions, human review, and improved export candidates."
         )
         st.warning(
-            "AI suggestions are draft recommendations. A human must review them before use."
+            "AI suggestions are draft recommendations. A human must review their factual accuracy before use."
+        )
+        st.info(
+            "Generating suggestions sends the selected product's fields, issues and review context to OpenAI "
+            "using your API key. It can incur API usage charges. Checking files and creating audit exports run locally."
         )
         st.write(
             "By default, the product with the lowest readiness score is selected so review starts with the item that needs the most attention."
@@ -1533,6 +1529,7 @@ def run_app():
             "Select a product",
             list(product_options.keys()),
             index=default_product_index,
+            key="ai_selected_product",
         )
         selected_row_number = product_options[selected_product_label]
         selected_product = products.iloc[selected_row_number]
@@ -1544,7 +1541,8 @@ def run_app():
 
         st.markdown("#### Classic AI Suggestions (v1)")
         st.caption(
-            "Generate draft content for one selected product. This flow stays separate from Smart Suggestions v2 approval and export candidates."
+            "Generate unreviewed draft content for one product. V1 has no approval controls; its CSV and management-sheet "
+            "contents remain unreviewed drafts. Use V2 below for field-level approval."
         )
 
         selected_suggestion_types = st.multiselect(
@@ -1612,6 +1610,8 @@ def run_app():
             "Generate AI Suggestions v1",
             type="primary",
         ):
+            st.session_state.pop("ai_suggestions", None)
+            st.session_state.pop("ai_suggestions_sku", None)
             with st.spinner("Generating AI suggestions..."):
                 try:
                     suggestions = generate_ai_suggestions(
@@ -1623,12 +1623,13 @@ def run_app():
                     suggestions["selected_suggestion_types"] = selected_suggestion_types
                     st.session_state["ai_suggestions"] = suggestions
                     st.session_state["ai_suggestions_sku"] = selected_sku
+                    st.rerun()
                 except Exception as error:
                     st.error(
                         "AI suggestion generation failed. Please check your API key, network connection, or model availability."
                     )
                     with st.expander("Technical details"):
-                        st.write(str(error))
+                        st.write(f"Error type: {type(error).__name__}. Check your local configuration; provider error details are not displayed.")
 
         if (
             "ai_suggestions" in st.session_state
@@ -1671,8 +1672,8 @@ def run_app():
                     st.text(suggestions["raw_response"])
 
             st.download_button(
-                "Download AI Suggestions CSV",
-                suggestions_to_dataframe(selected_sku, suggestions).to_csv(index=False),
+                "Download Unreviewed AI Drafts CSV",
+                safe_csv_bytes(suggestions_to_dataframe(selected_sku, suggestions)),
                 "ai_suggestions.csv",
                 "text/csv",
             )
@@ -1689,9 +1690,6 @@ def run_app():
         st.info(
             "Smart Suggestions v2 does not approve, publish, or update product data automatically. Every usable row needs human review."
         )
-        st.caption(
-            "Recommended demo flow: load demo records, review one suggestion, approve or reject it, preview export groups, then download the workbook."
-        )
 
         smart_suggestions_v2_prompt = build_smart_suggestion_prompt(
             selected_product_context,
@@ -1702,49 +1700,9 @@ def run_app():
         with st.expander("Smart Suggestions v2 prompt preview"):
             st.text(smart_suggestions_v2_prompt)
 
-        with st.expander("Demo fixture for Smart Suggestions v2"):
-            st.caption(
-                "Demo/test data only. Use these deterministic records to test review and export without an API key."
-            )
-            if st.button("Load demo Smart Suggestions v2 records"):
-                try:
-                    smart_suggestions_v2_demo_response = (
-                        load_smart_suggestions_v2_demo_response()
-                    )
-                    smart_suggestions_v2_demo_result = parse_and_normalize_suggestions(
-                        smart_suggestions_v2_demo_response
-                    )
-                    st.session_state["smart_suggestions_v2_prompt"] = (
-                        smart_suggestions_v2_prompt
-                    )
-                    st.session_state["smart_suggestions_v2_raw_response"] = (
-                        smart_suggestions_v2_demo_response
-                    )
-                    st.session_state["smart_suggestions_v2_records"] = (
-                        smart_suggestions_v2_demo_result["suggestions"]
-                    )
-                    st.session_state["smart_suggestions_v2_error"] = (
-                        smart_suggestions_v2_demo_result["errors"]
-                    )
-                    st.session_state["smart_suggestions_v2_is_valid_json"] = (
-                        smart_suggestions_v2_demo_result["is_valid_json"]
-                    )
-                    st.session_state["smart_suggestions_v2_sku"] = selected_sku
-                    st.session_state["smart_suggestions_v2_source"] = "demo_fixture"
-                    st.session_state["smart_suggestions_v2_review_decisions"] = {}
-                    st.success(
-                        "Demo Smart Suggestions v2 records loaded. These rows are fixture data for local review and export testing."
-                    )
-                except Exception as error:
-                    st.error(
-                        "Demo Smart Suggestions v2 records could not be loaded."
-                    )
-                    with st.expander("Technical details"):
-                        st.write(str(error))
-
         if not os.getenv("OPENAI_API_KEY"):
             st.info(
-                "Smart Suggestions v2 generation is disabled because OPENAI_API_KEY is missing. Demo records and prompt preview are still available."
+                "Smart Suggestions v2 generation is disabled because OPENAI_API_KEY is missing. The prompt preview is still available."
             )
         elif st.button("Generate Smart Suggestions v2", type="primary"):
             with st.spinner("Generating Smart Suggestions v2..."):
@@ -1755,38 +1713,25 @@ def run_app():
                     smart_suggestions_v2_result = parse_and_normalize_suggestions(
                         smart_suggestions_v2_raw_response
                     )
-                    st.session_state["smart_suggestions_v2_prompt"] = (
-                        smart_suggestions_v2_prompt
+                    smart_suggestions_v2_result["suggestions"] = validate_suggestions_against_product(
+                        smart_suggestions_v2_result["suggestions"], selected_product,
                     )
-                    st.session_state["smart_suggestions_v2_raw_response"] = (
-                        smart_suggestions_v2_raw_response
+                    replace_smart_response(
+                        st.session_state, sku=selected_sku, prompt=smart_suggestions_v2_prompt,
+                        raw_response=smart_suggestions_v2_raw_response, result=smart_suggestions_v2_result,
                     )
-                    st.session_state["smart_suggestions_v2_records"] = (
-                        smart_suggestions_v2_result["suggestions"]
-                    )
-                    st.session_state["smart_suggestions_v2_error"] = (
-                        smart_suggestions_v2_result["errors"]
-                    )
-                    st.session_state["smart_suggestions_v2_is_valid_json"] = (
-                        smart_suggestions_v2_result["is_valid_json"]
-                    )
-                    st.session_state["smart_suggestions_v2_sku"] = selected_sku
-                    st.session_state["smart_suggestions_v2_source"] = "openai"
                 except Exception as error:
                     st.error(
                         "Smart Suggestions v2 generation failed. Please check your API key, network connection, or model availability."
                     )
                     with st.expander("Technical details"):
-                        st.write(str(error))
-                    st.session_state["smart_suggestions_v2_prompt"] = (
-                        smart_suggestions_v2_prompt
+                        st.write(f"Error type: {type(error).__name__}. Check your local configuration; provider error details are not displayed.")
+                    replace_smart_response(
+                        st.session_state, sku=selected_sku, prompt=smart_suggestions_v2_prompt,
+                        raw_response="", result={"suggestions": [], "errors": [
+                            {"reason": "Generation failed. Try again after checking your local configuration."}
+                        ], "is_valid_json": False},
                     )
-                    st.session_state["smart_suggestions_v2_raw_response"] = ""
-                    st.session_state["smart_suggestions_v2_records"] = []
-                    st.session_state["smart_suggestions_v2_error"] = str(error)
-                    st.session_state["smart_suggestions_v2_is_valid_json"] = False
-                    st.session_state["smart_suggestions_v2_sku"] = selected_sku
-                    st.session_state["smart_suggestions_v2_source"] = ""
 
         st.markdown("#### Smart Suggestions v2 Results")
         st.caption(
@@ -1816,16 +1761,11 @@ def run_app():
                 "smart_suggestions_v2_is_valid_json",
                 True,
             )
-            smart_suggestions_v2_source = st.session_state.get(
-                "smart_suggestions_v2_source",
-                "",
-            )
         else:
             smart_suggestions_v2_records = []
             smart_suggestions_v2_error = []
             smart_suggestions_v2_raw_response = ""
             smart_suggestions_v2_is_valid_json = True
-            smart_suggestions_v2_source = ""
 
         smart_suggestions_v2_df = smart_suggestions_v2_to_dataframe(
             smart_suggestions_v2_records
@@ -1878,12 +1818,8 @@ def run_app():
                     "Blocked rows cannot be approved because they are incomplete, unsafe, or unsupported."
             )
 
-        if smart_suggestions_v2_source == "demo_fixture":
-            st.warning(
-                "Source: Demo fixture. These rows are deterministic test data, not generated by OpenAI."
-            )
-        elif smart_suggestions_v2_source == "openai":
-            st.caption("Source: OpenAI response")
+        if smart_suggestions_v2_records:
+            st.caption("Source: OpenAI response, checked against the selected product. Human factual review is still required.")
 
         smart_suggestions_v2_display_columns = [
             "sku",
@@ -1939,7 +1875,7 @@ def run_app():
                 )
             else:
                 st.info(
-                    "No structured suggestions yet. Load demo records or generate V2 suggestions to test the review workflow."
+                    "No structured suggestions yet. Configure an API key to generate suggestions for the selected product."
                 )
         elif (smart_suggestions_v2_df["suggestion_status"] == "blocked_insufficient_source").any():
             st.warning(
@@ -2085,7 +2021,7 @@ def run_app():
 
         if len(smart_suggestions_v2_df) == 0:
             st.info(
-                "No structured suggestions are available yet. Load demo records or generate V2 suggestions to preview future export groups."
+                "No structured suggestions are available yet. Generate V2 suggestions to review potential improvements before export."
             )
         else:
             improved_export_groups = split_smart_suggestions_for_export(
@@ -2170,17 +2106,16 @@ def run_app():
             st.caption(
                 "Approved suggestions are export candidates only. Source product data is not changed."
             )
-            improved_excel_export = create_improved_excel_export(
-                smart_suggestions_v2_df,
-                products,
-            )
-            st.download_button(
-                "Download Improved Product Data Workbook",
-                improved_excel_export,
-                IMPROVED_EXCEL_EXPORT_FILENAME,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                type="primary",
-            )
+            try:
+                improved_excel_export = create_improved_excel_export(smart_suggestions_v2_df, products)
+            except ExportError as error:
+                st.error(str(error))
+            else:
+                st.download_button(
+                    "Download Improved Product Data Workbook", improved_excel_export,
+                    IMPROVED_EXCEL_EXPORT_FILENAME,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary",
+                )
 
         if smart_suggestions_v2_raw_response:
             with st.expander("Raw Smart Suggestions v2 response"):

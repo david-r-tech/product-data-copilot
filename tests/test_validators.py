@@ -38,11 +38,11 @@ def test_text_normalization_and_min_length():
     assert not has_min_length("Short", 10)
 
 
-def test_ean_validation_accepts_expected_lengths():
-    assert is_valid_ean("12345678")
-    assert is_valid_ean("123456789012")
+def test_ean_validation_accepts_expected_lengths_with_correct_check_digits():
+    assert is_valid_ean("96385074")
+    assert is_valid_ean("036000291452")
     assert is_valid_ean("4006381333931")
-    assert is_valid_ean("12345678901234")
+    assert is_valid_ean("04006381333931")
 
 
 def test_ean_validation_rejects_invalid_values():
@@ -50,11 +50,18 @@ def test_ean_validation_rejects_invalid_values():
     assert not is_valid_ean("12345")
     assert not is_valid_ean("400638133393X")
     assert not is_valid_ean("4006381333931.0")
+    assert not is_valid_ean("4006381333932")
+    assert not is_valid_ean("0000000000000")
+    assert not is_valid_ean("４００６３８１３３３９３１")
 
 
 def test_price_validation():
     assert is_valid_price("19.99")
     assert is_valid_price(1)
+    assert is_valid_price("9,99")
+    assert not is_valid_price("inf")
+    assert not is_valid_price("nan")
+    assert not is_valid_price("1.234,56")
     assert not is_valid_price("0")
     assert not is_valid_price(0)
     assert not is_valid_price("-5")

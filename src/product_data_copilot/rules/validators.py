@@ -1,5 +1,7 @@
 """Small, pure validation helpers for product data checks."""
 
+import math
+
 import pandas as pd
 
 GENERIC_PRODUCT_NAMES = {
@@ -59,7 +61,7 @@ def has_min_length(value, min_length):
 
 
 def is_valid_ean(value):
-    """Return True for 8, 12, 13, or 14 digit EAN/GTIN-like values."""
+    """Check ASCII GTIN length and check digit; this does not verify registration."""
     if is_blank(value):
         return False
 
@@ -67,7 +69,12 @@ def is_valid_ean(value):
         value = int(value)
 
     ean = str(value).strip()
-    return ean.isdigit() and len(ean) in [8, 12, 13, 14]
+    if not ean.isascii() or not ean.isdigit() or len(ean) not in (8, 12, 13, 14):
+        return False
+    if set(ean) == {"0"}:
+        return False
+    total = sum(int(digit) * (3 if index % 2 == 0 else 1) for index, digit in enumerate(reversed(ean[:-1])))
+    return (10 - total % 10) % 10 == int(ean[-1])
 
 
 def is_valid_price(value):
@@ -76,7 +83,8 @@ def is_valid_price(value):
         return False
 
     try:
-        return float(value) > 0
+        price = float(str(value).strip().replace(",", "."))
+        return math.isfinite(price) and price > 0
     except (TypeError, ValueError):
         return False
 

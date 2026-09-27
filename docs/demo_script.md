@@ -1,5 +1,7 @@
 # Commerce Readiness AI - Demo Script
 
+> Historical walkthrough. Use the current [README](../README.md) and [release check](final_portfolio_release_checklist_v1.md) for the application workflow.
+
 ## 1. Start the App
 
 Start the app with `start_app.bat` on Windows or run:

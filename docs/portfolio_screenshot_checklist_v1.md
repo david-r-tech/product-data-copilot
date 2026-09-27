@@ -1,5 +1,7 @@
 # Product Data Copilot - Portfolio Screenshot Checklist v1
 
+> Historical screenshot plan. Its demo-fixture steps describe a removed app control. For the current product, capture the normal sample-data views and consult [requirements_traceability.md](requirements_traceability.md); AI screenshots require an optional reviewed live response.
+
 Screenshots are captured manually by the project owner after running the app locally. This block only documents what to capture.
 
 Use this checklist after the app has passed the manual UX and export QA checks. The screenshots should support the portfolio case study and GitHub presentation without overstating the current MVP.

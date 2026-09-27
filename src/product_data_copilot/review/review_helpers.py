@@ -101,6 +101,6 @@ def derive_review_status(issue_types, severities, readiness_status):
         return REVIEW_STATUS_COMPLIANCE_CHECK_REQUIRED
     if "Missing translation_de" in issue_types or "Missing translation_en" in issue_types:
         return REVIEW_STATUS_TRANSLATION_MISSING
-    if readiness_status == "Ready":
+    if readiness_status == "Ready" and not issue_types and not severities:
         return REVIEW_STATUS_READY_FOR_EXPORT
     return REVIEW_STATUS_NEEDS_REVIEW

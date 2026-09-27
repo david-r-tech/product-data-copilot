@@ -1,5 +1,7 @@
 # Product Data Copilot - Project Log
 
+> Chronological development record. Some older "current" sections and demo-fixture descriptions capture earlier states and are superseded by [current_context.md](current_context.md), the [README](../README.md), and [requirements_traceability.md](requirements_traceability.md).
+
 ## 1. Project Overview
 
 Product Data Copilot, formerly Commerce Readiness AI, is a beginner-friendly Streamlit MVP for checking e-commerce product data quality.
@@ -957,6 +959,22 @@ Readiness status logic:
 * Why it matters: Helps users understand what is available, what still needs attention, and which action to take next without changing product logic, AI behavior, approval rules, or export data.
 * How to test: Run `python -m py_compile app.py`, `python -m pytest`, and `git diff --check`; then manually start `python -m streamlit run app.py` and review the core workflow actions and empty states.
 * Next recommended step: Plan `Language Switch Planning v1`.
+
+### Abschlussprüfung vor Portfolio-Fertigstellung
+
+* Date: 2026-09-27
+* Change: Added `docs/abschluss_audit_2026-09-27.md` with prioritized, reproducible findings for the current code, tests, documentation, reachable Git history, and pushed branch state. No application behavior was changed.
+* Why it matters: The existing 122 helper tests pass, but additional runtime probes identified dataset-state carryover, reused AI approvals, identifier loss, upload failures, ambiguous SKU mapping, spreadsheet formula interpretation, incomplete AI source validation, demo/source mismatch, and contradictory readiness labels that should be resolved before the final portfolio handoff.
+* How to test: Existing pytest suite, app syntax check, and diff checks passed. Additional Streamlit AppTest scenarios and in-memory workbook inspection reproduced the findings. The report records the limits of live-AI, browser/Excel visual, GitHub visibility, and external-publication verification.
+* Next recommended step: Fix the report's P1 findings with targeted regression coverage, then complete dated manual QA and the public-facing documentation pass. Additional publication links are still pending.
+
+### Portfolio-Abschluss: Datenintegrität, Review-Sicherheit und ehrliche Produktdarstellung
+
+* Date: 2026-09-27
+* Change: Removed the runtime demo-fixture loader; added bounded CSV/XLSX input with text-preserved identifiers and unique-SKU validation, dataset-scoped review state, fresh AI approvals per generation, source-matched V2 suggestions, severity-aware readiness gates, spreadsheet-safe exports, and local UI polish. Updated README, case study, current context, status, audit follow-up, and a requirement-to-test matrix.
+* Why it matters: A reviewer can inspect and try one coherent local product without old demo data entering exports, stale approvals crossing contexts, ambiguous product ownership, or misleading readiness labels. Public claims now distinguish verified behavior from manual acceptance and deliberate scope limits.
+* How to test: Run syntax, pytest, dependency, and diff checks; launch the app with fictional sample data; inspect downloaded workbooks in Microsoft Excel and optionally one live AI response with fictional data.
+* Next recommended step: Verify anonymous GitHub access and any external portfolio/CV links before sending applications.
 
 ## 8. Product Decisions
 

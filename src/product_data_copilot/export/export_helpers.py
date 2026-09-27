@@ -23,6 +23,7 @@ AI_SUGGESTIONS_EXPORT_COLUMNS = [
     "translation",
     "compliance_safety_review_note",
     "human_review_notes",
+    "review_status",
 ]
 
 IMPROVED_EXPORT_STATUS_GROUPS = [
@@ -181,7 +182,8 @@ def normalize_improved_export_status(suggestion):
     status_text = _normalize_status_text(status_value)
 
     if status_text in {"approved"}:
-        return "approved"
+        # A provider-supplied approval_status is not a human review decision.
+        return "approved" if _normalize_status_text(suggestion.get("human_review_status")) == "approved" else "pending"
     if status_text in {"rejected"}:
         return "rejected"
     if status_text in {"blocked", "blocked_insufficient_source"}:
@@ -408,6 +410,6 @@ def _is_blank_value(value):
 
 
 def _text_value(value):
-    if value is None:
+    if value is None or (not isinstance(value, (list, tuple, set, dict)) and pd.isna(value)):
         return ""
     return str(value).strip()

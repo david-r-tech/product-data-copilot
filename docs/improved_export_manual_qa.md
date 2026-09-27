@@ -1,5 +1,7 @@
 # Improved Export Manual QA Checklist
 
+> Historical QA procedure. The demo-fixture loader described below was removed from the app. Use [final_portfolio_release_checklist_v1.md](final_portfolio_release_checklist_v1.md) for current manual acceptance.
+
 This checklist verifies the improved Excel export for Smart Suggestions v2 review results.
 
 The export must remain a review handoff artifact only. It must not update source product data, write back to uploaded files, persist decisions in a database, or apply AI suggestions automatically.
