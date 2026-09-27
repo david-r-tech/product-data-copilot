@@ -14,7 +14,7 @@ The product question is: **Which product records need attention, why, and what c
 2. Install dependencies: `.venv\Scripts\python.exe -m pip install -r requirements.txt` on Windows, or `.venv/bin/python -m pip install -r requirements.txt` on macOS/Linux.
 3. Start the app: `.venv\Scripts\python.exe -m streamlit run app.py` on Windows, or `.venv/bin/python -m streamlit run app.py` on macOS/Linux. On Windows, `start_app.bat` also uses `.venv` when available.
 4. The app opens with 25 fictional sample products. Inspect the Dashboard, Scores, Issues, and Review Tasks tabs, or upload your own file.
-5. Download the management workbook or CSV tables. With an `OPENAI_API_KEY`, optionally generate suggestions for one selected product, review structured suggestions, and download an improvement workbook.
+5. Download the management workbook or CSV tables. For optional AI suggestions, copy `.env.example` to `.env`, replace the placeholder with your own `OPENAI_API_KEY`, and restart the app. Then generate suggestions for one selected product, review structured suggestions, and download an improvement workbook.
 
 The sample file at [data/sample_products.csv](data/sample_products.csv) is fictional and deliberately contains quality gaps. No API key is needed for the core audit and export workflow.
 

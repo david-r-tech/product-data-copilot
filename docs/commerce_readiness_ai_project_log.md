@@ -1008,6 +1008,7 @@ Readiness status logic:
 * How to test: Run the two provider-boundary tests and the complete pytest suite; keep a real key out of the repository.
 * Documentation correction: Release acceptance requires visual Excel inspection of the management workbook. The improvement workbook is covered by offline tests and becomes available only after V2 suggestions; its visual check is optional after release with a reviewer-provided key.
 * Final browser pass: Opened all seven tabs with fictional sample data in a separate browser session; no app error or browser console error was observed. The owner will perform the remaining visual Excel check before changing GitHub visibility.
+* Reviewer setup: README now states the exact optional `.env.example` → ignored `.env` key setup and restart step. No key is bundled or used in the release tests.
 
 ## 8. Product Decisions
 
