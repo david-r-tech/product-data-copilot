@@ -976,6 +976,13 @@ Readiness status logic:
 * How to test: Run syntax, pytest, dependency, and diff checks; launch the app with fictional sample data; inspect downloaded workbooks in Microsoft Excel and optionally one live AI response with fictional data.
 * Next recommended step: Verify anonymous GitHub access and any external portfolio/CV links before sending applications.
 
+### GitHub-Zugriff für Bewerbungen
+
+* Date: 2026-09-27
+* Change: Pushed the verified portfolio commit to `main`. A signed-out GitHub browser received 404 at the repository URL. The owner chose to keep the repository private and invite named reviewers instead of changing its visibility.
+* Why it matters: A private repository URL cannot serve as a freely accessible application reference. Public wording should offer source access on request until reviewer GitHub accounts are known and invited.
+* How to test: Confirm invited reviewers can open the repository while signed in; separately check any external CV/portfolio link once supplied.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

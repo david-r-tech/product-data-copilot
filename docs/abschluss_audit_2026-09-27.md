@@ -7,6 +7,8 @@
 - Die P1-Punkte 1–8 wurden gezielt umgesetzt: datensatzgebundener Review-Zustand, neue Freigabe bei jeder KI-Generierung, validierte Textimporte, eindeutige SKUs, sichere CSV/XLSX-Zellen, Abgleich von V2-Vorschlägen mit dem Quellprodukt, Entfernung des Demo-Laders aus der App und konsistente Readiness-Grenzen.
 - P2-Punkt 9: Regressionstests für Import, Zustand, AI-Quellen, Streamlit-Abläufe und Export ergänzt. Letzter lokaler Stand: 185 bestandene Tests.
 - P2-Punkte 10–13: README, Case Study, aktueller Kontext und Status auf das tatsächliche Produkt ausgerichtet. Der GitHub-Zugriff ohne Anmeldung, externe Veröffentlichungen, Live-AI-Qualität und eine visuelle Excel-Abnahme bleiben offene externe/manuelle Prüfungen.
+- Nach dem Push wurde die Repository-Seite in einem nicht angemeldeten Browser geöffnet: GitHub zeigte 404. Der Link ist für Bewerbungsprüfer ohne zusätzliche Zugriffsregel aktuell nicht verwendbar.
+- Der Eigentümer entschied anschließend, das Repository privat zu lassen und nur namentlich bekannten GitHub-Nutzern Zugriff zu geben. Bis solche Prüfer bekannt sind, ist „Quellcode auf Anfrage“ die korrekte öffentliche Formulierung.
 - Alle unten genannten Zeilennummern beziehen sich auf den geprüften Ausgangscommit und können nach den Korrekturen abweichen.
 
 Geprüfter Stand: `6ef265cca65e7f3810140f4d6dac82bb9f5d14fd` (`main`). Zieltermin: 28.09.2026.

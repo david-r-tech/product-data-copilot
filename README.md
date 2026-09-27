@@ -43,4 +43,4 @@ The management workbook contains an overview, scores, issues, tasks, optional v1
 
 Run the automated suite with `python -m pytest`. The latest local verification on 27 September 2026 passed **185 tests** in a fresh virtual environment. Browser checks covered the normal sample-data experience; a live OpenAI response and a manual Microsoft Excel visual check are still separate acceptance checks. See [requirements and verification](docs/requirements_traceability.md) for the scope and evidence, and the [case study](docs/portfolio_case_study.md) for the product reasoning.
 
-The repository has no license file. Availability of the GitHub repository to an unauthenticated reviewer must be checked by the owner before using its link in an application.
+The repository has no license file and remains private by owner choice. On 27 September 2026 its GitHub URL returned **404 to a signed-out visitor** even though the latest commit was pushed. Treat source access as available on request to explicitly invited GitHub users; do not present the private URL as a freely accessible portfolio link.
