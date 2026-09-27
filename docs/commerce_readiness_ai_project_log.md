@@ -1006,6 +1006,8 @@ Readiness status logic:
 * Change: Added regression tests for both AI request paths through the installed OpenAI SDK, using a fake key and an in-memory HTTP transport. The owner chose to complete today's portfolio acceptance without a real API key or live request; current-facing documentation states that limit.
 * Why it matters: The key configuration, model selection, request endpoint, and response extraction are exercised without exposing data or spending API credit. The tests do not assert live provider availability or generated factual quality.
 * How to test: Run the two provider-boundary tests and the complete pytest suite; keep a real key out of the repository.
+* Documentation correction: Release acceptance requires visual Excel inspection of the management workbook. The improvement workbook is covered by offline tests and becomes available only after V2 suggestions; its visual check is optional after release with a reviewer-provided key.
+* Final browser pass: Opened all seven tabs with fictional sample data in a separate browser session; no app error or browser console error was observed. The owner will perform the remaining visual Excel check before changing GitHub visibility.
 
 ## 8. Product Decisions
 

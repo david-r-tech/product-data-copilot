@@ -4,7 +4,7 @@ Use this checklist just before including Product Data Copilot in an application.
 
 ## Already verified locally
 
-- [x] App starts with fictional sample data and the normal Dashboard, Issues, Review Tasks, Management Export, and AI Suggestions views render in a browser.
+- [x] App starts with fictional sample data; all seven tabs open in a browser without app or console errors.
 - [x] Old demo-fixture loading control is absent from the application.
 - [x] 188 automated tests pass in the tested Python 3.14.4 environment; syntax and dependency checks pass.
 - [x] Both AI request paths run through the installed OpenAI SDK with a fake key and in-memory HTTP responses; no provider request is sent.
