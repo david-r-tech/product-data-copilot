@@ -14,6 +14,6 @@ Read [README.md](../README.md) for setup and user-facing behavior, [requirements
 
 ## Scope boundary and remaining checks
 
-This is local and single-session. No accounts, database, deployment, marketplace integration, automatic bulk AI, auto-approval, or compliance guarantee. Manual Excel visual verification and optional live-AI quality review remain. The pushed GitHub repository remains private by owner choice; it returned 404 in a signed-out browser. Give named reviewers access when known and do not use its URL as a public CV link. External portfolio/CV publication links have not yet been supplied.
+This is local and single-session. No accounts, database, deployment, marketplace integration, automatic bulk AI, auto-approval, or compliance guarantee. Manual Excel visual verification and optional live-AI quality review remain. The owner now intends public GitHub visibility for job applications; change the repository setting and verify anonymous access before using its URL as a public CV link. External portfolio/CV publication links have not yet been supplied.
 
 For future tasks, read this file and the specific source files involved. Preserve app behavior outside the requested block, keep changes reviewable, update the project log after meaningful changes, and run the relevant automated checks. Do not store secrets. Commit and push only when requested and after checks pass.

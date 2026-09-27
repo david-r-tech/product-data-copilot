@@ -990,6 +990,14 @@ Readiness status logic:
 * Why it matters: Critical work now appears first, all issue columns fit a normal laptop view, the first GitHub visit shows the real product, and the documented 1,000-row input bound has been exercised.
 * How to test: The targeted AppTest suite passes. A worst-case 1,000-product / 9,000-issue run rendered all seven tabs in about 12 seconds without errors; an actual browser download of the sample management workbook contained six expected sheets, 25 source rows, and no formula cells. Repeat full tests and diff checks before the final push.
 
+### Public-reference preparation
+
+* Date: 2026-09-27
+
+* Change: The owner changed the GitHub access goal from invitation-only to public for job applications. Current-facing documentation records that intent without claiming the visibility setting has changed. Added a read-only GitHub Actions workflow for dependency, syntax, and test checks on Windows.
+* Why it matters: An expert reviewer should see the same core checks run on pushed code, and application materials should not describe a private repository as a public reference before anonymous access is confirmed.
+* How to test: Run the checks locally, inspect the GitHub workflow result after pushing, then confirm the repository opens without authentication after its visibility is changed.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

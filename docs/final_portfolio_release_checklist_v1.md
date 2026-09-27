@@ -13,7 +13,7 @@ Use this checklist just before including Product Data Copilot in an application.
 ## Required before sharing a GitHub link
 
 - [x] Confirm the final code commit is on GitHub and the intended branch is current.
-- [ ] Keep the repository private as chosen by the owner. The page returned **404** in a signed-out browser on 27 September 2026. Invite named GitHub reviewers when known and verify access with them; do not paste the URL as a freely accessible application link.
+- [ ] Make the repository public as now requested by the owner, then verify the exact URL opens without signing in. Until then, do not paste it as a freely accessible application link.
 - [ ] Check the application/CV wording and any portfolio or social posts against the current README. External publication links have not yet been provided for review.
 
 ## Manual acceptance

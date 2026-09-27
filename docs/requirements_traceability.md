@@ -23,7 +23,7 @@ This is the current decision and acceptance record for the **local** Product Dat
 
 ## Remaining acceptance checks and deliberate deferrals
 
-1. **Before sharing the application:** the authenticated Git remote is reachable and the latest commit was pushed, but the repository page returned 404 in a signed-out browser on 27 September 2026. The owner chose to keep it private and grant access to named reviewers. Do not present its URL as a freely accessible link; an invited reviewer must accept access and sign in to GitHub.
+1. **Before sharing the application:** the authenticated Git remote is reachable and the latest code was pushed, but the repository page returned 404 in a signed-out browser on 27 September 2026. The owner now intends to make it public. Change the GitHub visibility setting and verify anonymous access before presenting its URL as a freely accessible link.
 2. **Manual product check:** open the running app with the fictional sample file, navigate every tab, download both workbooks, and inspect the files in Microsoft Excel. Automated tests verify their data and cell types, not Excel's visual presentation.
 3. **Optional live AI check:** if an API key is available and the data may be sent to OpenAI, generate one V2 suggestion, inspect its sources and wording, approve only after factual review, regenerate, and verify that approval resets. The test suite uses controlled responses and does not establish live model quality.
 4. **External publication check:** any CV, portfolio page, or social post linking this project must be checked against this README. Those links have not yet been supplied.

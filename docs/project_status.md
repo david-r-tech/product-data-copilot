@@ -7,7 +7,7 @@ The latest local automated run passed **186 tests** in a fresh virtual environme
 ## Before using the repository as a job-application reference
 
 1. Finish manual visual checks of downloaded workbooks in Microsoft Excel and, if desired, one live AI response with fictional data.
-2. Repository remains private by owner choice. The latest commit was pushed, but the page returned 404 in a signed-out browser. Invite named GitHub reviewers when known; describe source access as available on request, not as a public link.
+2. The owner now intends to publish the repository for job applications. The latest code has been pushed, but the page returned 404 in a signed-out browser before the visibility change. Verify anonymous access before adding the URL to an application.
 3. Check any CV, portfolio, or social description against the current README. Links to those publications have not yet been supplied.
 
 ## Intentional limits
