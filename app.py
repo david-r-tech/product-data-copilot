@@ -191,8 +191,6 @@ TEXT_HEAVY_COLUMNS = {
     "Warning Notes",
     "Translation DE",
     "Translation EN",
-    "Issue",
-    "Recommended Action",
     "Reason",
     "Source Fields",
     "Suggested Value",
@@ -204,6 +202,7 @@ TEXT_HEAVY_COLUMNS = {
 }
 SMALL_COLUMNS = {
     "SKU",
+    "Field",
     "EAN",
     "Price",
     "Language",
@@ -578,6 +577,17 @@ def find_product_issues(products):
     )
 
 
+def prioritize_issues(issues):
+    """Show critical work first while preserving order within each severity."""
+    severity_order = {"Critical": 0, "Warning": 1, "Info": 2}
+    return (
+        issues.assign(_severity_order=issues["severity"].map(severity_order).fillna(3))
+        .sort_values("_severity_order", kind="stable")
+        .drop(columns="_severity_order")
+        .reset_index(drop=True)
+    )
+
+
 def get_review_status(product_issues, readiness_status):
     issue_types = product_issues["issue_type"].tolist()
     severities = product_issues["severity"].tolist()
@@ -741,16 +751,12 @@ def get_task_type(issue):
 
 def create_review_tasks(issues, readiness_scores):
     tasks = []
+    product_details = readiness_scores.set_index("sku")[["product_name", "review_status"]].to_dict("index")
 
     for _, issue in issues.iterrows():
-        product_score = readiness_scores[readiness_scores["sku"] == issue["sku"]]
-
-        if len(product_score) > 0:
-            product_name = product_score.iloc[0]["product_name"]
-            review_status = product_score.iloc[0]["review_status"]
-        else:
-            product_name = ""
-            review_status = "Needs Review"
+        product = product_details.get(issue["sku"], {})
+        product_name = product.get("product_name", "")
+        review_status = product.get("review_status", "Needs Review")
 
         tasks.append(
             {
@@ -1066,12 +1072,16 @@ def run_app():
     """Run the Streamlit app."""
     load_dotenv(Path(__file__).resolve().parent / ".env")
     st.set_page_config(page_title=APP_NAME, layout="wide")
+    st.markdown(
+        '<style>div[data-testid="stMainBlockContainer"] { padding-top: 2rem; }</style>',
+        unsafe_allow_html=True,
+    )
 
     logo_data_uri = get_image_data_uri(APP_LOGO_PATH)
     if logo_data_uri:
         st.markdown(
             f"""
-            <div style="max-width: 400px; margin: 0 0 0.75rem 0;">
+            <div style="max-width: 340px; margin: 0 0 0.75rem 0;">
                 <img
                     src="{logo_data_uri}"
                     alt="{APP_NAME} logo"
@@ -1094,14 +1104,14 @@ def run_app():
 
     uploaded_file = render_data_input_section(st)
     st.sidebar.caption(
-        "Upload CSV/XLSX product data or use the built-in sample data. After loading, the app checks data quality, creates review tasks, and prepares safe improvement/export options."
+        "Use the fictional sample data or upload your own file. Checks, tasks and exports update from the loaded data."
     )
-
-    st.sidebar.caption(
-        "Required columns: sku, product_name. SKUs must be unique and non-empty. "
-        "UTF-8 CSV (comma, semicolon or tab) or the first XLSX sheet. "
-        "Up to 1,000 products / 10 MB. Store SKU and EAN cells as text in Excel."
-    )
+    with st.sidebar.expander("Input requirements"):
+        st.caption(
+            "Required: sku and product_name. SKUs must be unique and non-empty. "
+            "Use UTF-8 CSV (comma, semicolon or tab) or the first XLSX sheet. "
+            "Limit: 1,000 products / 10 MB. Store SKU and EAN cells as text in Excel."
+        )
     try:
         if uploaded_file is not None:
             file_bytes = uploaded_file.getvalue()
@@ -1121,7 +1131,7 @@ def run_app():
 
     row_count, column_count = products.shape
 
-    issues = find_product_issues(products)
+    issues = prioritize_issues(find_product_issues(products))
     readiness_scores = calculate_readiness_scores(products, issues)
     readiness_scores = apply_manual_review_overrides(readiness_scores)
     review_tasks = create_review_tasks(issues, readiness_scores)

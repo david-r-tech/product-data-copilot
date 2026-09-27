@@ -983,6 +983,13 @@ Readiness status logic:
 * Why it matters: A private repository URL cannot serve as a freely accessible application reference. Public wording should offer source access on request until reviewer GitHub accounts are known and invited.
 * How to test: Confirm invited reviewers can open the repository while signed in; separately check any external CV/portfolio link once supplied.
 
+### Portfolio polish and bounded-data verification
+
+* Date: 2026-09-27
+* Change: Tightened the initial app layout, captured fictional-data Dashboard and Issues screenshots, sorted issues and derived review tasks by severity, improved 1,000-product task mapping, and aligned the current MVP requirements with concrete acceptance examples and linked regression evidence.
+* Why it matters: Critical work now appears first, all issue columns fit a normal laptop view, the first GitHub visit shows the real product, and the documented 1,000-row input bound has been exercised.
+* How to test: The targeted AppTest suite passes. A worst-case 1,000-product / 9,000-issue run rendered all seven tabs in about 12 seconds without errors; an actual browser download of the sample management workbook contained six expected sheets, 25 source rows, and no formula cells. Repeat full tests and diff checks before the final push.
+
 ## 8. Product Decisions
 
 Important product decisions so far:

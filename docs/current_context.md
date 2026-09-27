@@ -10,7 +10,7 @@ Read [README.md](../README.md) for setup and user-facing behavior, [requirements
 - Deterministic checks, five component readiness scores, severity-aware status, review tasks, and session-only manual status.
 - Optional AI suggestions for one selected product. V1 output is an unreviewed draft. V2 output is source-checked, human-reviewed, and exportable as candidates only. No demo-fixture control remains in the application.
 - CSV and management/improvement Excel downloads with source snapshot and spreadsheet-safe cell serialization. No source write-back.
-- Pure helper modules in `src/product_data_copilot/` and 185 passing pytest tests as last verified on 27 September 2026.
+- Pure helper modules in `src/product_data_copilot/` and 186 passing pytest tests as last verified on 27 September 2026.
 
 ## Scope boundary and remaining checks
 

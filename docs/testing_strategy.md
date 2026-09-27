@@ -1,5 +1,7 @@
 # Product Data Copilot - Testing Strategy v1
 
+> Historical planning document. `app.py` now has an import-safe `run_app()` entry point and the project has a pytest/AppTest regression suite. See [requirements_traceability.md](requirements_traceability.md) and the [current release check](final_portfolio_release_checklist_v1.md) for present verification evidence.
+
 ## Purpose
 
 This document explains why direct unit tests against the current `app.py` are not yet safe, and what should be extracted first to enable a clean pytest safety net.

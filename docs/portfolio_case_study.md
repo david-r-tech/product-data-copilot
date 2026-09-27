@@ -14,6 +14,10 @@ The project is a local Streamlit MVP. Its goal is a clear, testable handoff work
 4. **Suggest:** AI is optional and runs only for the selected product when requested. The classic output is explicitly an unreviewed draft. Structured V2 suggestions carry a field, old and proposed value, source fields, reason, and risk context. The app checks that the SKU, source fields, target field, and old value match the loaded record. Unsupported proposals are blocked.
 5. **Decide and hand off:** A person can approve or reject a valid V2 proposal. Every new generation resets approvals. The improvement workbook separates approved, pending, rejected, blocked, and unknown proposals and includes the original product snapshot. Approved means *candidate for handoff*, not an update to a product system.
 
+![Issues ordered by severity using fictional sample products](../assets/screenshots/issues.png)
+
+*Critical findings appear first; the same issue records feed review tasks and exports.*
+
 The rule engine is intentionally generic. It cannot certify retailer acceptance, image quality, or legal compliance. Even a source-matched AI proposal can contain a false or misleading statement; human review is necessary.
 
 ## Requirements-engineering rationale
@@ -30,7 +34,7 @@ The central requirements are traceable from user need to acceptance evidence in 
 
 `app.py` contains the Streamlit interaction flow. Pure modules under `src/product_data_copilot/` handle loading, validation, scoring, state boundaries, AI normalization, and export serialization. This keeps the high-risk logic independently testable while leaving the interface small enough for a local MVP.
 
-The latest local run on 27 September 2026 passed **185 automated tests** in a fresh environment. Tests cover invalid imports, leading-zero identifiers, issue/status gates, dataset and response changes, AI source checks, and workbook/CSV cell safety. A browser walkthrough confirmed the fictional sample Dashboard, Issues, and Review Tasks views. Live AI output and Microsoft Excel's visual rendering remain explicit manual acceptance checks; see [requirements_traceability.md](requirements_traceability.md).
+The latest local run on 27 September 2026 passed **186 automated tests** in a fresh environment. Tests cover invalid imports, leading-zero identifiers, issue/status gates, dataset and response changes, AI source checks, and workbook/CSV cell safety. A browser walkthrough confirmed the fictional sample Dashboard, Issues, and Review Tasks views. Live AI output and Microsoft Excel's visual rendering remain explicit manual acceptance checks; see [requirements_traceability.md](requirements_traceability.md).
 
 ## Limitations and next decision
 

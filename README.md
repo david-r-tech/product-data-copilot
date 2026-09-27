@@ -4,12 +4,17 @@ Product Data Copilot is a local Streamlit application for reviewing e-commerce p
 
 The product question is: **Which product records need attention, why, and what can a reviewer safely hand off next?** The app supports that decision; it does not publish listings or certify compliance.
 
+![Dashboard with fictional sample-product metrics](assets/screenshots/dashboard.png)
+
+*The local dashboard highlights catalog size, open issues and readiness using fictional sample data.*
+
 ## Try the workflow
 
-1. Install Python and the dependencies: `python -m pip install -r requirements.txt`.
-2. Start the app: `python -m streamlit run app.py`. On Windows, `start_app.bat` also starts it using the project's virtual environment when available.
-3. The app opens with 25 fictional sample products. Inspect the Dashboard, Scores, Issues, and Review Tasks tabs, or upload your own file.
-4. Download the management workbook or CSV tables. With an `OPENAI_API_KEY`, optionally generate suggestions for one selected product, review structured suggestions, and download an improvement workbook.
+1. Install Python and create an isolated environment: `python -m venv .venv`. The verified environment used Python **3.14.4** on Windows.
+2. Install dependencies: `.venv\Scripts\python.exe -m pip install -r requirements.txt` on Windows, or `.venv/bin/python -m pip install -r requirements.txt` on macOS/Linux.
+3. Start the app: `.venv\Scripts\python.exe -m streamlit run app.py` on Windows, or `.venv/bin/python -m streamlit run app.py` on macOS/Linux. On Windows, `start_app.bat` also uses `.venv` when available.
+4. The app opens with 25 fictional sample products. Inspect the Dashboard, Scores, Issues, and Review Tasks tabs, or upload your own file.
+5. Download the management workbook or CSV tables. With an `OPENAI_API_KEY`, optionally generate suggestions for one selected product, review structured suggestions, and download an improvement workbook.
 
 The sample file at [data/sample_products.csv](data/sample_products.csv) is fictional and deliberately contains quality gaps. No API key is needed for the core audit and export workflow.
 
@@ -41,6 +46,6 @@ The management workbook contains an overview, scores, issues, tasks, optional v1
 
 `app.py` owns the Streamlit flow. Import-safe modules under `src/product_data_copilot/` implement input validation, rules, scoring, review state, AI parsing and source validation, and export serialization. The app is deliberately a local MVP; it has no accounts, database, deployment, marketplace integration, automatic approval, or automatic publication.
 
-Run the automated suite with `python -m pytest`. The latest local verification on 27 September 2026 passed **185 tests** in a fresh virtual environment. Browser checks covered the normal sample-data experience; a live OpenAI response and a manual Microsoft Excel visual check are still separate acceptance checks. See [requirements and verification](docs/requirements_traceability.md) for the scope and evidence, and the [case study](docs/portfolio_case_study.md) for the product reasoning.
+Run the automated suite with `python -m pytest`. The latest local verification on 27 September 2026 passed **186 tests** in a fresh virtual environment. Browser checks covered the normal sample-data experience; a live OpenAI response and a manual Microsoft Excel visual check are still separate acceptance checks. See the [MVP requirements](docs/product_requirements.md), [requirements and verification](docs/requirements_traceability.md), and [case study](docs/portfolio_case_study.md) for the product decisions and evidence.
 
 The repository has no license file and remains private by owner choice. On 27 September 2026 its GitHub URL returned **404 to a signed-out visitor** even though the latest commit was pushed. Treat source access as available on request to explicitly invited GitHub users; do not present the private URL as a freely accessible portfolio link.

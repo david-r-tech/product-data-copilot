@@ -52,6 +52,11 @@ def test_sample_start_and_runtime_have_no_demo_controls():
     assert all("demo" not in button.label.lower() for button in at.button)
     assert not hasattr(app, "load_smart_suggestions_v2_demo_response")
     assert any("fictional" in element.value for element in at.info)
+    issues_table = next(
+        element.value for element in at.dataframe
+        if {"Severity", "Issue"}.issubset(element.value.columns)
+    )
+    assert issues_table.iloc[0]["Severity"] == "Critical"
 
 
 @pytest.mark.parametrize("content,filename", [
@@ -177,3 +182,14 @@ def test_empty_task_filter_means_no_tasks(valid_product):
     tasks = app.create_review_tasks(issues, app.calculate_readiness_scores(products, issues))
     assert not tasks.empty
     assert app.filter_review_tasks(tasks, [], ["Data Completion"], ["Missing Data"]).empty
+
+
+def test_review_tasks_keep_the_correct_product_name_and_priority(valid_product):
+    second = {**valid_product, "sku": "SECOND", "product_name": "Second Storage Box", "ean": ""}
+    products = pd.DataFrame([valid_product, second])
+    issues = app.prioritize_issues(app.find_product_issues(products))
+    scores = app.calculate_readiness_scores(products, issues)
+    tasks = app.create_review_tasks(issues, scores)
+    assert tasks.iloc[0]["sku"] == "SECOND"
+    assert tasks.iloc[0]["product_name"] == "Second Storage Box"
+    assert tasks.iloc[0]["priority"] == "High"

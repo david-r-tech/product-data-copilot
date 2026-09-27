@@ -6,7 +6,7 @@ Use this checklist just before including Product Data Copilot in an application.
 
 - [x] App starts with fictional sample data and the normal Dashboard, Issues, Review Tasks, Management Export, and AI Suggestions views render in a browser.
 - [x] Old demo-fixture loading control is absent from the application.
-- [x] 185 automated tests pass in a fresh virtual environment; syntax and dependency checks pass.
+- [x] 186 automated tests pass in a fresh virtual environment; syntax and dependency checks pass.
 - [x] Import, product identity, issue/status gates, AI source/decision boundaries, and spreadsheet serialization have regression coverage.
 - [x] Current README and case study describe the actual workflow and limitations.
 
