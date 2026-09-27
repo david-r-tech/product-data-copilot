@@ -10,10 +10,10 @@ Read [README.md](../README.md) for setup and user-facing behavior, [requirements
 - Deterministic checks, five component readiness scores, severity-aware status, review tasks, and session-only manual status.
 - Optional AI suggestions for one selected product. V1 output is an unreviewed draft. V2 output is source-checked, human-reviewed, and exportable as candidates only. No demo-fixture control remains in the application.
 - CSV and management/improvement Excel downloads with source snapshot and spreadsheet-safe cell serialization. No source write-back.
-- Pure helper modules in `src/product_data_copilot/` and 186 passing pytest tests as last verified on 27 September 2026.
+- Pure helper modules in `src/product_data_copilot/` and 188 passing pytest tests as last verified on 27 September 2026, including offline calls through the installed OpenAI SDK.
 
 ## Scope boundary and remaining checks
 
-This is local and single-session. No accounts, database, deployment, marketplace integration, automatic bulk AI, auto-approval, or compliance guarantee. Manual Excel visual verification and optional live-AI quality review remain. The owner now intends public GitHub visibility for job applications; change the repository setting and verify anonymous access before using its URL as a public CV link. External portfolio/CV publication links have not yet been supplied.
+This is local and single-session. No accounts, database, deployment, marketplace integration, automatic bulk AI, auto-approval, or compliance guarantee. Manual Excel visual verification remains. A live-AI quality review is explicitly optional and is not part of today's acceptance; no real key or provider request was used. The owner now intends public GitHub visibility for job applications after reviewing the private release candidate; change the repository setting and verify anonymous access only then. External portfolio/CV publication links have not yet been supplied.
 
 For future tasks, read this file and the specific source files involved. Preserve app behavior outside the requested block, keep changes reviewable, update the project log after meaningful changes, and run the relevant automated checks. Do not store secrets. Commit and push only when requested and after checks pass.
