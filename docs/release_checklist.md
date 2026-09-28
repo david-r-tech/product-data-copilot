@@ -1,6 +1,6 @@
 # Release checklist — 28 September 2026
 
-Use this checklist before publishing or sharing Product Data Copilot. The current contract is in the [README](../README.md) and [requirements traceability](requirements_traceability.md).
+Use this checklist to verify Product Data Copilot before sharing it. The current contract is in the [README](../README.md) and [requirements traceability](requirements_traceability.md).
 
 ## Verified locally
 
@@ -11,16 +11,14 @@ Use this checklist before publishing or sharing Product Data Copilot. The curren
 - [x] A live translation-only call returned French text and two translated source bullets.
 - [x] A live creation request completed in the browser UI before the approval gate. Its earlier text workbook contained exactly two sheets, 25 product rows, five German and five English bullets for `APP-001`, and no formula cells.
 - [x] The README and case study describe the current text workflow and limitations.
+- [x] Repository renamed to `product-data-copilot`, current implementation committed and pushed.
+- [x] Repository is public at `https://github.com/david-r-tech/product-data-copilot`.
 
-## Manual acceptance before sharing
+## Remaining manual acceptance
 
 - [ ] Inspect all three tabs at a normal laptop width. Filter the correction list, create one text, translate one existing text, and check every AI claim against the source.
 - [ ] Manually perform approve → reject → approve in the live app and use previous/next navigation between generated articles. Confirm that pending and rejected drafts are excluded from the approved-text download.
 - [ ] Open the approved-only two-sheet text workbook and five-sheet management workbook in Microsoft Excel; confirm readable content and unchanged source values.
-- [x] Rename the existing GitHub repository to `product-data-copilot`, update the local `origin` URL, and confirm the application link points to this same repository. The existing Git history is retained; the repository remains private.
-- [x] Commit and push the current implementation; verify the intended GitHub branch. The repository remains private and publication has not happened.
-- [ ] Confirm the repository still shows PRIVATE before publication.
-- [ ] Make the repository public when ready and verify its URL opens without signing in.
 - [ ] Confirm that any external product description matches the README and its documented limitations.
 
 A whole-file live run and multiple-language quality review are useful before claiming broad output reliability, but are not required to demonstrate the local workflow honestly. AI drafts require human review. The MVP does not promise deployment, marketplace integration, automatic publication, or compliance certification.
