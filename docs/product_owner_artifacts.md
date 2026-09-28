@@ -32,7 +32,7 @@ Diese Rollen sind eine Arbeitsannahme. Interviews oder eine Freigabe durch ein r
 | Must | Pro Artikel menschlich prüfen und nur Freigegebenes als Text-Excel exportieren | Umgesetzt; reduziert Risiko unbelegter KI-Aussagen im Übergabeergebnis |
 | Should | Verständliche Prüfstatus-Übersicht und getrennten Qualitätsbericht bieten | Umgesetzt; unterstützt Priorisierung und Übergabe |
 | Could | Weitere Spaltenzuordnung und vertiefte semantische Widerspruchsprüfung | Offen; Bedarf und Fehlalarmquote erst mit realistischen Tabellen validieren |
-| Won't for MVP | Automatische Publikation, Shop-Integrationen, Benutzerkonten, Datenbank, Rechtsfreigabe | Bewusst ausgeschlossen; nicht für den lokalen Referenzprototyp nötig |
+| Won't for MVP | Automatische Publikation, Shop-Integrationen, Benutzerkonten, Datenbank, Rechtsfreigabe | Bewusst ausgeschlossen; für den lokalen MVP nicht erforderlich |
 
 **Reihenfolge:** Datenbasis und Prüfbarkeit → Textgenerierung/Übersetzung → menschliche Freigabe → nutzbarer Export → Validierung an realistischen Testtabellen. Der heutige Stand deckt die ersten vier Schritte ab; die letzte Stufe ist Teil der Endabnahme.
 
@@ -49,7 +49,7 @@ Die technische Zuordnung und Tests stehen in der [Anforderungsnachverfolgung](re
 
 ## Definition of Done für ein MVP-Inkrement
 
-Ein Inkrement ist für diesen Prototyp fertig, wenn sein Nutzerablauf verständlich beschrieben ist, die relevanten Akzeptanzkriterien automatisiert oder manuell geprüft wurden, ein Fehlerfall verständlich behandelt wird, Quell- und Exportdaten unverändert beziehungsweise sicher bleiben, README und Anforderungsnachweise den tatsächlichen Stand beschreiben und keine Zugangsdaten eingecheckt wurden. Für die öffentliche Referenz kommen ein visueller Excel-Check, die Prüfung des GitHub-Links ohne Anmeldung und die Abnahme des Bewerbungstexts hinzu.
+Ein Inkrement ist für diesen Prototyp fertig, wenn sein Nutzerablauf verständlich beschrieben ist, die relevanten Akzeptanzkriterien automatisiert oder manuell geprüft wurden, ein Fehlerfall verständlich behandelt wird, Quell- und Exportdaten unverändert beziehungsweise sicher bleiben, README und Anforderungsnachweise den tatsächlichen Stand beschreiben und keine Zugangsdaten eingecheckt wurden. Für die Veröffentlichung kommen ein visueller Excel-Check, die Bestätigung des privaten Status vor der Freigabe und anschließend die Prüfung des GitHub-Links ohne Anmeldung hinzu.
 
 ## Messkonzept — noch keine Wirkungsbehauptung
 

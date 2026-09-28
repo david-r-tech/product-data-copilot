@@ -1,8 +1,8 @@
 # Current context — Product Data Copilot
 
-**Updated:** 28 September 2026. This local Streamlit MVP audits uploaded product data and creates product-copy drafts. The immediate goal is a credible GitHub reference for a Requirements Engineer application, with accurate claims about its limits.
+**Updated:** 28 September 2026. This local Streamlit MVP audits uploaded product data and creates product-copy drafts. The current goal is a reliable local release candidate for structured product-data review, safe AI-assisted content creation, and controlled exports.
 
-Read [README.md](../README.md) for setup and usage, [requirements_traceability.md](requirements_traceability.md) for acceptance evidence, and [commerce_readiness_ai_project_log.md](commerce_readiness_ai_project_log.md) for history. Older AI plans and screenshots under `docs/` describe earlier stages, not the current UI.
+Read [README.md](../README.md) for setup and usage, [requirements_traceability.md](requirements_traceability.md) for acceptance evidence, and [product_case_study.md](product_case_study.md) for product decisions and trade-offs.
 
 ## Current capabilities
 

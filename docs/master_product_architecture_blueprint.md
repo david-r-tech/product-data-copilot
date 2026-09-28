@@ -1,5 +1,7 @@
 # Product Data Copilot - Master Product & Architecture Blueprint v1
 
+> Product and architecture planning record. Use [current_context.md](current_context.md) and [project_status.md](project_status.md) for the current release state, and validate proposed modules against the present code before implementation.
+
 ## 1. Product Vision
 
 Product Data Copilot should become a professional product-data review and improvement tool for e-commerce teams.
@@ -26,7 +28,7 @@ Other name options considered:
 Recommended direction:
 
 - Use **Product Data Copilot** as the forward-looking product name.
-- Treat **Commerce Readiness AI** as the original MVP/project name during the transition.
+- Use **Product Data Copilot** consistently across the product and documentation.
 
 ## 3. Target Users and Business Use Cases
 
@@ -458,7 +460,7 @@ Avoid by starting with simple rule functions or small rule classes. Do not build
 
 Avoid by requiring source fields, confidence, reasons, and manual approval.
 
-### Risk: Portfolio project becomes too large to explain
+### Risk: Product scope becomes too large to explain
 
 Avoid by keeping a clear MVP story: product data audit, readiness scoring, review tasks, safe AI suggestions, exports.
 
@@ -466,26 +468,26 @@ Avoid by keeping a clear MVP story: product data audit, readiness scoring, revie
 
 Avoid by adding first tests before major refactoring.
 
-## 15. Definition of Portfolio-Ready and Almost Sellable
+## 15. Definition of Release-Ready and Operationally Credible
 
-### Portfolio-Ready
+### Release-Ready
 
-The project is portfolio-ready when:
+The project is release-ready when:
 
 - The app runs locally.
 - README explains the problem, setup, features, and scope.
-- Sample data demonstrates the workflow.
+- Sample data supports a repeatable workflow check.
 - Requirements and acceptance criteria are documented.
-- Demo checklist and testing notes exist.
+- Release checks and verification evidence exist.
 - No secrets are committed.
 - Code is not perfect, but the next architecture direction is clearly documented.
-- Screenshots are available or planned.
+- Current documentation states product boundaries and known limitations.
 
-Current status: mostly portfolio-ready.
+Current status: release criteria are tracked in [release_checklist.md](release_checklist.md).
 
-### Almost Sellable
+### Operationally Credible
 
-The product becomes almost sellable when:
+The product becomes operationally credible when:
 
 - Core logic is modularized into services.
 - Important logic is covered by tests.
@@ -497,16 +499,10 @@ The product becomes almost sellable when:
 - The tool can process realistic customer files reliably.
 - Security and secret handling are documented and verified.
 
-Current status: not almost sellable yet, but the path is clear.
+Current status is maintained in [project_status.md](project_status.md); these criteria describe longer-term operational maturity.
 
 ## Recommended Next Step
 
-Do not start with Tkinter.
-
-Start with:
-
-1. Add lightweight pytest tests for current validators and scoring.
-2. Extract pure validation/rule logic from `app.py`.
-3. Keep Streamlit as the UI until the core is modular.
+Before further architecture work, compare this blueprint with the current source and test suite. Keep Streamlit as the UI, preserve verified behavior, and make only evidence-based extractions from `app.py`.
 
 Only after the core is clean and tested should a Tkinter desktop UI be considered.

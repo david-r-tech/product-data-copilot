@@ -1,6 +1,6 @@
 # Product Data Copilot — MVP requirements
 
-**Version:** local portfolio MVP, 28 September 2026. This is the current product contract. [Requirements traceability](requirements_traceability.md) links requirements to implementation and evidence; the [README](../README.md) explains installation and use.
+**Version:** local MVP, 28 September 2026. This is the current product contract. [Requirements traceability](requirements_traceability.md) links requirements to implementation and evidence; the [README](../README.md) explains installation and use.
 
 ## Problem and users
 
@@ -43,4 +43,4 @@ The local workflow is **upload → check data → create or translate text → r
 
 There are no accounts, shared review, persistence across sessions, marketplace presets or integrations, automatic approval, source write-back, hosting, or compliance guarantees. The explicit-attribute comparison is a conservative rule; semantic consistency of arbitrary free-form supplier text remains a separate future product decision.
 
-The code reference is ready to share after automated checks pass, the final UI and both downloads are inspected, public-facing documentation matches the app, and the intended GitHub URL is accessible to reviewers. A live in-app creation and a separate translation-only call have passed for small fictional examples; whole-file factual quality is not established. The [release check](final_portfolio_release_checklist_v1.md) records the remaining manual steps.
+The release candidate is ready after automated checks pass, the final UI and both downloads are inspected, documentation matches the app, and the intended repository access works. A live in-app creation and a separate translation-only call have passed for small fictional examples; whole-file factual quality is not established. The [release checklist](release_checklist.md) records the remaining manual steps.

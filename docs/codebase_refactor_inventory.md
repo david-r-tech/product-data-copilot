@@ -1,5 +1,7 @@
 # Product Data Copilot - Codebase Audit & Refactor Inventory v1
 
+> Refactoring snapshot. Use [current_context.md](current_context.md) and [project_status.md](project_status.md) for the current release state, and verify line counts and locations against the present source before planning changes.
+
 ## 1. Current `app.py` Assessment
 
 Current `app.py` size:
@@ -308,7 +310,7 @@ Concerns:
 Reason:
 
 - These areas are coupled to Streamlit runtime behavior and user interaction.
-- Moving them early risks breaking the working demo.
+- Moving them early risks breaking the working application.
 
 ### Safer to Move First
 

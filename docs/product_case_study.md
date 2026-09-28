@@ -1,4 +1,4 @@
-# Product Data Copilot — product case study
+# Product Data Copilot — Product Case Study
 
 ## Problem and audience
 

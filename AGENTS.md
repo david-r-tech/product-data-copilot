@@ -4,7 +4,7 @@
 
 Product Data Copilot is a local Streamlit MVP for e-commerce product data quality, readiness scoring, review tasks, user-triggered product-copy creation and translation, and safe Excel exports.
 
-The project direction is professional and portfolio-ready, but still deliberately local-first. Future work should improve usefulness and code quality without drifting into SaaS, integrations, or production infrastructure unless explicitly requested.
+The project direction is professional, maintainable, and deliberately local-first. Future work should improve usefulness and code quality without drifting into SaaS, integrations, or production infrastructure unless explicitly requested.
 
 ## Default Context
 
@@ -14,7 +14,7 @@ For most future Codex tasks, read:
 2. `AGENTS.md`
 3. The specific files named by the task
 
-Read longer docs such as the master blueprint, refactor inventory, full project log, or requirements only when the task is about architecture, history, planning, or product scope.
+Read longer docs such as the master blueprint, refactor inventory, or requirements only when the task is about architecture, planning, or product scope.
 
 ## Scope Rules
 
@@ -37,7 +37,6 @@ Work only on the requested block. Do not add these without explicit approval:
 
 ## Documentation Rules
 
-- Update `docs/commerce_readiness_ai_project_log.md` after meaningful changes.
 - Update `README.md` only when setup, usage, export, AI, or workflow behavior changes.
 - Future prompts should reference `docs/current_context.md` instead of repeating full project history.
 
