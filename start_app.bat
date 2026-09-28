@@ -1,4 +1,5 @@
 @echo off
+REM Product Data Copilot local launcher
 cd /d "%~dp0"
 
 echo Starting Product Data Copilot...
