@@ -28,7 +28,7 @@ This records the current decisions for the **local** Product Data Copilot MVP. S
 
 1. Approve one text, reject another, then open both workbooks in Microsoft Excel and verify that only approved texts and their matching source rows occur in the text workbook. The revised gate passed an offline browser check with fictional responses; a live-key review remains manual.
 2. Spot-check several generated products before making broad quality claims. Live creation was checked in German/English for fictional `APP-001`, and live translation-only in French for a small fictional text; Spanish remains unverified.
-3. The implementation is committed and pushed. Confirm that the repository remains private before publication; after publication, verify anonymous access to the intended URL.
+3. The implementation is committed, pushed, and publicly accessible at `https://github.com/david-r-tech/product-data-copilot`.
 4. Confirm that any external product description matches the current README and documented limitations.
 
 Accounts, database persistence, hosting, marketplace integrations, automatic approval, and source write-back are outside the local MVP scope.
