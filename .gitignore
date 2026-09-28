@@ -13,6 +13,7 @@ data_quality_issues.csv
 review_tasks.csv
 ai_suggestions.csv
 product_data_copilot_improved_export.xlsx
+outputs/
 .pytest_cache/
 .coverage
 htmlcov/

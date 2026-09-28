@@ -105,7 +105,7 @@ def test_render_sidebar_intro_preserves_input_header():
 
     render_sidebar_intro(fake_st)
 
-    assert fake_st.sidebar.headers == ["Input"]
+    assert fake_st.sidebar.headers == ["Eingabe"]
 
 
 def test_render_data_input_section_preserves_upload_widget():
@@ -115,9 +115,9 @@ def test_render_data_input_section_preserves_upload_widget():
     uploaded_file = render_data_input_section(fake_st)
 
     assert uploaded_file is fake_st.sidebar.uploaded_file
-    assert fake_st.sidebar.headers == ["Input"]
+    assert fake_st.sidebar.headers == ["Eingabe"]
     assert fake_st.sidebar.file_uploaders == [
-        {"label": "Upload a CSV or Excel file", "type": ["csv", "xlsx"], "max_upload_size": 10}
+        {"label": "CSV- oder Excel-Datei hochladen", "type": ["csv", "xlsx"], "max_upload_size": 10}
     ]
 
 
@@ -128,8 +128,8 @@ def test_render_data_source_notice_preserves_message():
     render_data_source_notice(fake_st, "Uploaded file")
 
     assert fake_st.info_messages == [
-        "Using: Sample data",
-        "Using: Uploaded file",
+        "Datenquelle: Sample data",
+        "Datenquelle: Hochgeladene Datei",
     ]
 
 
@@ -138,7 +138,7 @@ def test_render_dataset_summary_preserves_caption():
 
     render_dataset_summary(fake_st, 25, 14)
 
-    assert fake_st.captions == ["Rows: 25 | Columns: 14"]
+    assert fake_st.captions == ["Artikel: 25 | Spalten: 14"]
 
 
 def test_render_issues_summary_preserves_caption():

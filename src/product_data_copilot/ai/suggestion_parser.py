@@ -1,4 +1,4 @@
-"""Pure parser helpers for future Smart Suggestions AI responses."""
+"""Pure parser helpers for reviewable AI suggestions."""
 
 import json
 

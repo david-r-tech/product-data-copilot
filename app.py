@@ -1,5 +1,4 @@
 import base64
-import json
 import os
 import sys
 from pathlib import Path
@@ -23,6 +22,7 @@ from product_data_copilot.rules.validators import (  # noqa: E402
     is_valid_price,
     normalize_text as source_text,
 )
+from product_data_copilot.rules.attribute_consistency import explicit_attribute_conflicts  # noqa: E402
 from product_data_copilot.scoring.scoring_helpers import (  # noqa: E402
     readiness_status_from_score as get_readiness_status,
     score_from_checks,
@@ -34,40 +34,15 @@ from product_data_copilot.review.review_helpers import (  # noqa: E402
     severity_to_task_priority as get_task_priority,
 )
 from product_data_copilot.export.export_helpers import (  # noqa: E402
-    AI_SUGGESTIONS_EXPORT_COLUMNS,
-    IMPROVED_EXCEL_EXPORT_FILENAME,
-    IMPROVED_EXPORT_STATUS_GROUPS,
     MANAGEMENT_EXPORT_FILENAME,
     MANAGEMENT_EXPORT_SHEETS,
-    build_improved_excel_export_sheets,
-    split_smart_suggestions_for_export,
-)
-from product_data_copilot.ai.prompt_helpers import (  # noqa: E402
-    do_not_invent_facts_instruction,
-    human_review_instruction,
-)
-from product_data_copilot.ai.suggestion_parser import (  # noqa: E402
-    parse_and_normalize_suggestions,
-)
-from product_data_copilot.ai.suggestion_prompt_adapter import (  # noqa: E402
-    DEFAULT_PRODUCT_CONTEXT_FIELDS,
-    build_smart_suggestion_prompt,
-)
-from product_data_copilot.ai.suggestion_schema import (  # noqa: E402
-    REQUIRED_SUGGESTION_FIELDS,
 )
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     render_data_input_section,
     render_data_source_notice,
     render_dataset_summary,
-    render_issues_summary,
-    render_no_data_quality_issues_notice,
-    render_no_matching_issues_notice,
-    render_no_matching_review_tasks_notice,
-    render_no_review_tasks_notice,
-    render_review_tasks_intro,
-    render_review_tasks_summary,
 )
+from product_data_copilot.ui.content_workspace import render_content_workspace  # noqa: E402
 
 from product_data_copilot.data.product_input import (  # noqa: E402
     ProductInputError,
@@ -82,27 +57,11 @@ from product_data_copilot.export.serialization import (  # noqa: E402
 )
 from product_data_copilot.review.session_state import (  # noqa: E402
     bind_dataset,
-    replace_smart_response,
-    suggestion_review_key,
-)
-from product_data_copilot.ai.source_validation import (  # noqa: E402
-    validate_suggestions_against_product,
 )
 
 APP_NAME = "Product Data Copilot"
 APP_LOGO_PATH = Path(__file__).resolve().parent / "assets" / "product_data_copilot_logo.png"
 
-AI_SUGGESTION_TYPES = [
-    "Improved Product Title",
-    "Product Description",
-    "Bullet Points",
-    "Missing Attribute Suggestions",
-    "Translation DE to EN",
-    "Translation EN to DE",
-    "Compliance / Safety Review Note",
-]
-
-SMART_SUGGESTIONS_V2_COLUMNS = REQUIRED_SUGGESTION_FIELDS
 SAMPLE_DATA_PATH = Path(__file__).resolve().parent / "data" / "sample_products.csv"
 
 
@@ -547,6 +506,21 @@ def add_media_checks(issues, row, sku):
         )
 
 
+def add_attribute_consistency_checks(issues, row, sku):
+    labels = {"material": "Material", "color": "Farbe", "surface": "Oberfläche"}
+    for kind, first, second in explicit_attribute_conflicts(row):
+        label = labels[kind]
+        add_issue(
+            issues,
+            sku,
+            f"Different {kind} values",
+            kind,
+            "Warning",
+            f"{label} unterschiedlich angegeben: {first[0]} = {first[1]}; {second[0]} = {second[1]}.",
+            f"{label}-Angaben in den genannten Spalten mit der Produktquelle abgleichen.",
+        )
+
+
 def find_product_issues(products):
     validate_product_identity(products)
     issues = []
@@ -562,6 +536,7 @@ def find_product_issues(products):
         add_content_quality_checks(issues, row, sku)
         add_translation_checks(issues, row, sku)
         add_compliance_checks(issues, row, sku)
+        add_attribute_consistency_checks(issues, row, sku)
         add_media_checks(issues, row, sku)
 
     return pd.DataFrame(
@@ -813,175 +788,16 @@ def get_product_option(row):
     return f"{sku} - {product_name} - Score {score}"
 
 
-def get_ai_product_context(product, product_score):
-    context = {
-        field: source_text(get_value(product, field))
-        for field in DEFAULT_PRODUCT_CONTEXT_FIELDS
-    }
-    for field in ("sku", "overall_readiness_score", "readiness_status", "review_status"):
-        context[field] = source_text(product_score.get(field, context.get(field, "")))
-    return context
-
-
-def build_ai_prompt(product, product_issues, product_score, selected_suggestion_types):
-    product_context = get_ai_product_context(product, product_score)
-    issues_context = product_issues.to_dict(orient="records")
-    scores_context = product_score.to_dict()
-    anti_hallucination_instruction = do_not_invent_facts_instruction()
-    human_review_safety_instruction = human_review_instruction()
-
-    return f"""
-You are helping with an e-commerce product data audit.
-
-Create human-review suggestions for exactly one product.
-Only generate sections requested in the selected suggestion types.
-If a selected section is not applicable, return a short note explaining why.
-{anti_hallucination_instruction}
-Do not claim legal compliance.
-Do not say the product is legally safe.
-If the product is compliance-relevant or has missing warning notes, the review note must say that a human must check the warning and compliance information.
-{human_review_safety_instruction}
-
-Return only valid JSON with these keys:
-- improved_product_title
-- improved_product_description
-- bullet_points
-- suggested_missing_attributes
-- translation
-- compliance_safety_review_note
-- human_review_notes
-
-Selected suggestion types:
-{json.dumps(selected_suggestion_types, ensure_ascii=False, default=str)}
-
-Product data:
-{json.dumps(product_context, ensure_ascii=False, default=str)}
-
-Current issues:
-{json.dumps(issues_context, ensure_ascii=False, default=str)}
-
-Current scores:
-{json.dumps(scores_context, ensure_ascii=False, default=str)}
-"""
-
-
-def generate_ai_suggestions(product, product_issues, product_score, selected_suggestion_types):
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=30.0, max_retries=1)
-    model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
-    prompt = build_ai_prompt(product, product_issues, product_score, selected_suggestion_types)
-
+def request_content_draft(prompt):
+    """One paid, JSON-constrained request for one product."""
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=45.0, max_retries=1)
     response = client.responses.create(
-        model=model,
+        model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
         input=prompt,
         max_output_tokens=3000,
+        text={"format": {"type": "json_object"}},
     )
-
-    response_text = response.output_text.strip()
-
-    try:
-        suggestions = json.loads(response_text)
-        if not isinstance(suggestions, dict):
-            raise ValueError("The AI response must be a JSON object.")
-        return suggestions
-    except json.JSONDecodeError:
-        return {
-            "improved_product_title": "",
-            "improved_product_description": "",
-            "bullet_points": "",
-            "suggested_missing_attributes": "",
-            "translation": "",
-            "compliance_safety_review_note": "",
-            "human_review_notes": "AI response was not valid JSON. Please review manually.",
-            "raw_response": response_text,
-        }
-
-
-def generate_smart_suggestions_v2(prompt):
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=30.0, max_retries=1)
-    model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
-
-    response = client.responses.create(
-        model=model,
-        input=prompt,
-        max_output_tokens=3000,
-    )
-
     return response.output_text.strip()
-
-
-def suggestions_to_dataframe(sku, suggestions):
-    return pd.DataFrame(
-        [
-            {
-                "sku": sku,
-                "selected_suggestion_types": ", ".join(
-                    suggestions.get("selected_suggestion_types", [])
-                ),
-                "improved_product_title": suggestions.get("improved_product_title", ""),
-                "improved_product_description": suggestions.get(
-                    "improved_product_description", ""
-                ),
-                "bullet_points": suggestions.get("bullet_points", ""),
-                "suggested_missing_attributes": suggestions.get(
-                    "suggested_missing_attributes", ""
-                ),
-                "translation": suggestions.get("translation", ""),
-                "compliance_safety_review_note": suggestions.get(
-                    "compliance_safety_review_note", ""
-                ),
-                "human_review_notes": suggestions.get("human_review_notes", ""),
-                "review_status": "unreviewed_draft",
-            }
-        ]
-    )
-
-
-def smart_suggestions_v2_to_dataframe(suggestions):
-    if len(suggestions) == 0:
-        return pd.DataFrame(columns=SMART_SUGGESTIONS_V2_COLUMNS)
-
-    rows = []
-    for suggestion in suggestions:
-        row = {
-            column: suggestion.get(column, "")
-            for column in SMART_SUGGESTIONS_V2_COLUMNS
-        }
-        if row.get("approval_status") == "approved":
-            row["approval_status"] = "needs_review"
-            row["suggestion_status"] = "review_required"
-        source_fields = row.get("source_fields", [])
-        if isinstance(source_fields, list):
-            row["source_fields"] = ", ".join(source_fields)
-        rows.append(row)
-
-    return pd.DataFrame(rows, columns=SMART_SUGGESTIONS_V2_COLUMNS)
-
-
-def get_smart_suggestion_v2_review_key(suggestion):
-    return suggestion_review_key(suggestion)
-
-
-def get_smart_suggestion_v2_review_status(suggestion, review_decisions):
-    if suggestion.get("suggestion_status") == "blocked_insufficient_source":
-        return "blocked"
-
-    review_key = get_smart_suggestion_v2_review_key(suggestion)
-    decision = review_decisions.get(review_key, {})
-    approval_state = decision.get("approval_state", "pending")
-
-    if approval_state in ["approved", "rejected"]:
-        return approval_state
-
-    return "pending"
-
-
-def apply_smart_suggestions_v2_review_decisions(suggestions_df, review_decisions):
-    reviewed_df = suggestions_df.copy()
-    reviewed_df["human_review_status"] = [
-        get_smart_suggestion_v2_review_status(row, review_decisions)
-        for _, row in reviewed_df.iterrows()
-    ]
-    return reviewed_df
 
 
 def create_management_summary(
@@ -990,7 +806,6 @@ def create_management_summary(
     issues,
     readiness_scores,
     review_tasks,
-    ai_suggestions,
 ):
     ready_products = len(readiness_scores[readiness_scores["readiness_status"] == "Ready"])
     needs_review_products = len(
@@ -1034,38 +849,21 @@ def create_management_summary(
             "metric": "Low priority tasks",
             "value": len(review_tasks[review_tasks["priority"] == "Low"]),
         },
-        {
-            "metric": "AI suggestions included",
-            "value": "Yes" if len(ai_suggestions) > 0 else "No",
-        },
     ]
 
     return pd.DataFrame(summary_rows)
 
 
-def get_ai_suggestions_export_dataframe():
-    if "ai_suggestions" not in st.session_state:
-        return pd.DataFrame(columns=AI_SUGGESTIONS_EXPORT_COLUMNS)
-
-    sku = st.session_state.get("ai_suggestions_sku", "")
-    suggestions = st.session_state["ai_suggestions"]
-    return suggestions_to_dataframe(sku, suggestions)
-
-
 def create_excel_management_export(
-    data_source, products, readiness_scores, issues, review_tasks, ai_suggestions,
+    data_source, products, readiness_scores, issues, review_tasks,
 ):
     management_summary = create_management_summary(
-        data_source, products, issues, readiness_scores, review_tasks, ai_suggestions,
+        data_source, products, issues, readiness_scores, review_tasks,
     )
     return workbook_bytes(dict(zip(
         MANAGEMENT_EXPORT_SHEETS,
-        [management_summary, readiness_scores, issues, review_tasks, ai_suggestions, products],
+        [management_summary, readiness_scores, issues, review_tasks, products],
     )))
-
-
-def create_improved_excel_export(suggestions, products):
-    return workbook_bytes(build_improved_excel_export_sheets(suggestions, source_products=products))
 
 
 def run_app():
@@ -1094,23 +892,19 @@ def run_app():
     else:
         st.title(APP_NAME)
 
-    st.caption(
-        "CSV/XLSX-based product data quality, AI suggestion, review, and export workflow for e-commerce teams."
-    )
-    st.markdown("**Workflow:** Upload -> Check -> Review -> Improve -> Approve -> Export")
-    st.caption(
-        "Load product data, find quality gaps, review AI-assisted improvements, and export safe workbook outputs without changing the source file."
-    )
+    st.caption("Produktdaten prüfen, Textentwürfe erstellen und Ergebnisse sicher exportieren.")
+    st.markdown("**Ablauf:** Datei hochladen → Daten prüfen → Texte erstellen oder übersetzen → Prüfen → Exportieren")
+    st.caption("Die hochgeladene Datei bleibt unverändert; KI-Texte sind Entwürfe zur fachlichen Prüfung.")
 
     uploaded_file = render_data_input_section(st)
     st.sidebar.caption(
-        "Use the fictional sample data or upload your own file. Checks, tasks and exports update from the loaded data."
+        "Nutze die fiktiven Beispieldaten oder lade eine eigene Datei hoch. Prüfung und Exporte beziehen sich auf die geladenen Daten."
     )
-    with st.sidebar.expander("Input requirements"):
+    with st.sidebar.expander("Anforderungen an die Datei"):
         st.caption(
-            "Required: sku and product_name. SKUs must be unique and non-empty. "
-            "Use UTF-8 CSV (comma, semicolon or tab) or the first XLSX sheet. "
-            "Limit: 1,000 products / 10 MB. Store SKU and EAN cells as text in Excel."
+            "Pflichtspalten: sku und product_name. Artikelnummern müssen eindeutig und gefüllt sein. "
+            "UTF-8-CSV (Komma, Semikolon oder Tab) oder erstes Blatt einer XLSX-Datei. "
+            "Grenze: 1.000 Artikel / 10 MB. SKU und EAN in Excel vor der Eingabe als Text formatieren."
         )
     try:
         if uploaded_file is not None:
@@ -1137,15 +931,14 @@ def run_app():
     review_tasks = create_review_tasks(issues, readiness_scores)
 
     critical_issues = len(issues[issues["severity"] == "Critical"])
-    warning_issues = len(issues[issues["severity"] == "Warning"])
-    info_issues = len(issues[issues["severity"] == "Info"])
     products_affected = issues["sku"].nunique()
 
-    st.sidebar.header("Issue Filter")
+    st.sidebar.header("Probleme filtern")
     selected_severities = st.sidebar.multiselect(
-        "Filter by severity",
+        "Schweregrad",
         ["Critical", "Warning", "Info"],
         default=["Critical", "Warning", "Info"],
+        format_func=lambda value: {"Critical": "Kritisch", "Warning": "Warnung", "Info": "Info"}[value],
     )
 
     filtered_issues = issues[issues["severity"].isin(selected_severities)]
@@ -1154,60 +947,75 @@ def run_app():
 
     tabs = st.tabs(
         [
-            "Dashboard",
-            "Product Data",
-            "Scores",
-            "Issues",
-            "Review Tasks",
-            "Management Export",
-            "AI Suggestions",
+            "Daten prüfen",
+            "Texte erstellen & übersetzen",
+            "Ergebnisse & Export",
         ]
     )
 
     with tabs[0]:
-        st.subheader("Dashboard")
-        st.caption(
-            "Quick business overview of product data readiness, issue volume, and products that need attention."
-        )
+        st.subheader("Daten prüfen")
+        st.caption("Welche Artikel brauchen Aufmerksamkeit – und was muss konkret korrigiert werden?")
 
         metric_columns = st.columns(3)
-        metric_columns[0].metric("Total products", row_count)
-        metric_columns[1].metric("Total issues", len(issues))
-        metric_columns[2].metric("Products affected", products_affected)
-
-        severity_columns = st.columns(3)
-        severity_columns[0].metric("Critical issues", critical_issues)
-        severity_columns[1].metric("Warning issues", warning_issues)
-        severity_columns[2].metric("Info issues", info_issues)
-
-        average_score = round(readiness_scores["overall_readiness_score"].mean())
-        average_score_columns = st.columns(3)
-        average_score_columns[0].metric("Average overall score", average_score)
-        average_score_columns[1].metric(
-            "Average data quality",
-            round(readiness_scores["data_quality_score"].mean()),
-        )
-        average_score_columns[2].metric(
-            "Average marketplace readiness",
-            round(readiness_scores["marketplace_readiness_score"].mean()),
-        )
+        metric_columns[0].metric("Artikel geprüft", row_count)
+        metric_columns[1].metric("Artikel mit Auffälligkeiten", products_affected)
+        metric_columns[2].metric("Kritische Auffälligkeiten", critical_issues)
         if critical_issues > 0:
             st.warning(
-                f"{critical_issues} critical issues should be reviewed before product data is used for export or publication."
+                f"{critical_issues} kritische Auffälligkeiten: Prüfe zuerst die betroffenen Quelldaten."
             )
         elif products_affected > 0:
             st.info(
-                f"{products_affected} products need review. Start with Scores or Issues to see where attention is needed."
+                f"{products_affected} Artikel haben Auffälligkeiten. Die Korrekturliste steht unten."
             )
         else:
-            st.success(
-                "No product data issues were found in the current dataset."
-            )
+            st.success("Die lokalen Regeln haben keine Auffälligkeiten gefunden.")
 
-    with tabs[1]:
-        st.subheader("Product Data")
+
+    with tabs[0]:
+        st.markdown("#### Konkrete Korrekturen")
         st.caption(
-            "Review the loaded source data. This table is not changed automatically by AI suggestions or exports."
+            "Jede Zeile zeigt eine gefundene Auffälligkeit und den nächsten sinnvollen Prüfschritt. "
+            "Korrigiere die Quelldatei und lade sie erneut hoch, um den Stand neu zu prüfen."
+        )
+        product_names = products.set_index("sku")["product_name"]
+        actions = filtered_issues.copy()
+        actions.insert(1, "Produkt", actions["sku"].map(product_names).fillna(""))
+        product_labels = {
+            f"{row['sku']} · {row['product_name']}": row["sku"]
+            for _, row in products.iterrows()
+        }
+        selected_product = st.selectbox(
+            "Artikel filtern", ["Alle Artikel", *product_labels], key="audit_product_filter"
+        )
+        if selected_product != "Alle Artikel":
+            actions = actions[actions["sku"] == product_labels[selected_product]]
+        severity_labels = {"Critical": "Kritisch", "Warning": "Warnung", "Info": "Info"}
+        action_view = pd.DataFrame({
+            "SKU": actions["sku"],
+            "Produkt": actions["Produkt"],
+            "Schweregrad": actions["severity"].map(severity_labels),
+            "Feld": actions["field_name"],
+            "Problem": actions["message"],
+            "Nächster Schritt": actions["recommended_action"],
+        })
+        st.caption(f"{len(action_view)} von {len(issues)} Auffälligkeiten angezeigt")
+        if action_view.empty:
+            st.info("Für diese Auswahl wurden keine Auffälligkeiten gefunden.")
+        else:
+            st.dataframe(action_view, width="stretch", hide_index=True, height=430)
+        st.download_button(
+            "Korrekturliste als CSV herunterladen",
+            safe_csv_bytes(action_view),
+            "produktdaten_korrekturen.csv",
+            "text/csv",
+        )
+
+    with tabs[0], st.expander("Originaldaten ansehen"):
+        st.markdown("#### Hochgeladene Produktdaten")
+        st.caption(
+            "Referenz für die Prüfung. KI-Texte und Exporte ändern diese Daten nicht."
         )
         render_dataset_summary(st, row_count, column_count)
         render_readable_dataframe(
@@ -1231,11 +1039,11 @@ def run_app():
             height=430,
         )
 
-    with tabs[2]:
-        st.subheader("Product Readiness Scores")
+    with tabs[0], st.expander("Score-Details und Prüfmethode"):
+        st.markdown("#### Technische Vollständigkeitsindikatoren")
         st.caption(
-            "Scores are completeness indicators. Critical issues always block readiness; other open issues require review. "
-            "Ready means these local rules found no issues, not marketplace certification."
+            "Diese Werte zählen überwiegend ausgefüllte Felder. Sie bewerten weder die Qualität erzeugter KI-Texte "
+            "noch rechtliche Konformität oder die Freigabe eines Marktplatzes."
         )
         render_readable_dataframe(
             readiness_scores,
@@ -1254,882 +1062,121 @@ def run_app():
             height=430,
         )
         st.download_button(
-            "Download Scores CSV",
+            "Score-Details als CSV herunterladen",
             safe_csv_bytes(readiness_scores),
             "product_readiness_scores.csv",
             "text/csv",
         )
-
-    with tabs[3]:
-        st.subheader("Data Quality Issues")
+    with tabs[0], st.expander("Prüfentscheidung dokumentieren (nur diese Sitzung)"):
         st.caption(
-            "Detected issues are grouped by severity so teams can focus on the highest-risk product data first."
-        )
-        render_issues_summary(st, len(issues), len(filtered_issues))
-
-        if len(filtered_issues) > 0:
-            render_readable_dataframe(
-                filtered_issues,
-                preferred_columns=[
-                    "sku",
-                    "severity",
-                    "field_name",
-                    "issue_type",
-                    "message",
-                    "recommended_action",
-                ],
-                height=430,
-            )
-        elif len(issues) > 0:
-            render_no_matching_issues_notice(st)
-        else:
-            render_no_data_quality_issues_notice(st)
-
-        st.download_button(
-            "Download Issues CSV",
-            safe_csv_bytes(issues),
-            "data_quality_issues.csv",
-            "text/csv",
-        )
-
-    with tabs[4]:
-        st.subheader("Review Tasks")
-        st.caption(
-            "Turn detected issues into practical work items for product data cleanup and business review."
-        )
-        render_review_tasks_intro(st)
-
-        st.markdown("#### Product Review Overview")
-        high_priority_tasks = len(review_tasks[review_tasks["priority"] == "High"])
-        medium_priority_tasks = len(review_tasks[review_tasks["priority"] == "Medium"])
-        low_priority_tasks = len(review_tasks[review_tasks["priority"] == "Low"])
-        ready_for_export_products = len(
-            readiness_scores[readiness_scores["review_status"] == "Ready for Export"]
-        )
-        not_ready_for_export_products = len(readiness_scores) - ready_for_export_products
-
-        overview_columns = st.columns(3)
-        overview_columns[0].metric("Total review tasks", len(review_tasks))
-        overview_columns[1].metric("High priority tasks", high_priority_tasks)
-        overview_columns[2].metric("Medium priority tasks", medium_priority_tasks)
-
-        readiness_columns = st.columns(3)
-        readiness_columns[0].metric("Low priority tasks", low_priority_tasks)
-        readiness_columns[1].metric("Ready for Export", ready_for_export_products)
-        readiness_columns[2].metric("Not Ready for Export", not_ready_for_export_products)
-
-        status_counts = (
-            readiness_scores["review_status"]
-            .value_counts()
-            .rename_axis("review_status")
-            .reset_index(name="products")
-        )
-        priority_counts = (
-            review_tasks["priority"]
-            .value_counts()
-            .rename_axis("priority")
-            .reset_index(name="tasks")
-        )
-        task_type_counts = (
-            review_tasks["task_type"]
-            .value_counts()
-            .head(5)
-            .rename_axis("task_type")
-            .reset_index(name="tasks")
-        )
-
-        summary_columns = st.columns(3)
-        summary_columns[0].write("Products by review status")
-        render_readable_dataframe(
-            status_counts,
-            preferred_columns=["review_status", "products"],
-            height=180,
-            container=summary_columns[0],
-        )
-        summary_columns[1].write("Tasks by priority")
-        render_readable_dataframe(
-            priority_counts,
-            preferred_columns=["priority", "tasks"],
-            height=180,
-            container=summary_columns[1],
-        )
-        summary_columns[2].write("Top task types")
-        render_readable_dataframe(
-            task_type_counts,
-            preferred_columns=["task_type", "tasks"],
-            height=180,
-            container=summary_columns[2],
-        )
-
-        st.markdown("#### Set Product Review Status")
-        st.caption(
-            "Use this session-only status to mark the current business review outcome for a product. It does not change source product data."
+            "Hier kannst du einen Artikel für die aktuelle Sitzung markieren. "
+            "Offene Auffälligkeiten werden dadurch nicht behoben; korrigiere sie in der Quelldatei."
         )
         product_options = {
-            get_product_option(row): row["sku"] for _, row in readiness_scores.iterrows()
+            f"{row['sku']} · {row['product_name']}": row["sku"]
+            for _, row in readiness_scores.iterrows()
         }
         selected_review_product = st.selectbox(
-            "Select SKU",
-            list(product_options.keys()),
-            key="manual_review_product",
+            "Artikel auswählen", list(product_options), key="manual_review_product"
         )
         selected_review_sku = product_options[selected_review_product]
-        selected_review_score = readiness_scores.loc[readiness_scores["sku"] == selected_review_sku].iloc[0]
+        selected_review_score = readiness_scores.loc[
+            readiness_scores["sku"] == selected_review_sku
+        ].iloc[0]
         current_manual_status = selected_review_score["review_status"]
         allowed_manual_statuses = [
             status for status in REVIEW_STATUS_OPTIONS
-            if selected_review_score["readiness_status"] == "Ready" or status not in {"OK", "Ready for Export"}
+            if selected_review_score["readiness_status"] == "Ready"
+            or status not in {"OK", "Ready for Export"}
         ]
+        status_labels = {
+            "OK": "OK",
+            "Needs Review": "Prüfung nötig",
+            "Missing Data": "Daten fehlen",
+            "AI Suggestion Created": "KI-Entwurf vorhanden",
+            "Translation Missing": "Übersetzung fehlt",
+            "Compliance Check Required": "Fachprüfung nötig",
+            "Ready for Export": "Keine offenen Regelverstöße",
+            "Rejected": "Abgelehnt",
+        }
         if st.session_state.get("manual_status_product") != selected_review_sku:
             st.session_state["manual_review_status"] = current_manual_status
             st.session_state["manual_status_product"] = selected_review_sku
         if st.session_state.get("manual_review_status") not in allowed_manual_statuses:
             st.session_state["manual_review_status"] = current_manual_status
         manual_status = st.selectbox(
-            "Review status",
-            allowed_manual_statuses,
+            "Prüfstatus", allowed_manual_statuses,
+            format_func=lambda value: status_labels.get(value, value),
             key="manual_review_status",
         )
-        st.caption(f"Current effective status: {current_manual_status}")
+        st.caption(f"Aktueller Status: {status_labels.get(current_manual_status, current_manual_status)}")
         if selected_review_score["readiness_status"] != "Ready":
-            st.caption("Open issues prevent a Ready for Export override. Correct the source data and upload it again to resolve them.")
-
+            st.caption("Offene Auffälligkeiten verhindern den Status „Keine offenen Regelverstöße“.")
         action_columns = st.columns(2)
-        if action_columns[0].button("Save Review Status", type="primary"):
-            st.session_state["manual_review_status_overrides"][
-                selected_review_sku
-            ] = manual_status
+        if action_columns[0].button("Prüfstatus speichern", type="primary"):
+            st.session_state["manual_review_status_overrides"][selected_review_sku] = manual_status
             st.rerun()
-
-        if action_columns[1].button("Clear Review Status"):
+        if action_columns[1].button("Prüfstatus zurücksetzen"):
             st.session_state["manual_review_status_overrides"].pop(selected_review_sku, None)
             st.session_state.pop("manual_status_product", None)
             st.rerun()
 
-        st.markdown("#### Filter Review Tasks")
+    with tabs[2]:
+        st.subheader("Ergebnisse & Export")
         st.caption(
-            "Filter the task list by priority, task type, or review status before downloading the current view."
-        )
-        filter_columns = st.columns(3)
-        priority_options = get_filter_options(review_tasks, "priority")
-        task_type_options = get_filter_options(review_tasks, "task_type")
-        review_status_options = get_filter_options(review_tasks, "review_status")
-
-        selected_priorities = filter_columns[0].multiselect(
-            "Priority",
-            priority_options,
-            default=priority_options,
-        )
-        selected_task_types = filter_columns[1].multiselect(
-            "Task type",
-            task_type_options,
-            default=task_type_options,
-        )
-        selected_review_statuses = filter_columns[2].multiselect(
-            "Review status",
-            review_status_options,
-            default=review_status_options,
+            "Lade den Qualitätsbericht für die Abstimmung herunter. Er enthält die Prüfergebnisse, "
+            "Korrekturaufgaben und eine Kopie der eingelesenen Quelldaten."
         )
 
-        filtered_review_tasks = filter_review_tasks(
-            review_tasks,
-            selected_priorities,
-            selected_task_types,
-            selected_review_statuses,
-        )
-
-        render_review_tasks_summary(st, len(review_tasks), len(filtered_review_tasks))
-
-        if len(filtered_review_tasks) > 0:
-            render_readable_dataframe(
-                filtered_review_tasks,
-                preferred_columns=[
-                    "sku",
-                    "product_name",
-                    "priority",
-                    "task_type",
-                    "review_status",
-                    "field_name",
-                    "issue_type",
-                    "recommended_action",
-                ],
-                height=430,
-            )
-        elif len(review_tasks) > 0:
-            render_no_matching_review_tasks_notice(st)
-        else:
-            render_no_review_tasks_notice(st)
-
-        st.download_button(
-            "Download Filtered Review Tasks CSV",
-            safe_csv_bytes(filtered_review_tasks),
-            "review_tasks.csv",
-            "text/csv",
-        )
-
-    with tabs[5]:
-        st.subheader("Management Export")
-        st.caption(
-            "Management Export is the audit/reporting workbook for overview, readiness scores, issues, review tasks, AI suggestions, and the source product snapshot."
-        )
-
-        ai_suggestions_export = get_ai_suggestions_export_dataframe()
         management_summary = create_management_summary(
             data_source,
             products,
             issues,
             readiness_scores,
             review_tasks,
-            ai_suggestions_export,
         )
 
-        st.markdown("#### Management Summary Preview")
-        st.caption(
-            "Use this preview to confirm the management report context before downloading the workbook."
-        )
-        render_readable_dataframe(
-            management_summary,
-            preferred_columns=["metric", "value"],
-            height=240,
-        )
+        st.markdown("#### Berichtsvorschau")
+        st.caption("Die Vorschau zeigt die wichtigsten Ergebnisse; der Download enthält den vollständigen Bericht.")
+        preview_labels = {
+            "Data source": "Datenquelle",
+            "Total products": "Geprüfte Artikel",
+            "Products affected by issues": "Artikel mit Auffälligkeiten",
+            "Critical issues": "Kritische Auffälligkeiten",
+            "Total issues": "Auffälligkeiten insgesamt",
+        }
+        preview = management_summary[
+            management_summary["metric"].isin(preview_labels)
+        ].copy()
+        preview["metric"] = preview["metric"].map(preview_labels)
+        preview["value"] = preview["value"].replace({
+            "Sample data (fictional products)": "Beispieldaten (fiktive Produkte)",
+            "Uploaded file": "Hochgeladene Datei",
+        })
+        preview.columns = ["Kennzahl", "Wert"]
+        st.dataframe(preview, width="stretch", hide_index=True, height=240)
 
         try:
             management_bytes = create_excel_management_export(
-                data_source, products, readiness_scores, issues, review_tasks, ai_suggestions_export,
+                data_source, products, readiness_scores, issues, review_tasks,
             )
         except ExportError as error:
             st.error(str(error))
         else:
             st.download_button(
-                "Download Management Export Workbook", management_bytes, MANAGEMENT_EXPORT_FILENAME,
+                "Qualitätsbericht als Excel herunterladen", management_bytes, MANAGEMENT_EXPORT_FILENAME,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary",
             )
         st.caption(
-            "Text is exported as text, never as executable formulas. Unsupported control characters are shown as "
-            "\\uXXXX. The source snapshot contains the loaded table, not original workbook formatting or other sheets."
+            "Die Scores sind technische Indikatoren, keine Freigabe für Marktplätze oder rechtliche Konformität. "
+            "Originaltexte werden als Text exportiert; die hochgeladene Datei bleibt unverändert."
         )
 
-    with tabs[6]:
-        st.subheader("AI Suggestions")
-        st.caption(
-            "AI support is split into classic suggestions, structured Smart Suggestions, human review, and improved export candidates."
+    with tabs[1]:
+        render_content_workspace(
+            st, products, request_content_draft, workbook_bytes,
+            has_key=bool(os.getenv("OPENAI_API_KEY")),
         )
-        st.warning(
-            "AI suggestions are draft recommendations. A human must review their factual accuracy before use."
-        )
-        st.info(
-            "Generating suggestions sends the selected product's fields, issues and review context to OpenAI "
-            "using your API key. It can incur API usage charges. Checking files and creating audit exports run locally."
-        )
-        st.write(
-            "By default, the product with the lowest readiness score is selected so review starts with the item that needs the most attention."
-        )
-
-        product_options = {
-            get_product_option(row): row_number
-            for row_number, row in readiness_scores.iterrows()
-        }
-        default_product_index = 0
-
-        if len(readiness_scores) > 0 and "overall_readiness_score" in readiness_scores.columns:
-            lowest_score_row = readiness_scores["overall_readiness_score"].idxmin()
-            default_product_index = list(readiness_scores.index).index(lowest_score_row)
-
-        selected_product_label = st.selectbox(
-            "Select a product",
-            list(product_options.keys()),
-            index=default_product_index,
-            key="ai_selected_product",
-        )
-        selected_row_number = product_options[selected_product_label]
-        selected_product = products.iloc[selected_row_number]
-        selected_score = readiness_scores.iloc[selected_row_number]
-        selected_sku = selected_score["sku"]
-        selected_issues = issues[issues["sku"] == selected_sku]
-        selected_product_context = get_ai_product_context(selected_product, selected_score)
-        selected_review_tasks = review_tasks[review_tasks["sku"] == selected_sku]
-
-        st.markdown("#### Classic AI Suggestions (v1)")
-        st.caption(
-            "Generate unreviewed draft content for one product. V1 has no approval controls; its CSV and management-sheet "
-            "contents remain unreviewed drafts. Use V2 below for field-level approval."
-        )
-
-        selected_suggestion_types = st.multiselect(
-            "Select suggestion types",
-            AI_SUGGESTION_TYPES,
-            default=[
-                "Improved Product Title",
-                "Product Description",
-                "Bullet Points",
-                "Missing Attribute Suggestions",
-            ],
-        )
-
-        st.markdown("##### Selected Product Context")
-        render_readable_dataframe(
-            pd.DataFrame([selected_product_context]),
-            preferred_columns=[
-                "sku",
-                "product_name",
-                "review_status",
-                "readiness_status",
-                "overall_readiness_score",
-                "category",
-                "brand",
-                "manufacturer",
-                "description",
-                "attributes",
-            ],
-            height=180,
-        )
-
-        st.markdown("##### Current Issues for This Product")
-        if len(selected_issues) > 0:
-            render_readable_dataframe(
-                selected_issues,
-                preferred_columns=[
-                    "sku",
-                    "severity",
-                    "field_name",
-                    "issue_type",
-                    "message",
-                    "recommended_action",
-                ],
-                height=260,
-            )
-        else:
-            st.success("No issues found for this product.")
-
-        if not os.getenv("OPENAI_API_KEY"):
-            st.info(
-                "AI generation is disabled because OPENAI_API_KEY is missing. You can still review the selected product context and prompt preview."
-            )
-            with st.expander("Prompt preview"):
-                st.text(
-                    build_ai_prompt(
-                        selected_product,
-                        selected_issues,
-                        selected_score,
-                        selected_suggestion_types,
-                    )
-                )
-        elif len(selected_suggestion_types) == 0:
-            st.info("Select at least one suggestion type to generate AI suggestions.")
-        elif st.button(
-            "Generate AI Suggestions v1",
-            type="primary",
-        ):
-            st.session_state.pop("ai_suggestions", None)
-            st.session_state.pop("ai_suggestions_sku", None)
-            with st.spinner("Generating AI suggestions..."):
-                try:
-                    suggestions = generate_ai_suggestions(
-                        selected_product,
-                        selected_issues,
-                        selected_score,
-                        selected_suggestion_types,
-                    )
-                    suggestions["selected_suggestion_types"] = selected_suggestion_types
-                    st.session_state["ai_suggestions"] = suggestions
-                    st.session_state["ai_suggestions_sku"] = selected_sku
-                    st.rerun()
-                except Exception as error:
-                    st.error(
-                        "AI suggestion generation failed. Please check your API key, network connection, or model availability."
-                    )
-                    with st.expander("Technical details"):
-                        st.write(f"Error type: {type(error).__name__}. Check your local configuration; provider error details are not displayed.")
-
-        if (
-            "ai_suggestions" in st.session_state
-            and st.session_state.get("ai_suggestions_sku") == selected_sku
-        ):
-            st.success(
-                "AI Suggestions v1 are available for this product. Treat them as drafts for human review."
-            )
-            suggestions = st.session_state["ai_suggestions"]
-            bulletpoints = suggestions.get("bullet_points", "")
-
-            if isinstance(bulletpoints, list):
-                bulletpoints_text = "\n".join([f"- {item}" for item in bulletpoints])
-            else:
-                bulletpoints_text = str(bulletpoints)
-
-            st.markdown("### Improved Product Title")
-            st.write(suggestions.get("improved_product_title", ""))
-
-            st.markdown("### Improved Product Description")
-            st.write(suggestions.get("improved_product_description", ""))
-
-            st.markdown("### Bullet Points")
-            st.write(bulletpoints_text)
-
-            st.markdown("### Suggested Missing Attributes")
-            st.write(suggestions.get("suggested_missing_attributes", ""))
-
-            st.markdown("### Translation")
-            st.write(suggestions.get("translation", ""))
-
-            st.markdown("### Compliance / Safety Review Note")
-            st.write(suggestions.get("compliance_safety_review_note", ""))
-
-            st.markdown("### Human Review Notes")
-            st.write(suggestions.get("human_review_notes", ""))
-
-            if suggestions.get("raw_response"):
-                with st.expander("Raw AI response"):
-                    st.text(suggestions["raw_response"])
-
-            st.download_button(
-                "Download Unreviewed AI Drafts CSV",
-                safe_csv_bytes(suggestions_to_dataframe(selected_sku, suggestions)),
-                "ai_suggestions.csv",
-                "text/csv",
-            )
-        elif os.getenv("OPENAI_API_KEY") and len(selected_suggestion_types) > 0:
-            st.info(
-                "No AI Suggestions v1 have been generated for this product yet. Use the generate button above to create a draft."
-            )
-
-        st.divider()
-        st.markdown("### Smart Suggestions v2 (experimental)")
-        st.caption(
-            "Structured field-level draft suggestions for human review. V2 is separate from the current AI Suggestions v1 flow."
-        )
-        st.info(
-            "Smart Suggestions v2 does not approve, publish, or update product data automatically. Every usable row needs human review."
-        )
-
-        smart_suggestions_v2_prompt = build_smart_suggestion_prompt(
-            selected_product_context,
-            selected_issues.to_dict(orient="records"),
-            selected_review_tasks.to_dict(orient="records"),
-        )
-
-        with st.expander("Smart Suggestions v2 prompt preview"):
-            st.text(smart_suggestions_v2_prompt)
-
-        if not os.getenv("OPENAI_API_KEY"):
-            st.info(
-                "Smart Suggestions v2 generation is disabled because OPENAI_API_KEY is missing. The prompt preview is still available."
-            )
-        elif st.button("Generate Smart Suggestions v2", type="primary"):
-            with st.spinner("Generating Smart Suggestions v2..."):
-                try:
-                    smart_suggestions_v2_raw_response = generate_smart_suggestions_v2(
-                        smart_suggestions_v2_prompt
-                    )
-                    smart_suggestions_v2_result = parse_and_normalize_suggestions(
-                        smart_suggestions_v2_raw_response
-                    )
-                    smart_suggestions_v2_result["suggestions"] = validate_suggestions_against_product(
-                        smart_suggestions_v2_result["suggestions"], selected_product,
-                    )
-                    replace_smart_response(
-                        st.session_state, sku=selected_sku, prompt=smart_suggestions_v2_prompt,
-                        raw_response=smart_suggestions_v2_raw_response, result=smart_suggestions_v2_result,
-                    )
-                except Exception as error:
-                    st.error(
-                        "Smart Suggestions v2 generation failed. Please check your API key, network connection, or model availability."
-                    )
-                    with st.expander("Technical details"):
-                        st.write(f"Error type: {type(error).__name__}. Check your local configuration; provider error details are not displayed.")
-                    replace_smart_response(
-                        st.session_state, sku=selected_sku, prompt=smart_suggestions_v2_prompt,
-                        raw_response="", result={"suggestions": [], "errors": [
-                            {"reason": "Generation failed. Try again after checking your local configuration."}
-                        ], "is_valid_json": False},
-                    )
-
-        st.markdown("#### Smart Suggestions v2 Results")
-        st.caption(
-            "Current Value is the source/reference value. Suggested Value is a draft recommendation. Human Review Status is your session-only decision."
-        )
-
-        smart_suggestions_v2_state_matches = (
-            st.session_state.get("smart_suggestions_v2_sku") == selected_sku
-            and st.session_state.get("smart_suggestions_v2_prompt")
-            == smart_suggestions_v2_prompt
-        )
-
-        if smart_suggestions_v2_state_matches:
-            smart_suggestions_v2_records = st.session_state.get(
-                "smart_suggestions_v2_records",
-                [],
-            )
-            smart_suggestions_v2_error = st.session_state.get(
-                "smart_suggestions_v2_error",
-                [],
-            )
-            smart_suggestions_v2_raw_response = st.session_state.get(
-                "smart_suggestions_v2_raw_response",
-                "",
-            )
-            smart_suggestions_v2_is_valid_json = st.session_state.get(
-                "smart_suggestions_v2_is_valid_json",
-                True,
-            )
-        else:
-            smart_suggestions_v2_records = []
-            smart_suggestions_v2_error = []
-            smart_suggestions_v2_raw_response = ""
-            smart_suggestions_v2_is_valid_json = True
-
-        smart_suggestions_v2_df = smart_suggestions_v2_to_dataframe(
-            smart_suggestions_v2_records
-        )
-        if "smart_suggestions_v2_review_decisions" not in st.session_state:
-            st.session_state["smart_suggestions_v2_review_decisions"] = {}
-        smart_suggestions_v2_review_decisions = st.session_state[
-            "smart_suggestions_v2_review_decisions"
-        ]
-        smart_suggestions_v2_df = apply_smart_suggestions_v2_review_decisions(
-            smart_suggestions_v2_df,
-            smart_suggestions_v2_review_decisions,
-        )
-
-        if len(smart_suggestions_v2_df) > 0:
-            st.success(
-                "Structured Smart Suggestions v2 are available. Review decisions are still required before export use."
-            )
-            approved_count = len(
-                smart_suggestions_v2_df[
-                    smart_suggestions_v2_df["human_review_status"] == "approved"
-                ]
-            )
-            rejected_count = len(
-                smart_suggestions_v2_df[
-                    smart_suggestions_v2_df["human_review_status"] == "rejected"
-                ]
-            )
-            pending_count = len(
-                smart_suggestions_v2_df[
-                    smart_suggestions_v2_df["human_review_status"] == "pending"
-                ]
-            )
-            blocked_count = len(
-                smart_suggestions_v2_df[
-                    smart_suggestions_v2_df["human_review_status"] == "blocked"
-                ]
-            )
-
-            smart_v2_metric_columns = st.columns(4)
-            smart_v2_metric_columns[0].metric("Approved", approved_count)
-            smart_v2_metric_columns[1].metric("Rejected", rejected_count)
-            smart_v2_metric_columns[2].metric("Pending", pending_count)
-            smart_v2_metric_columns[3].metric("Blocked", blocked_count)
-
-            with st.expander("How to read Smart Suggestions v2"):
-                st.write(
-                    "`Human Review Status` shows your local session-only decision. "
-                    "Approved suggestions are export candidates only and are not written back to product data. "
-                    "Blocked rows cannot be approved because they are incomplete, unsafe, or unsupported."
-            )
-
-        if smart_suggestions_v2_records:
-            st.caption("Source: OpenAI response, checked against the selected product. Human factual review is still required.")
-
-        smart_suggestions_v2_display_columns = [
-            "sku",
-            "product_name",
-            "target_field",
-            "current_value",
-            "proposed_value",
-            "reason",
-            "source_fields",
-            "confidence",
-            "risk_level",
-            "human_review_status",
-            "suggestion_status",
-        ]
-        smart_suggestions_v2_display_labels = {
-            "sku": "SKU",
-            "product_name": "Product",
-            "target_field": "Field",
-            "current_value": "Current Value",
-            "proposed_value": "Suggested Value",
-            "reason": "Reason",
-            "source_fields": "Source Fields",
-            "confidence": "Confidence",
-            "risk_level": "Risk",
-            "human_review_status": "Human Review Status",
-            "suggestion_status": "Suggestion State",
-        }
-        smart_suggestions_v2_display_df = smart_suggestions_v2_df[
-            smart_suggestions_v2_display_columns
-        ].rename(columns=smart_suggestions_v2_display_labels)
-
-        render_readable_dataframe(
-            smart_suggestions_v2_display_df,
-            preferred_columns=[
-                "SKU",
-                "Product",
-                "Field",
-                "Human Review Status",
-                "Risk",
-                "Confidence",
-                "Suggested Value",
-                "Current Value",
-                "Reason",
-                "Source Fields",
-                "Suggestion State",
-            ],
-            height=430,
-        )
-        if len(smart_suggestions_v2_df) == 0:
-            if smart_suggestions_v2_raw_response:
-                st.warning(
-                    "Smart Suggestions v2 returned no structured records. Review the raw response before taking any action."
-                )
-            else:
-                st.info(
-                    "No structured suggestions yet. Configure an API key to generate suggestions for the selected product."
-                )
-        elif (smart_suggestions_v2_df["suggestion_status"] == "blocked_insufficient_source").any():
-            st.warning(
-                "Some Smart Suggestions v2 rows are blocked because the response was incomplete, unsafe, or not supported for automatic use."
-            )
-
-        if smart_suggestions_v2_is_valid_json is False:
-            st.warning(
-                "Smart Suggestions v2 response could not be parsed safely. No suggestion was approved automatically."
-            )
-
-        if isinstance(smart_suggestions_v2_error, list) and len(smart_suggestions_v2_error) > 0:
-            st.warning(
-                "Smart Suggestions v2 parser output needs review. No suggestion was approved automatically."
-            )
-            parser_errors_df = smart_suggestions_v2_to_dataframe(
-                smart_suggestions_v2_error
-            )
-            render_readable_dataframe(
-                parser_errors_df,
-                preferred_columns=[
-                    "sku",
-                    "product_name",
-                    "target_field",
-                    "suggestion_status",
-                    "risk_level",
-                    "confidence",
-                    "reason",
-                    "source_fields",
-                ],
-                height=280,
-            )
-        elif isinstance(smart_suggestions_v2_error, str) and smart_suggestions_v2_error:
-            st.warning(
-                "Smart Suggestions v2 generation returned an error. No suggestion was approved automatically."
-            )
-
-        if len(smart_suggestions_v2_df) > 0:
-            st.markdown("#### Human Review for Smart Suggestions v2")
-            st.caption(
-                "Review one suggestion at a time. Decisions are stored only in this Streamlit session and do not update product data."
-            )
-
-            review_row_indexes = list(range(len(smart_suggestions_v2_df)))
-
-            def format_smart_suggestion_v2_review_option(row_index):
-                row = smart_suggestions_v2_df.iloc[row_index]
-                return (
-                    f"{row_index + 1}. {row['target_field']} - "
-                    f"{row['human_review_status']}"
-                )
-
-            selected_review_row_index = st.selectbox(
-                "Select one Smart Suggestion",
-                review_row_indexes,
-                format_func=format_smart_suggestion_v2_review_option,
-                key="smart_suggestions_v2_review_row",
-            )
-            selected_review_suggestion = smart_suggestions_v2_df.iloc[
-                selected_review_row_index
-            ]
-            selected_review_key = get_smart_suggestion_v2_review_key(
-                selected_review_suggestion
-            )
-            selected_review_status = selected_review_suggestion[
-                "human_review_status"
-            ]
-
-            review_details = pd.DataFrame(
-                [
-                    {
-                        "SKU": selected_review_suggestion.get("sku", ""),
-                        "Product": selected_review_suggestion.get("product_name", ""),
-                        "Field": selected_review_suggestion.get("target_field", ""),
-                        "Current Value": selected_review_suggestion.get(
-                            "current_value",
-                            "",
-                        ),
-                        "Suggested Value": selected_review_suggestion.get(
-                            "proposed_value",
-                            "",
-                        ),
-                        "Reason": selected_review_suggestion.get("reason", ""),
-                        "Source Fields": selected_review_suggestion.get(
-                            "source_fields",
-                            "",
-                        ),
-                        "Confidence": selected_review_suggestion.get("confidence", ""),
-                        "Risk": selected_review_suggestion.get("risk_level", ""),
-                        "Current Review Status": selected_review_status,
-                    }
-                ]
-            )
-            render_readable_dataframe(review_details, height=220)
-
-            if selected_review_status == "blocked":
-                st.warning(
-                    "This suggestion is blocked and cannot be approved because required source or safety information is missing. It remains visible for review context."
-                )
-            else:
-                review_action_columns = st.columns(3)
-                if review_action_columns[0].button(
-                    "Approve",
-                    type="primary",
-                ):
-                    smart_suggestions_v2_review_decisions[selected_review_key] = {
-                        "sku": selected_review_suggestion.get("sku", ""),
-                        "target_field": selected_review_suggestion.get(
-                            "target_field",
-                            "",
-                        ),
-                        "approval_state": "approved",
-                        "review_note": "",
-                    }
-                    st.rerun()
-
-                if review_action_columns[1].button("Reject"):
-                    smart_suggestions_v2_review_decisions[selected_review_key] = {
-                        "sku": selected_review_suggestion.get("sku", ""),
-                        "target_field": selected_review_suggestion.get(
-                            "target_field",
-                            "",
-                        ),
-                        "approval_state": "rejected",
-                        "review_note": "",
-                    }
-                    st.rerun()
-
-                if review_action_columns[2].button("Mark Pending"):
-                    smart_suggestions_v2_review_decisions.pop(
-                        selected_review_key,
-                        None,
-                    )
-                    st.rerun()
-
-        st.markdown("#### Improved Product Data Export Preview")
-        st.caption(
-            "Preview only - no product data is changed and no source file is overwritten."
-        )
-        st.info(
-            "Approved suggestions are prepared as export candidates only. Original product data stays unchanged."
-        )
-
-        if len(smart_suggestions_v2_df) == 0:
-            st.info(
-                "No structured suggestions are available yet. Generate V2 suggestions to review potential improvements before export."
-            )
-        else:
-            improved_export_groups = split_smart_suggestions_for_export(
-                smart_suggestions_v2_df
-            )
-            improved_export_counts = {
-                status_group: len(improved_export_groups.get(status_group, []))
-                for status_group in IMPROVED_EXPORT_STATUS_GROUPS
-            }
-
-            preview_metric_columns = st.columns(4)
-            preview_metric_columns[0].metric(
-                "Approved candidates",
-                improved_export_counts.get("approved", 0),
-            )
-            preview_metric_columns[1].metric(
-                "Pending suggestions",
-                improved_export_counts.get("pending", 0),
-            )
-            preview_metric_columns[2].metric(
-                "Rejected suggestions",
-                improved_export_counts.get("rejected", 0),
-            )
-            preview_metric_columns[3].metric(
-                "Blocked suggestions",
-                improved_export_counts.get("blocked", 0),
-            )
-
-            if improved_export_counts.get("approved", 0) == 0:
-                st.info(
-                    "No approved candidates yet. Approve a non-blocked suggestion to populate the Approved Improvements sheet."
-                )
-                st.caption(
-                    "You can still download the workbook for review context; Approved Improvements will be empty."
-                )
-            else:
-                st.success(
-                    "Approved export candidates are ready for the improved workbook. Source product data will stay unchanged."
-                )
-
-            export_preview_labels = {
-                "approved": "Approved Export Candidates",
-                "pending": "Pending / Proposed Suggestions",
-                "rejected": "Rejected Suggestions",
-                "blocked": "Blocked Suggestions",
-                "unknown": "Unknown / Other Suggestions",
-            }
-
-            for status_group in IMPROVED_EXPORT_STATUS_GROUPS:
-                group_dataframe = improved_export_groups.get(status_group)
-                if group_dataframe is not None and len(group_dataframe) > 0:
-                    group_label = export_preview_labels.get(
-                        status_group,
-                        status_group.title(),
-                    )
-                    with st.expander(
-                        f"{group_label} ({len(group_dataframe)})",
-                        expanded=status_group == "approved",
-                    ):
-                        render_readable_dataframe(
-                            group_dataframe,
-                            preferred_columns=[
-                                "sku",
-                                "product_name",
-                                "field",
-                                "approval_status",
-                                "export_status",
-                                "risk_level",
-                                "confidence",
-                                "suggested_value",
-                                "current_value",
-                                "reason",
-                                "source",
-                            ],
-                            height=320,
-                        )
-
-            st.markdown("##### Download Improved Product Data Export")
-            st.caption(
-                "The workbook uses the same groups shown in this preview: approved, pending, rejected, blocked, unknown, and original source snapshot."
-            )
-            st.caption(
-                "Approved suggestions are export candidates only. Source product data is not changed."
-            )
-            try:
-                improved_excel_export = create_improved_excel_export(smart_suggestions_v2_df, products)
-            except ExportError as error:
-                st.error(str(error))
-            else:
-                st.download_button(
-                    "Download Improved Product Data Workbook", improved_excel_export,
-                    IMPROVED_EXCEL_EXPORT_FILENAME,
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary",
-                )
-
-        if smart_suggestions_v2_raw_response:
-            with st.expander("Raw Smart Suggestions v2 response"):
-                st.text(smart_suggestions_v2_raw_response)
 
 if __name__ == "__main__":
     run_app()

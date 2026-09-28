@@ -3,7 +3,7 @@ import math
 import pandas as pd
 import pytest
 
-import app
+from product_data_copilot.ai.content_generation import build_content_prompt
 from product_data_copilot.ai.source_validation import validate_suggestions_against_product
 from product_data_copilot.ai.suggestion_prompt_adapter import normalize_prompt_value
 from product_data_copilot.ai.suggestion_schema import normalize_text
@@ -36,8 +36,8 @@ def test_identifier_na_and_literal_current_value_survive_ai_context(valid_produc
     assert result["sku"] == "NA"
     assert result["current_value"] == "unknown"
     assert result["suggestion_status"] == "review_required"
-    context = app.get_ai_product_context(pd.Series(valid_product), {"sku": "NA"})
-    assert context["sku"] == "NA"
+    prompt = build_content_prompt(pd.Series(valid_product), "create", "en")
+    assert 'sku: "NA"' in prompt
 
 
 @pytest.mark.parametrize("override", [
@@ -59,11 +59,13 @@ def test_existing_parser_block_is_not_removed(valid_product):
     assert result["suggestion_status"] == "blocked_insufficient_source"
 
 
-def test_prompt_uses_complete_source_context(valid_product):
+def test_content_prompt_uses_relevant_source_context(valid_product):
     valid_product["warning_notes"] = "Use existing warning text."
-    context = app.get_ai_product_context(pd.Series(valid_product), {"sku": valid_product["sku"]})
-    for field in ["ean", "price", "image_url", "translation_de", "translation_en", "warning_notes"]:
-        assert context[field] == valid_product[field]
+    prompt = build_content_prompt(pd.Series(valid_product), "create", "en")
+    for field in ["translation_de", "warning_notes"]:
+        assert valid_product[field] in prompt
+    assert valid_product["ean"] not in prompt
+    assert valid_product["image_url"] not in prompt
 
 
 @pytest.mark.parametrize("value", [None, math.nan, pd.NA])

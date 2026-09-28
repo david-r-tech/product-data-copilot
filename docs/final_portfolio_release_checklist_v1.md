@@ -1,29 +1,25 @@
-# Portfolio release check — 27 September 2026
+# Portfolio release check — 28 September 2026
 
-Use this checklist just before including Product Data Copilot in an application. The current technical and product contract is in the [README](../README.md) and [requirements traceability](requirements_traceability.md).
+Use this checklist before including Product Data Copilot in an application. The current contract is in the [README](../README.md) and [requirements traceability](requirements_traceability.md).
 
-## Already verified locally
+## Verified locally
 
-- [x] App starts with fictional sample data; all seven tabs open in a browser without app or console errors.
-- [x] Old demo-fixture loading control is absent from the application.
-- [x] 188 automated tests pass in the tested Python 3.14.4 environment; syntax and dependency checks pass.
-- [x] Both AI request paths run through the installed OpenAI SDK with a fake key and in-memory HTTP responses; no provider request is sent.
-- [x] Import, product identity, issue/status gates, AI source/decision boundaries, and spreadsheet serialization have regression coverage.
-- [x] Current README and case study describe the actual workflow and limitations.
+- [x] App starts with fictional sample data; three workflow tabs are available.
+- [x] Old demo-fixture and Quick Drafts controls are absent from the current UI.
+- [x] 189 automated tests pass in Python 3.14.4, including generation, individual approval after whole-list creation, approved-only export, translation input, workbook safety, and an offline OpenAI SDK request.
+- [x] A live German-to-English creation call for fictional `APP-001` returned valid JSON, complete text, and five translated bullets after tightening the source-fact prompt.
+- [x] A live translation-only call returned French text and two translated source bullets.
+- [x] A live creation request completed in the browser UI before the approval gate. Its earlier text workbook contained exactly two sheets, 25 product rows, five German and five English bullets for `APP-001`, and no formula cells.
+- [x] The README and case study describe the current text workflow and limitations.
 
-## Required before sharing a GitHub link
+## Manual acceptance before sharing
 
-- [x] Confirm the final code commit is on GitHub and the intended branch is current.
-- [ ] Make the repository public as now requested by the owner, then verify the exact URL opens without signing in. Until then, do not paste it as a freely accessible application link.
-- [ ] Check the application/CV wording and any portfolio or social posts against the current README. External publication links have not yet been provided for review.
+- [ ] Inspect all three tabs at a normal laptop width. Filter the correction list, create one text, translate one existing text, and check every AI claim against the source.
+- [ ] After generating multiple articles, approve one and reject one. Confirm that no text download appears before approval and only the approved article appears in both sheets of the downloaded text workbook.
+- [ ] Open the approved-only two-sheet text workbook and five-sheet management workbook in Microsoft Excel; confirm readable content and unchanged source values.
+- [x] Rename the existing GitHub repository to `product-data-copilot`, update the local `origin` URL, and confirm the application link points to this same repository. The existing Git history is retained; the repository remains private.
+- [ ] Commit and push accepted code; verify the intended GitHub branch.
+- [ ] Make the repository public when ready and verify its URL opens without signing in.
+- [ ] Compare application/CV, portfolio, and social descriptions with the README. External links have not yet been supplied.
 
-## Manual acceptance
-
-- [ ] Launch the app with fictional sample data, inspect each tab at a normal laptop width, and confirm labels and tables are readable.
-- [ ] Download the management workbook and open it in Microsoft Excel. Confirm the intended sheets, source snapshot, readable layout, and text cells.
-
-## Optional after release
-
-- [ ] If a reviewer uses their own API key with suitable data, inspect one live V2 answer and the improved workbook in Microsoft Excel. Without V2 suggestions, the app does not offer this download. Do not treat a structurally valid response as factually proven.
-
-No login, database, deployment, marketplace integration, automatic write-back, or compliance certification is promised for this local MVP. Old plan/fixture documents in `docs/` record development history and are not current manual test instructions.
+A whole-file live run and multiple-language quality review are useful before claiming broad output reliability, but are not required to demonstrate the local workflow honestly. AI drafts require human review. The MVP does not promise deployment, marketplace integration, automatic publication, or compliance certification.

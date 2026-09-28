@@ -1,4 +1,4 @@
-"""Pure helpers describing the future Smart Suggestions AI contract."""
+"""Pure helpers describing the reviewable AI suggestion contract."""
 
 SMART_SUGGESTION_REQUIRED_KEYS = [
     "sku",
@@ -107,7 +107,7 @@ def smart_suggestion_prompt_contract_block():
 
     return "\n".join(
         [
-            "Smart Suggestions v2 output contract:",
+            "Reviewable AI Suggestions output contract:",
             "Return only valid JSON.",
             "The root object must contain a smart_suggestions array.",
             "Each array item must be one field-level suggestion.",

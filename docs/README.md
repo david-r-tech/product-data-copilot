@@ -5,6 +5,7 @@ Start with the repository [README](../README.md) to run the app. These documents
 - [Product requirements](product_requirements.md): user problem, scope, acceptance criteria and explicit exclusions.
 - [Requirements traceability](requirements_traceability.md): requirement-to-code-to-test evidence and remaining manual checks.
 - [Portfolio case study](portfolio_case_study.md): product decisions and tradeoffs.
+- [Product-Owner artifacts](product_owner_artifacts.md): vision, Product Goal, assumed stakeholder map, MoSCoW backlog, user story, Definition of Done, and measurement concept.
 - [Project status](project_status.md): current release state and remaining actions.
 - [Release check](final_portfolio_release_checklist_v1.md): the final verification steps before sharing the project.
 - [Current context](current_context.md): concise handoff for further development.

@@ -2,7 +2,7 @@
 
 ## Product
 
-Product Data Copilot is a local Streamlit MVP for e-commerce product data quality, readiness scoring, review tasks, safe AI suggestions, and management exports.
+Product Data Copilot is a local Streamlit MVP for e-commerce product data quality, readiness scoring, review tasks, user-triggered product-copy creation and translation, and safe Excel exports.
 
 The project direction is professional and portfolio-ready, but still deliberately local-first. Future work should improve usefulness and code quality without drifting into SaaS, integrations, or production infrastructure unless explicitly requested.
 

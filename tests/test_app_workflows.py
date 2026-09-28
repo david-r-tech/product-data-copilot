@@ -41,22 +41,126 @@ def click(at, label):
     return next(button for button in at.button if button.label == label).click().run()
 
 
-def suggestions_table(at):
-    return next(element.value for element in at.dataframe if "Human Review Status" in element.value.columns)
+def click_content_start(at):
+    return next(button for button in at.button if button.label.startswith("Jetzt Texte für ")).click().run()
 
 
 def test_sample_start_and_runtime_have_no_demo_controls():
     at = AppTest.from_string("import app; app.run_app()", default_timeout=20).run()
     assert not at.exception
-    assert len(at.tabs) == 7
+    assert [tab.label for tab in at.tabs] == [
+        "Daten prüfen", "Texte erstellen & übersetzen", "Ergebnisse & Export",
+    ]
     assert all("demo" not in button.label.lower() for button in at.button)
     assert not hasattr(app, "load_smart_suggestions_v2_demo_response")
-    assert any("fictional" in element.value for element in at.info)
+    assert any("fiktive" in element.value for element in at.info)
     issues_table = next(
         element.value for element in at.dataframe
-        if {"Severity", "Issue"}.issubset(element.value.columns)
+        if {"Schweregrad", "Problem", "Nächster Schritt"}.issubset(element.value.columns)
     )
-    assert issues_table.iloc[0]["Severity"] == "Critical"
+    assert issues_table.iloc[0]["Schweregrad"] == "Kritisch"
+    assert any(
+        {"SKU", "Produkt", "Schweregrad", "Problem", "Nächster Schritt"}.issubset(table.value.columns)
+        for table in at.dataframe
+    )
+
+
+def test_explicit_supplier_attribute_conflict_appears_in_correction_list(valid_product):
+    at = start_with_rows([{**valid_product, "material": "Polyester", "farbe": "Rot",
+                           "attributes": "material: cotton; color: blue"}])
+    assert not at.exception
+    correction_list = next(
+        element.value for element in at.dataframe
+        if {"Schweregrad", "Problem", "Nächster Schritt"}.issubset(element.value.columns)
+    )
+    problems = correction_list["Problem"].tolist()
+    assert any("Material unterschiedlich" in problem for problem in problems)
+    assert any("Farbe unterschiedlich" in problem for problem in problems)
+
+
+def _content_response(sku):
+    return json.dumps({
+        "sku": sku,
+        "de_html": "<p>Eine praktische Aufbewahrungsbox für Büromaterial.</p>",
+        "de_bullets": [f"Merkmal {i}" for i in range(1, 6)],
+        "translated_html": "<p>A practical storage box for office supplies.</p>",
+        "translated_bullets": [f"Feature {i}" for i in range(1, 6)],
+        "review_note": "",
+    })
+
+
+def test_content_generation_covers_whole_uploaded_file_before_review(valid_product, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "offline-test-placeholder")
+    second = {**valid_product, "sku": "SECOND", "product_name": "Second Storage Box"}
+    calls = []
+    def provider(prompt):
+        calls.append(prompt)
+        return _content_response("SECOND" if 'sku: "SECOND"' in prompt else valid_product["sku"])
+    monkeypatch.setattr(app, "request_content_draft", provider)
+    at = start_with_rows([valid_product, second])
+    assert any("zuerst einen deutschen HTML-Text" in element.value for element in at.info)
+    assert any("2 Artikel" in button.label for button in at.button if button.label.startswith("Jetzt Texte für "))
+    click_content_start(at)
+    assert not at.exception
+    assert len(calls) == 2
+    job = next(iter(at.session_state["content_jobs"].values()))
+    assert set(job) == {valid_product["sku"], "SECOND"}
+    assert len(job["SECOND"]["de_bullets"]) == 5
+    assert any(button.label == "Text freigeben" for button in at.button)
+    assert any("Gib mindestens einen Artikel" in element.value for element in at.info)
+    assert all(not button.label.startswith("Jetzt Texte für ") for button in at.button)
+
+
+def test_bulk_drafts_are_reviewed_per_article_before_export(valid_product, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "offline-test-placeholder")
+    second = {**valid_product, "sku": "SECOND", "product_name": "Second Storage Box"}
+    monkeypatch.setattr(
+        app, "request_content_draft",
+        lambda prompt: _content_response("SECOND" if 'sku: "SECOND"' in prompt else valid_product["sku"]),
+    )
+    at = start_with_rows([valid_product, second])
+    click_content_start(at)
+    assert not at.exception
+    assert any("Gib mindestens einen Artikel" in element.value for element in at.info)
+    click(at, "Text freigeben")
+    job = next(iter(at.session_state["content_jobs"].values()))
+    assert job[valid_product["sku"]]["review_status"] == "approved"
+    at.selectbox(key="content_preview_sku").select("SECOND").run()
+    click(at, "Text ablehnen")
+    assert job["SECOND"]["review_status"] == "rejected"
+    assert not any("Gib mindestens einen Artikel" in element.value for element in at.info)
+    at.selectbox(key="content_preview_sku").select(valid_product["sku"]).run()
+    click(at, "Entscheidung zurücknehmen")
+    assert "review_status" not in job[valid_product["sku"]]
+    assert any("Gib mindestens einen Artikel" in element.value for element in at.info)
+
+
+def test_content_generation_single_product_and_language(valid_product, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "offline-test-placeholder")
+    second = {**valid_product, "sku": "SECOND", "product_name": "Second Storage Box"}
+    calls = []
+    monkeypatch.setattr(app, "request_content_draft", lambda prompt: calls.append(prompt) or _content_response("SECOND"))
+    at = start_with_rows([valid_product, second])
+    at.radio(key="content_scope").set_value("Einzelner Artikel").run()
+    at.selectbox(key="content_product").select(at.selectbox(key="content_product").options[1]).run()
+    at.selectbox(key="content_language").select("fr").run()
+    click_content_start(at)
+    assert not at.exception
+    assert len(calls) == 1
+    assert "French" in calls[0]
+    job = next(iter(at.session_state["content_jobs"].values()))
+    assert set(job) == {"SECOND"}
+
+
+def test_translation_mode_skips_missing_source_without_provider_call(valid_product, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "offline-test-placeholder")
+    monkeypatch.setattr(app, "request_content_draft", lambda prompt: pytest.fail("Provider must not be called"))
+    at = start_with_rows([{**valid_product, "description": ""}])
+    at.radio(key="content_task").set_value("Vorhandene Texte übersetzen").run()
+    click(at, "Jetzt 1 Artikel übersetzen")
+    assert not at.exception
+    job = next(iter(at.session_state["content_jobs"].values()))
+    assert job[valid_product["sku"]]["status"] == "Quelltext fehlt"
 
 
 @pytest.mark.parametrize("content,filename", [
@@ -75,19 +179,18 @@ def test_bad_uploads_show_an_error_without_a_traceback(content, filename):
     assert len(at.tabs) == 0
 
 
-def test_file_switch_clears_approval_and_v1_text_for_same_sku(valid_product):
+def test_file_switch_clears_content_drafts_for_same_sku(valid_product):
     at = start_with_rows([valid_product])
     assert not at.exception
     at.selectbox(key="manual_review_status").select("Ready for Export")
-    click(at, "Save Review Status")
-    at.session_state["ai_suggestions_sku"] = valid_product["sku"]
-    at.session_state["ai_suggestions"] = {"improved_product_title": "OLD FILE DRAFT"}
+    click(at, "Prüfstatus speichern")
+    at.session_state["content_jobs"] = {"job": {valid_product["sku"]: {"translated_html": "OLD FILE DRAFT"}}}
     changed = {**valid_product, "product_name": "Different Product", "ean": ""}
     at.session_state["audit_content"] = pd.DataFrame([changed]).to_csv(index=False).encode()
     at.run()
     assert not at.exception
     assert at.session_state["manual_review_status_overrides"] == {}
-    assert "ai_suggestions" not in at.session_state
+    assert "content_jobs" not in at.session_state
     assert not any("OLD FILE DRAFT" in element.value for element in at.markdown)
     assert "Ready for Export" not in at.selectbox(key="manual_review_status").options
 
@@ -96,61 +199,15 @@ def test_manual_status_form_follows_selected_product_and_clear(valid_product):
     second = {**valid_product, "sku": "SECOND", "product_name": "Second Storage Box"}
     at = start_with_rows([valid_product, second])
     at.selectbox(key="manual_review_status").select("Rejected")
-    click(at, "Save Review Status")
+    click(at, "Prüfstatus speichern")
     choices = at.selectbox(key="manual_review_product").options
     at.selectbox(key="manual_review_product").select(choices[1]).run()
     assert at.selectbox(key="manual_review_status").value == "Ready for Export"
     at.selectbox(key="manual_review_product").select(choices[0]).run()
     assert at.selectbox(key="manual_review_status").value == "Rejected"
-    click(at, "Clear Review Status")
+    click(at, "Prüfstatus zurücksetzen")
     assert not at.exception
     assert at.selectbox(key="manual_review_status").value == "Ready for Export"
-
-
-def test_generation_approval_rejection_pending_and_regeneration(valid_product, monkeypatch):
-    monkeypatch.setenv("OPENAI_API_KEY", "offline-test-placeholder")
-    record = {
-        "sku": valid_product["sku"], "target_field": "description", "current_value": valid_product["description"],
-        "proposed_value": "Blue storage box for office supplies.", "source_fields": ["description"],
-        "reason": "Shortens the original description.", "confidence": "medium", "risk_level": "low",
-    }
-    response = {"smart_suggestions": [record]}
-    monkeypatch.setattr(app, "generate_smart_suggestions_v2", lambda prompt: json.dumps(response))
-    at = start_with_rows([valid_product])
-    click(at, "Generate Smart Suggestions v2")
-    assert not at.exception
-    assert suggestions_table(at).iloc[0]["Human Review Status"] == "pending"
-    click(at, "Approve")
-    assert suggestions_table(at).iloc[0]["Human Review Status"] == "approved"
-    click(at, "Reject")
-    assert suggestions_table(at).iloc[0]["Human Review Status"] == "rejected"
-    click(at, "Mark Pending")
-    assert suggestions_table(at).iloc[0]["Human Review Status"] == "pending"
-    click(at, "Approve")
-    record["risk_level"] = "high"
-    record["reason"] = "New reason, same proposed text."
-    click(at, "Generate Smart Suggestions v2")
-    assert not at.exception
-    assert suggestions_table(at).iloc[0]["Human Review Status"] == "pending"
-    assert at.session_state["smart_suggestions_v2_review_decisions"] == {}
-    record["source_fields"] = ["nonexistent"]
-    click(at, "Generate Smart Suggestions v2")
-    assert suggestions_table(at).iloc[0]["Human Review Status"] == "blocked"
-    assert all(button.label != "Approve" for button in at.button)
-
-
-def test_generation_failure_clears_old_suggestions_without_exposing_provider_details(valid_product, monkeypatch):
-    monkeypatch.setenv("OPENAI_API_KEY", "offline-test-placeholder")
-    def failed_response(prompt):
-        raise RuntimeError("provider detail containing private data")
-    monkeypatch.setattr(app, "generate_smart_suggestions_v2", failed_response)
-    at = start_with_rows([valid_product])
-    at.session_state["smart_suggestions_v2_review_decisions"] = {"old": {"approval_state": "approved"}}
-    click(at, "Generate Smart Suggestions v2")
-    assert not at.exception
-    assert at.session_state["smart_suggestions_v2_records"] == []
-    assert at.session_state["smart_suggestions_v2_review_decisions"] == {}
-    assert not any("private data" in item.value for item in at.markdown)
 
 
 def test_control_characters_and_long_cells_do_not_crash_the_app(valid_product):

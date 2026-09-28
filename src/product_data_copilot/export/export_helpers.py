@@ -9,21 +9,7 @@ MANAGEMENT_EXPORT_SHEETS = [
     "Product Scores",
     "Issues",
     "Review Tasks",
-    "AI Suggestions",
     "Source Products",
-]
-
-AI_SUGGESTIONS_EXPORT_COLUMNS = [
-    "sku",
-    "selected_suggestion_types",
-    "improved_product_title",
-    "improved_product_description",
-    "bullet_points",
-    "suggested_missing_attributes",
-    "translation",
-    "compliance_safety_review_note",
-    "human_review_notes",
-    "review_status",
 ]
 
 IMPROVED_EXPORT_STATUS_GROUPS = [
@@ -38,6 +24,7 @@ IMPROVED_EXCEL_EXPORT_FILENAME = "product_data_copilot_improved_export.xlsx"
 
 IMPROVED_EXCEL_EXPORT_SHEETS = [
     "Export Summary",
+    "Reviewed Product Data",
     "Approved Improvements",
     "Pending Suggestions",
     "Rejected Suggestions",
@@ -305,6 +292,35 @@ def source_products_to_snapshot_dataframe(source_products=None):
         return pd.DataFrame()
 
 
+def build_reviewed_product_dataframe(source_products, approved_improvements):
+    """Apply uniquely approved text edits to an export copy, never the source."""
+    reviewed = source_products_to_snapshot_dataframe(source_products)
+    if reviewed.empty or "sku" not in reviewed.columns:
+        return reviewed
+    allowed_fields = {"product_name", "description", "attributes", "translation_de", "translation_en"}
+    approvals = approved_improvements.to_dict(orient="records")
+    counts = {}
+    for row in approvals:
+        key = (_text_value(row.get("sku")), _text_value(row.get("field")))
+        counts[key] = counts.get(key, 0) + 1
+    for row in approvals:
+        sku = _text_value(row.get("sku"))
+        field = _text_value(row.get("field"))
+        if field not in allowed_fields or counts[(sku, field)] != 1:
+            continue
+        matches = reviewed.index[reviewed["sku"].map(_text_value) == sku].tolist()
+        if len(matches) != 1:
+            continue
+        index = matches[0]
+        current = _text_value(reviewed.at[index, field]) if field in reviewed.columns else ""
+        if current != _text_value(row.get("current_value")):
+            continue
+        if field not in reviewed.columns:
+            reviewed[field] = ""
+        reviewed.at[index, field] = _text_value(row.get("approved_value"))
+    return reviewed
+
+
 def build_improved_export_summary(suggestions=None, source_products=None):
     """Return a summary DataFrame for future improved Excel export.
 
@@ -334,6 +350,9 @@ def build_improved_excel_export_sheets(suggestions=None, source_products=None):
             grouped_suggestions,
             source_snapshot,
         ),
+        "Reviewed Product Data": build_reviewed_product_dataframe(
+            source_snapshot, grouped_suggestions["approved"],
+        ),
         "Approved Improvements": grouped_suggestions["approved"].copy(),
         "Pending Suggestions": grouped_suggestions["pending"].copy(),
         "Rejected Suggestions": grouped_suggestions["rejected"].copy(),
@@ -350,14 +369,14 @@ def _build_improved_export_summary_from_groups(grouped_suggestions, source_snaps
     )
 
     rows = [
-        ("total_smart_suggestions_v2_records", total_suggestions),
+        ("total_reviewable_suggestions", total_suggestions),
         ("approved_improvement_count", len(grouped_suggestions["approved"])),
         ("pending_suggestion_count", len(grouped_suggestions["pending"])),
         ("rejected_suggestion_count", len(grouped_suggestions["rejected"])),
         ("blocked_suggestion_count", len(grouped_suggestions["blocked"])),
         ("unknown_suggestion_count", len(grouped_suggestions["unknown"])),
         ("source_product_count", len(source_snapshot)),
-        ("export_scope", "Smart Suggestions v2 review results"),
+        ("export_scope", "Reviewable AI suggestion results"),
         ("source_data_changed", "No"),
         ("write_back_enabled", "No"),
         ("generated_from_session_state", "Yes"),

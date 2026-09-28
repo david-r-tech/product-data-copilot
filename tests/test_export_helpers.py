@@ -9,7 +9,6 @@ SRC_PATH = PROJECT_ROOT / "src"
 sys.path.insert(0, str(SRC_PATH))
 
 from product_data_copilot.export.export_helpers import (  # noqa: E402
-    AI_SUGGESTIONS_EXPORT_COLUMNS,
     IMPROVED_EXCEL_EXPORT_FILENAME,
     IMPROVED_EXCEL_EXPORT_SHEETS,
     IMPROVED_EXPORT_SUMMARY_COLUMNS,
@@ -45,23 +44,7 @@ def test_management_export_sheet_order_is_stable():
         "Product Scores",
         "Issues",
         "Review Tasks",
-        "AI Suggestions",
         "Source Products",
-    ]
-
-
-def test_ai_suggestions_export_columns_are_stable():
-    assert AI_SUGGESTIONS_EXPORT_COLUMNS == [
-        "sku",
-        "selected_suggestion_types",
-        "improved_product_title",
-        "improved_product_description",
-        "bullet_points",
-        "suggested_missing_attributes",
-        "translation",
-        "compliance_safety_review_note",
-        "human_review_notes",
-        "review_status",
     ]
 
 
@@ -90,7 +73,6 @@ def test_required_management_export_sheets_returns_copy():
         "Product Scores",
         "Issues",
         "Review Tasks",
-        "AI Suggestions",
         "Source Products",
     ]
 
@@ -115,8 +97,8 @@ def test_dataframe_has_rows():
 
 
 def test_dataframe_has_columns():
-    suggestions = pd.DataFrame(columns=AI_SUGGESTIONS_EXPORT_COLUMNS)
-    assert dataframe_has_columns(suggestions, ["sku", "bullet_points"])
+    suggestions = pd.DataFrame(columns=["sku", "target_field", "proposed_value"])
+    assert dataframe_has_columns(suggestions, ["sku", "proposed_value"])
     assert not dataframe_has_columns(suggestions, ["missing_column"])
     assert not dataframe_has_columns(None, ["sku"])
 
@@ -360,6 +342,7 @@ def test_improved_excel_export_filename_and_sheet_order_are_stable():
     assert IMPROVED_EXCEL_EXPORT_FILENAME == "product_data_copilot_improved_export.xlsx"
     assert IMPROVED_EXCEL_EXPORT_SHEETS == [
         "Export Summary",
+        "Reviewed Product Data",
         "Approved Improvements",
         "Pending Suggestions",
         "Rejected Suggestions",
@@ -389,7 +372,7 @@ def test_improved_export_summary_counts_status_groups():
     summary_values = dict(zip(summary["metric"], summary["value"]))
 
     assert list(summary.columns) == IMPROVED_EXPORT_SUMMARY_COLUMNS
-    assert summary_values["total_smart_suggestions_v2_records"] == 5
+    assert summary_values["total_reviewable_suggestions"] == 5
     assert summary_values["approved_improvement_count"] == 1
     assert summary_values["pending_suggestion_count"] == 1
     assert summary_values["rejected_suggestion_count"] == 1
@@ -469,12 +452,30 @@ def test_approved_suggestions_are_not_applied_to_original_source_rows():
     assert snapshot.iloc[0]["product_name"] == "Bottle"
 
 
+def test_reviewed_product_data_applies_only_matching_human_approved_edits():
+    source = pd.DataFrame([{
+        "sku": "ONE", "product_name": "Bottle", "description": "Original text",
+        "translation_de": "",
+    }])
+    suggestions = [
+        {"sku": "ONE", "target_field": "description", "current_value": "Original text",
+         "proposed_value": "Clear product text", "human_review_status": "approved"},
+        {"sku": "ONE", "target_field": "translation_de", "current_value": "",
+         "proposed_value": "Deutscher Text", "human_review_status": "pending"},
+    ]
+    sheets = build_improved_excel_export_sheets(suggestions, source)
+    assert sheets["Reviewed Product Data"].iloc[0]["description"] == "Clear product text"
+    assert sheets["Reviewed Product Data"].iloc[0]["translation_de"] == ""
+    assert sheets["Original Source Snapshot"].iloc[0]["description"] == "Original text"
+    assert source.iloc[0]["description"] == "Original text"
+
+
 def test_empty_suggestion_input_returns_stable_improved_excel_sheets():
     sheets = build_improved_excel_export_sheets()
     summary_values = dict(zip(sheets["Export Summary"]["metric"], sheets["Export Summary"]["value"]))
 
     assert list(sheets.keys()) == IMPROVED_EXCEL_EXPORT_SHEETS
-    assert summary_values["total_smart_suggestions_v2_records"] == 0
+    assert summary_values["total_reviewable_suggestions"] == 0
     for sheet_name in IMPROVED_EXCEL_EXPORT_SHEETS:
         assert isinstance(sheets[sheet_name], pd.DataFrame)
 

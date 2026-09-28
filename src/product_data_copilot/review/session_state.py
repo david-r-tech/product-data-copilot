@@ -3,7 +3,7 @@
 import hashlib
 import json
 
-DATASET_STATE_PREFIXES = ("manual_", "ai_", "smart_suggestions_v2_")
+DATASET_STATE_PREFIXES = ("manual_", "ai_", "smart_suggestions_v2_", "batch_ai_", "content_")
 
 
 def bind_dataset(state, fingerprint):

@@ -18,25 +18,29 @@ def render_app_intro(st):
 
 def render_sidebar_intro(st):
     """Render the sidebar input section header."""
-    st.sidebar.header("Input")
+    st.sidebar.header("Eingabe")
 
 
 def render_data_input_section(st):
     """Render the sidebar data upload input and return the uploaded file."""
     render_sidebar_intro(st)
     return st.sidebar.file_uploader(
-        "Upload a CSV or Excel file", type=["csv", "xlsx"], max_upload_size=10
+        "CSV- oder Excel-Datei hochladen", type=["csv", "xlsx"], max_upload_size=10
     )
 
 
 def render_data_source_notice(st, data_source):
     """Render the currently used data source notice."""
-    st.info(f"Using: {data_source}")
+    labels = {
+        "Uploaded file": "Hochgeladene Datei",
+        "Sample data (fictional products)": "Beispieldaten (fiktive Produkte)",
+    }
+    st.info(f"Datenquelle: {labels.get(data_source, data_source)}")
 
 
 def render_dataset_summary(st, row_count, column_count):
     """Render the product data row and column summary."""
-    st.caption(f"Rows: {row_count} | Columns: {column_count}")
+    st.caption(f"Artikel: {row_count} | Spalten: {column_count}")
 
 
 def render_issues_summary(st, total_issues, displayed_issues):

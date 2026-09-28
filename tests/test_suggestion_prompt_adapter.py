@@ -126,7 +126,7 @@ def test_smart_suggestion_prompt_output_is_deterministic_and_contains_contract()
     second_prompt = build_smart_suggestion_prompt(product, issues, tasks)
 
     assert first_prompt == second_prompt
-    assert "Smart Suggestions v2 output contract" in first_prompt
+    assert "Reviewable AI Suggestions output contract" in first_prompt
     assert "smart_suggestions array" in first_prompt
     assert "field-level suggestion" in first_prompt
     for required_key in SMART_SUGGESTION_REQUIRED_KEYS:

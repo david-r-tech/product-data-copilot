@@ -39,7 +39,7 @@ def test_csv_escapes_formula_text_and_retains_unicode(text):
     assert data.iloc[0, 0] == text
 
 
-def test_both_app_workbooks_preserve_source_and_human_review_groups(valid_product):
+def test_management_workbook_preserves_source_data(valid_product):
     valid_product["description"] = "=1+1"
     products = pd.DataFrame([valid_product])
     before = products.copy(deep=True)
@@ -47,22 +47,10 @@ def test_both_app_workbooks_preserve_source_and_human_review_groups(valid_produc
     scores = app.calculate_readiness_scores(products, issues)
     tasks = app.create_review_tasks(issues, scores)
     management = load_workbook(BytesIO(app.create_excel_management_export(
-        "Test input", products, scores, issues, tasks, app.suggestions_to_dataframe("000123", {}),
+        "Test input", products, scores, issues, tasks,
     )))
     assert management.sheetnames == app.MANAGEMENT_EXPORT_SHEETS
     assert management["Source Products"]["D2"].value == "=1+1"
     assert management["Source Products"]["D2"].data_type == "s"
-    assert list(management["AI Suggestions"].values)[1][-1] == "unreviewed_draft"
-    suggestions = [
-        {"sku": "000123", "target_field": "description", "proposed_value": "=1+1", "human_review_status": status,
-         "suggestion_status": "blocked_insufficient_source" if status == "blocked" else "review_required"}
-        for status in ["approved", "pending", "rejected", "blocked"]
-    ]
-    improved = load_workbook(BytesIO(app.create_improved_excel_export(suggestions, products)))
-    assert len(improved.sheetnames) == 7
-    for sheet in ["Approved Improvements", "Pending Suggestions", "Rejected Suggestions", "Blocked Suggestions"]:
-        assert improved[sheet].max_row == 2
-    assert improved["Approved Improvements"]["G2"].value == "=1+1"
-    assert improved["Approved Improvements"]["G2"].data_type == "s"
-    assert improved["Original Source Snapshot"]["A2"].value == "000123"
+    assert "AI Suggestions" not in management.sheetnames
     pd.testing.assert_frame_equal(products, before)
