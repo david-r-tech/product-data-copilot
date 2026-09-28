@@ -8,6 +8,7 @@ venv/
 .streamlit/secrets.toml
 *.log
 product_data_copilot_management_export.xlsx
+product_data_copilot_freigegeben_*.xlsx
 product_readiness_scores.csv
 data_quality_issues.csv
 review_tasks.csv
