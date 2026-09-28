@@ -15,7 +15,7 @@ Use this checklist before publishing or sharing Product Data Copilot. The curren
 ## Manual acceptance before sharing
 
 - [ ] Inspect all three tabs at a normal laptop width. Filter the correction list, create one text, translate one existing text, and check every AI claim against the source.
-- [ ] Manually perform approve → reject → withdraw/reset → final approve in the live app. Confirm that pending and rejected drafts are excluded from the approved-text download.
+- [ ] Manually perform approve → reject → approve in the live app and use previous/next navigation between generated articles. Confirm that pending and rejected drafts are excluded from the approved-text download.
 - [ ] Open the approved-only two-sheet text workbook and five-sheet management workbook in Microsoft Excel; confirm readable content and unchanged source values.
 - [x] Rename the existing GitHub repository to `product-data-copilot`, update the local `origin` URL, and confirm the application link points to this same repository. The existing Git history is retained; the repository remains private.
 - [x] Commit and push the current implementation; verify the intended GitHub branch. The repository remains private and publication has not happened.

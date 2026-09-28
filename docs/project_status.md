@@ -8,7 +8,7 @@ The latest complete local run passed **196 automated tests** on 28 September 202
 
 ## Before publishing or sharing the repository
 
-1. Open the approved-only text workbook and the management workbook in Microsoft Excel and inspect their visual layout. In the live app, manually perform approve → reject → withdraw/reset → final approve.
+1. Open the approved-only text workbook and the management workbook in Microsoft Excel and inspect their visual layout. In the live app, manually perform approve → reject → approve while navigating between generated articles.
 2. The implementation is committed and pushed. Confirm that the repository still shows PRIVATE before publication. After publication, verify that its exact URL opens anonymously without signing in.
 3. Confirm that any external product description matches the current [README](../README.md).
 

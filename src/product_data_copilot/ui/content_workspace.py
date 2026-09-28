@@ -13,6 +13,10 @@ MAX_REQUESTS_PER_CLICK = 100
 LANGUAGE_LABELS = {"en": "Englisch", "fr": "Französisch", "es": "Spanisch"}
 
 
+def _select_review_article(st, sku):
+    st.session_state["content_preview_sku"] = sku
+
+
 def render_content_workspace(st, products, provider, workbook_writer, has_key):
     st.subheader("Texte erstellen & übersetzen")
     st.caption("Aus deiner hochgeladenen Tabelle werden prüfbare Textentwürfe erstellt. Die Originaldatei bleibt unverändert.")
@@ -161,6 +165,8 @@ def render_content_workspace(st, products, provider, workbook_writer, has_key):
     ready_skus = [sku for sku in selected_skus if results.get(sku, {}).get("translated_html")]
     if ready_skus:
         product_by_sku = {source_identifier(row.get("sku")): row for _, row in products.iterrows()}
+        if st.session_state.get("content_preview_sku") not in ready_skus:
+            st.session_state["content_preview_sku"] = ready_skus[0]
         preview_sku = st.selectbox(
             "Artikel zur Prüfung auswählen", ready_skus,
             format_func=lambda sku: f"{sku} · {clean_text(product_by_sku[sku].get('product_name'))}",
@@ -198,22 +204,31 @@ def render_content_workspace(st, products, provider, workbook_writer, has_key):
         if draft.get("review_note"):
             st.warning(f"Prüfhinweis: {draft['review_note']}")
         st.caption("Prüfe besonders Material, Farbe, Maße, Produktart und werbliche Versprechen. Die KI kann glaubwürdig klingende, aber unbelegte Aussagen erzeugen.")
-        approve, reject, reset = st.columns(3)
-        if approve.button("Text freigeben", type="primary", width="stretch", key="content_approve",
+        approve, reject = st.columns(2)
+        if approve.button("Freigeben", type="primary", width="stretch", key="content_approve",
                           disabled=review_status == "approved"):
             draft["review_status"] = "approved"
             st.session_state["content_jobs"] = jobs
             st.rerun()
-        if reject.button("Text ablehnen", width="stretch", key="content_reject",
+        if reject.button("Ablehnen", width="stretch", key="content_reject",
                          disabled=review_status == "rejected"):
             draft["review_status"] = "rejected"
             st.session_state["content_jobs"] = jobs
             st.rerun()
-        if reset.button("Entscheidung zurücknehmen", width="stretch", key="content_reset_review",
-                        disabled=review_status not in {"approved", "rejected"}):
-            draft.pop("review_status", None)
-            st.session_state["content_jobs"] = jobs
-            st.rerun()
+
+        current_index = ready_skus.index(preview_sku)
+        previous, position, following = st.columns([1, 1, 1])
+        previous.button(
+            "← Vorheriger Artikel", width="stretch", key="content_previous_article",
+            disabled=current_index == 0, on_click=_select_review_article,
+            args=(st, ready_skus[max(0, current_index - 1)]),
+        )
+        position.markdown(f"**Artikel {current_index + 1} von {len(ready_skus)}**")
+        following.button(
+            "Nächster Artikel →", width="stretch", key="content_next_article",
+            disabled=current_index == len(ready_skus) - 1, on_click=_select_review_article,
+            args=(st, ready_skus[min(len(ready_skus) - 1, current_index + 1)]),
+        )
 
     approved_count = sum(result.get("review_status") == "approved" for result in results.values())
     st.markdown("#### 6. Freigegebene Texte exportieren")

@@ -143,7 +143,13 @@ def test_content_generation_covers_whole_uploaded_file_before_review(valid_produ
     job = next(iter(at.session_state["content_jobs"].values()))
     assert set(job) == {valid_product["sku"], "SECOND"}
     assert len(job["SECOND"]["de_bullets"]) == 5
-    assert any(button.label == "Text freigeben" for button in at.button)
+    assert any(button.label == "Freigeben" for button in at.button)
+    assert any(button.label == "← Vorheriger Artikel" for button in at.button)
+    assert any(button.label == "Nächster Artikel →" for button in at.button)
+    assert any(element.value == "**Artikel 1 von 2**" for element in at.markdown)
+    assert next(button for button in at.button if button.label == "← Vorheriger Artikel").disabled
+    assert not next(button for button in at.button if button.label == "Nächster Artikel →").disabled
+    assert all(button.label != "Entscheidung zurücknehmen" for button in at.button)
     assert any("Gib mindestens einen Artikel" in element.value for element in at.info)
     assert all(not button.label.startswith("Jetzt Texte für ") for button in at.button)
 
@@ -151,25 +157,43 @@ def test_content_generation_covers_whole_uploaded_file_before_review(valid_produ
 def test_bulk_drafts_are_reviewed_per_article_before_export(valid_product, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "offline-test-placeholder")
     second = {**valid_product, "sku": "SECOND", "product_name": "Second Storage Box"}
-    monkeypatch.setattr(
-        app, "request_content_draft",
-        lambda prompt: _content_response("SECOND" if 'sku: "SECOND"' in prompt else valid_product["sku"]),
-    )
+    calls = []
+    def provider(prompt):
+        calls.append(prompt)
+        return _content_response("SECOND" if 'sku: "SECOND"' in prompt else valid_product["sku"])
+    monkeypatch.setattr(app, "request_content_draft", provider)
     at = start_with_rows([valid_product, second])
     click_content_start(at)
     assert not at.exception
+    assert len(calls) == 2
     assert any("Gib mindestens einen Artikel" in element.value for element in at.info)
-    click(at, "Text freigeben")
+    click(at, "Freigeben")
     job = next(iter(at.session_state["content_jobs"].values()))
     assert job[valid_product["sku"]]["review_status"] == "approved"
-    at.selectbox(key="content_preview_sku").select("SECOND").run()
-    click(at, "Text ablehnen")
+    click(at, "Ablehnen")
+    assert job[valid_product["sku"]]["review_status"] == "rejected"
+    click(at, "Freigeben")
+    assert job[valid_product["sku"]]["review_status"] == "approved"
+
+    click(at, "Nächster Artikel →")
+    assert at.selectbox(key="content_preview_sku").value == "SECOND"
+    assert any(element.value == "**Artikel 2 von 2**" for element in at.markdown)
+    assert not next(button for button in at.button if button.label == "← Vorheriger Artikel").disabled
+    assert next(button for button in at.button if button.label == "Nächster Artikel →").disabled
+    assert len(calls) == 2
+    click(at, "Ablehnen")
+    assert job["SECOND"]["review_status"] == "rejected"
+    click(at, "Freigeben")
+    assert job["SECOND"]["review_status"] == "approved"
+    click(at, "Ablehnen")
     assert job["SECOND"]["review_status"] == "rejected"
     assert not any("Gib mindestens einen Artikel" in element.value for element in at.info)
-    at.selectbox(key="content_preview_sku").select(valid_product["sku"]).run()
-    click(at, "Entscheidung zurücknehmen")
-    assert "review_status" not in job[valid_product["sku"]]
-    assert any("Gib mindestens einen Artikel" in element.value for element in at.info)
+    assert any("1 freigegeben" in element.value for element in at.caption)
+
+    click(at, "← Vorheriger Artikel")
+    assert at.selectbox(key="content_preview_sku").value == valid_product["sku"]
+    assert any(element.value == "**Artikel 1 von 2**" for element in at.markdown)
+    assert len(calls) == 2
 
 
 def test_content_generation_single_product_and_language(valid_product, monkeypatch):
