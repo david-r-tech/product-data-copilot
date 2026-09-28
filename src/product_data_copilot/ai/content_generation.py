@@ -155,6 +155,13 @@ def normalize_content_response(raw_response, sku, mode, source_bullet_count=0):
     for key in bullet_keys:
         value = payload.get(key)
         result[key] = [clean_text(item) for item in value if clean_text(item)] if isinstance(value, list) else []
+    if mode == "create" and any(len(result[key]) > 5 for key in bullet_keys):
+        for key in bullet_keys:
+            result[key] = result[key][:5]
+        result["review_note"] = (
+            "Der Anbieter hat mehr als fünf Bullet Points geliefert; die Ausgabe wurde lokal "
+            "auf die jeweils ersten fünf begrenzt. Inhaltlich weiterhin ungeprüfter Entwurf."
+        )
     if not result.get("translated_html") or (mode == "create" and not result.get("de_html")):
         raise ValueError("The AI did not return a usable product text")
     expected = source_bullet_count if mode == "translate" else 5

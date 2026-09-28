@@ -45,6 +45,34 @@ def test_creation_response_requires_matching_sku_and_keeps_five_bullets():
         normalize_content_response(json.dumps(payload), "WRONG", "create")
 
 
+def test_creation_response_limits_excess_bullets_to_first_five():
+    payload = {
+        "sku": "A-1", "de_html": "<p>Lampe.</p>",
+        "de_bullets": [f"Merkmal {i}" for i in range(1, 8)],
+        "translated_html": "<p>Lamp.</p>",
+        "translated_bullets": [f"Feature {i}" for i in range(1, 7)],
+    }
+    draft = normalize_content_response(json.dumps(payload), "A-1", "create")
+    assert draft["de_bullets"] == [f"Merkmal {i}" for i in range(1, 6)]
+    assert draft["translated_bullets"] == [f"Feature {i}" for i in range(1, 6)]
+    assert "mehr als fünf" in draft["review_note"]
+    assert "ersten fünf begrenzt" in draft["review_note"]
+    assert "ungeprüfter Entwurf" in draft["review_note"]
+
+
+def test_creation_response_keeps_fewer_than_five_without_inventing_bullets():
+    payload = {
+        "sku": "A-1", "de_html": "<p>Lampe.</p>",
+        "de_bullets": ["Blau", "Aluminium"],
+        "translated_html": "<p>Lamp.</p>",
+        "translated_bullets": ["Blue", "Aluminium"],
+    }
+    draft = normalize_content_response(json.dumps(payload), "A-1", "create")
+    assert draft["de_bullets"] == ["Blau", "Aluminium"]
+    assert draft["translated_bullets"] == ["Blue", "Aluminium"]
+    assert "weicht von 5 ab" in draft["review_note"]
+
+
 def test_translation_prompt_and_response_preserve_existing_bullet_count():
     product = pd.Series({"sku": "A-1", "description": "<p>Gute Lampe.</p>", "punkte": "Blau|Aus Aluminium"})
     prompt = build_content_prompt(product, "translate", "es", "description", "punkte")
@@ -55,6 +83,16 @@ def test_translation_prompt_and_response_preserve_existing_bullet_count():
         "translated_bullets": ["Azul", "De aluminio"],
     }), "A-1", "translate", source_bullet_count=2)
     assert draft["translated_bullets"] == ["Azul", "De aluminio"]
+    assert not draft["review_note"]
+
+
+def test_translation_response_with_more_than_five_source_bullets_is_not_capped():
+    translated = [f"Translated {i}" for i in range(1, 8)]
+    draft = normalize_content_response(json.dumps({
+        "sku": "A-1", "translated_html": "<p>Translated text.</p>",
+        "translated_bullets": translated,
+    }), "A-1", "translate", source_bullet_count=7)
+    assert draft["translated_bullets"] == translated
     assert not draft["review_note"]
 
 

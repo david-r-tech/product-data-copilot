@@ -1,5 +1,9 @@
 # Product Data Copilot - Project Log
 
+## 28 September 2026 — AI bullet contract and source transparency
+
+Creation responses are now deterministically limited to the first five German and translated bullet points, with a local review note when a provider exceeds the contract; shorter outputs remain unchanged and translation-only keeps the source bullet count. Before a paid request, the text workspace now explains which data is sent to OpenAI, shows the actual populated fields for one article through the same `product_facts()` boundary used by generation, summarizes potentially used fields for a whole list, and distinguishes translation-only inputs. Regression tests cover all three paths. The full offline suite passed with 194 tests; no live API request was made.
+
 ## 28 September 2026 — GitHub name aligned with the application
 
 The owner renamed the existing private GitHub repository from `commerce-readiness-ai` to `product-data-copilot`. Its `main` branch still points to commit `d943436`, so the prior history remains attached. The local `origin` was updated to the new URL. No code was pushed and visibility was not changed; the final review and anonymous-access check remain.

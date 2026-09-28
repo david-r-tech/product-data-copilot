@@ -59,6 +59,42 @@ def render_content_workspace(st, products, provider, workbook_writer, has_key):
         bullet_column = None if selected_bullet_column == bullet_options[0] else selected_bullet_column
         st.caption("Vorhandener Text und vorhandene Bullet Points werden übersetzt. Fehlende Angaben werden nicht ergänzt.")
 
+    st.markdown("#### Welche Daten werden an OpenAI gesendet?")
+    by_sku = {source_identifier(row.get("sku")): row for _, row in products.iterrows()}
+    if mode == "create":
+        st.caption(
+            "Pro Artikel werden die SKU zur Zuordnung und die ausgefüllten Produktfelder als Faktenquelle gesendet. "
+            "EAN, Preis und Bild-URL sind ausgeschlossen; zusätzliche ausgefüllte Lieferantenspalten können enthalten sein. "
+            "Die Übermittlung beginnt erst, wenn du den Erstellen-Button anklickst."
+        )
+        if scope == "Einzelner Artikel":
+            selected_sku = selected_skus[0]
+            sent_values = {"sku": selected_sku, **product_facts(by_sku[selected_sku])}
+            st.dataframe(
+                pd.DataFrame([{"Feld": name, "Gesendeter Wert": value} for name, value in sent_values.items()]),
+                hide_index=True, width="stretch", height=220,
+            )
+        else:
+            used_columns = sorted({
+                name
+                for sku in selected_skus
+                for name in product_facts(by_sku[sku])
+            })
+            st.caption(
+                "Die Auswahlregel wird für jeden Artikel einzeln angewendet. Potenziell verwendete ausgefüllte "
+                f"Spalten in dieser Liste: {', '.join(used_columns) if used_columns else 'keine'}."
+            )
+    else:
+        bullet_detail = (
+            f" sowie der Inhalt der Bullet-Point-Spalte „{bullet_column}“"
+            if bullet_column else ""
+        )
+        st.caption(
+            f"Pro Artikel werden nur die SKU zur Zuordnung, der Inhalt der gewählten Textspalte "
+            f"„{source_column}“{bullet_detail} gesendet. Die Übermittlung beginnt erst, wenn du den "
+            "Übersetzen-Button anklickst."
+        )
+
     job_key = json.dumps([mode, language, source_column if mode == "translate" else "",
                           bullet_column if mode == "translate" else ""], ensure_ascii=False)
     jobs = st.session_state.get("content_jobs", {})
@@ -76,7 +112,6 @@ def render_content_workspace(st, products, provider, workbook_writer, has_key):
         if st.button(label, type="primary", width="stretch", key="content_generate"):
             work = pending[:MAX_REQUESTS_PER_CLICK]
             bar = st.progress(0, text="Texte werden erstellt …")
-            by_sku = {source_identifier(row.get("sku")): row for _, row in products.iterrows()}
             for index, sku in enumerate(work, start=1):
                 product = by_sku[sku]
                 if mode == "translate" and not clean_text(product.get(source_column)):

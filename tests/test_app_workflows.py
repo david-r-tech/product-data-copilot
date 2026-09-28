@@ -99,6 +99,7 @@ def test_content_generation_covers_whole_uploaded_file_before_review(valid_produ
     monkeypatch.setattr(app, "request_content_draft", provider)
     at = start_with_rows([valid_product, second])
     assert any("zuerst einen deutschen HTML-Text" in element.value for element in at.info)
+    assert any("Auswahlregel wird für jeden Artikel einzeln angewendet" in element.value for element in at.caption)
     assert any("2 Artikel" in button.label for button in at.button if button.label.startswith("Jetzt Texte für "))
     click_content_start(at)
     assert not at.exception
@@ -150,6 +151,37 @@ def test_content_generation_single_product_and_language(valid_product, monkeypat
     assert "French" in calls[0]
     job = next(iter(at.session_state["content_jobs"].values()))
     assert set(job) == {"SECOND"}
+
+
+def test_content_source_transparency_matches_creation_selection(valid_product):
+    product = {**valid_product, "material_einkauf": "Aluminium", "price": "19.90",
+               "ean": "4006381333931", "image_url": "https://example.invalid/image.jpg"}
+    at = start_with_rows([product])
+    at.radio(key="content_scope").set_value("Einzelner Artikel").run()
+    assert not at.exception
+    assert any("Welche Daten werden an OpenAI gesendet?" in item.value for item in at.markdown)
+    transparency = next(
+        element.value for element in at.dataframe
+        if list(element.value.columns) == ["Feld", "Gesendeter Wert"]
+    )
+    sent_fields = transparency["Feld"].tolist()
+    assert "sku" in sent_fields
+    assert "material_einkauf" in sent_fields
+    assert "price" not in sent_fields
+    assert "ean" not in sent_fields
+    assert "image_url" not in sent_fields
+    assert any("Erstellen-Button" in item.value for item in at.caption)
+
+
+def test_translation_source_transparency_names_only_selected_inputs(valid_product):
+    at = start_with_rows([{**valid_product, "punkte": "A|B"}])
+    at.radio(key="content_task").set_value("Vorhandene Texte übersetzen").run()
+    at.selectbox(key="content_bullet_column").select("punkte").run()
+    assert not at.exception
+    message = next(item.value for item in at.caption if "Übersetzen-Button" in item.value)
+    assert "description" in message
+    assert "punkte" in message
+    assert "Preis" not in message
 
 
 def test_translation_mode_skips_missing_source_without_provider_call(valid_product, monkeypatch):
