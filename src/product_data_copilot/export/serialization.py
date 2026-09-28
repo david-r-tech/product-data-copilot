@@ -65,8 +65,8 @@ def workbook_bytes(sheets):
                 value = _cell_value(value)
                 if isinstance(value, str) and len(value) > 32767:
                     raise ExportError(
-                        f"A cell in {sheet_name} exceeds Excel's 32,767-character limit. "
-                        "Shorten the source text before exporting."
+                        f"Eine Zelle im Tabellenblatt {sheet_name} überschreitet die Excel-Grenze von 32.767 Zeichen. "
+                        "Kürze den Quelltext vor dem Export."
                     )
                 cell = sheet.cell(row_index, column_index, value)
                 if isinstance(value, str):

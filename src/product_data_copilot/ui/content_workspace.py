@@ -16,6 +16,7 @@ LANGUAGE_LABELS = {"en": "Englisch", "fr": "Französisch", "es": "Spanisch"}
 def render_content_workspace(st, products, provider, workbook_writer, has_key):
     st.subheader("Texte erstellen & übersetzen")
     st.caption("Aus deiner hochgeladenen Tabelle werden prüfbare Textentwürfe erstellt. Die Originaldatei bleibt unverändert.")
+    st.info("KI-Entwurf → Quelldaten prüfen → Mensch gibt frei → nur Freigegebenes wird exportiert.")
 
     task_label = st.radio(
         "1. Was möchtest du tun?",

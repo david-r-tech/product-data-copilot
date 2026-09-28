@@ -42,17 +42,17 @@ def test_excel_identifiers_formulas_and_blank_optional_fields_are_preserved():
 
 
 @pytest.mark.parametrize("content,filename,message", [
-    (b"", "a.csv", "empty"),
-    (b"sku,product_name\n", "a.csv", "no product rows"),
-    (b"name,price\nBox,10\n", "a.csv", "Missing required"),
-    (b"sku,product_name\n,Box\n", "a.csv", "Missing SKU"),
-    (b"sku,product_name\nA,Box\n A ,Bag", "a.csv", "Duplicate SKUs"),
-    (b"sku,product_name,SKU\nA,Box,B", "a.csv", "unique"),
-    (b"sku,product_name\nA,Box,extra", "a.csv", "expected 2"),
-    (b'sku,product_name\nA,"unclosed', "a.csv", "malformed"),
+    (b"", "a.csv", "leer"),
+    (b"sku,product_name\n", "a.csv", "keine Produktzeilen"),
+    (b"name,price\nBox,10\n", "a.csv", "Erforderliche Spalte"),
+    (b"sku,product_name\n,Box\n", "a.csv", "SKU.*fehlt"),
+    (b"sku,product_name\nA,Box\n A ,Bag", "a.csv", "doppelte SKUs"),
+    (b"sku,product_name,SKU\nA,Box,B", "a.csv", "eindeutig"),
+    (b"sku,product_name\nA,Box,extra", "a.csv", "erwartet werden 2"),
+    (b'sku,product_name\nA,"unclosed', "a.csv", "fehlerhaft"),
     (b"sku,product_name\nA,\xff", "a.csv", "UTF-8"),
-    (b"not excel", "a.xlsx", "valid, unencrypted"),
-    (b"anything", "a.xls", "CSV or XLSX"),
+    (b"not excel", "a.xlsx", "gültige, unverschlüsselte"),
+    (b"anything", "a.xls", "CSV- oder XLSX"),
 ])
 def test_invalid_files_have_actionable_errors(content, filename, message):
     with pytest.raises(ProductInputError, match=message):
@@ -63,7 +63,7 @@ def test_import_limits_are_enforced():
     with pytest.raises(ProductInputError, match="10 MB"):
         load_product_file(b"x" * (MAX_FILE_BYTES + 1), "a.csv")
     content = "sku,product_name\n" + "\n".join(f"{i},Box" for i in range(MAX_PRODUCTS + 1))
-    with pytest.raises(ProductInputError, match="1,000"):
+    with pytest.raises(ProductInputError, match="1.000"):
         load_product_file(content.encode(), "a.csv")
 
 

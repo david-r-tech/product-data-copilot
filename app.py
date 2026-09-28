@@ -92,94 +92,112 @@ def make_display_safe(dataframe):
 
 DISPLAY_COLUMN_LABELS = {
     "sku": "SKU",
-    "product_name": "Product Name",
-    "category": "Category",
-    "description": "Description",
-    "brand": "Brand",
-    "manufacturer": "Manufacturer",
-    "attributes": "Attributes",
+    "product_name": "Produkt",
+    "category": "Kategorie",
+    "description": "Beschreibung",
+    "brand": "Marke",
+    "manufacturer": "Hersteller",
+    "attributes": "Merkmale",
     "ean": "EAN",
-    "language": "Language",
-    "price": "Price",
-    "image_url": "Image URL",
-    "warning_notes": "Warning Notes",
-    "translation_de": "Translation DE",
-    "translation_en": "Translation EN",
-    "data_quality_score": "Data Quality",
-    "marketplace_readiness_score": "Marketplace Readiness",
-    "translation_readiness_score": "Translation Readiness",
-    "compliance_readiness_score": "Compliance Readiness",
-    "ai_content_readiness_score": "AI Content Readiness",
-    "overall_readiness_score": "Overall Score",
-    "readiness_status": "Readiness Status",
-    "review_status": "Review Status",
-    "issue_type": "Issue Type",
-    "field_name": "Field",
-    "severity": "Severity",
-    "message": "Issue",
-    "recommended_action": "Recommended Action",
-    "task_type": "Task Type",
-    "priority": "Priority",
-    "products": "Products",
-    "tasks": "Tasks",
-    "metric": "Metric",
-    "value": "Value",
-    "target_field": "Field",
-    "field": "Field",
-    "current_value": "Current Value",
-    "proposed_value": "Suggested Value",
-    "suggested_value": "Suggested Value",
-    "original_value": "Original Value",
-    "approved_value": "Approved Value",
-    "source_fields": "Source Fields",
-    "reason": "Reason",
-    "confidence": "Confidence",
-    "risk_level": "Risk",
-    "human_review_status": "Human Review Status",
-    "suggestion_status": "Suggestion State",
-    "approval_status": "Approval Status",
-    "export_status": "Export Status",
-    "suggestion_id": "Suggestion ID",
-    "source": "Source",
+    "language": "Sprache",
+    "price": "Preis",
+    "image_url": "Bild-URL",
+    "warning_notes": "Warnhinweise",
+    "translation_de": "Übersetzung DE",
+    "translation_en": "Übersetzung EN",
+    "data_quality_score": "Datenqualität",
+    "marketplace_readiness_score": "Marktplatz-Reife",
+    "translation_readiness_score": "Übersetzungs-Reife",
+    "compliance_readiness_score": "Compliance-Reife",
+    "ai_content_readiness_score": "KI-Content-Reife",
+    "overall_readiness_score": "Gesamt-Score",
+    "readiness_status": "Readiness-Status",
+    "review_status": "Prüfstatus",
+    "issue_type": "Art der Auffälligkeit",
+    "field_name": "Feld",
+    "severity": "Schweregrad",
+    "message": "Auffälligkeit",
+    "recommended_action": "Nächster Schritt",
+    "task_type": "Aufgabentyp",
+    "priority": "Priorität",
+    "products": "Artikel",
+    "tasks": "Aufgaben",
+    "metric": "Kennzahl",
+    "value": "Wert",
+    "target_field": "Feld",
+    "field": "Feld",
+    "current_value": "Aktueller Wert",
+    "proposed_value": "Vorgeschlagener Wert",
+    "suggested_value": "Vorgeschlagener Wert",
+    "original_value": "Originalwert",
+    "approved_value": "Freigegebener Wert",
+    "source_fields": "Quellfelder",
+    "reason": "Begründung",
+    "confidence": "Konfidenz",
+    "risk_level": "Risiko",
+    "human_review_status": "Menschlicher Prüfstatus",
+    "suggestion_status": "Vorschlagsstatus",
+    "approval_status": "Freigabestatus",
+    "export_status": "Exportstatus",
+    "suggestion_id": "Vorschlags-ID",
+    "source": "Quelle",
 }
 
 TEXT_HEAVY_COLUMNS = {
-    "Description",
-    "Attributes",
-    "Image URL",
-    "Warning Notes",
-    "Translation DE",
-    "Translation EN",
-    "Reason",
-    "Source Fields",
-    "Suggested Value",
-    "Original Value",
-    "Approved Value",
-    "Current Value",
-    "Value",
-    "Source",
+    "Beschreibung",
+    "Merkmale",
+    "Bild-URL",
+    "Warnhinweise",
+    "Übersetzung DE",
+    "Übersetzung EN",
+    "Begründung",
+    "Quellfelder",
+    "Vorgeschlagener Wert",
+    "Originalwert",
+    "Freigegebener Wert",
+    "Aktueller Wert",
+    "Wert",
+    "Quelle",
 }
 SMALL_COLUMNS = {
     "SKU",
-    "Field",
+    "Feld",
     "EAN",
-    "Price",
-    "Language",
-    "Severity",
-    "Priority",
-    "Risk",
-    "Confidence",
-    "Products",
-    "Tasks",
-    "Export Status",
+    "Preis",
+    "Sprache",
+    "Schweregrad",
+    "Priorität",
+    "Risiko",
+    "Konfidenz",
+    "Artikel",
+    "Aufgaben",
+    "Exportstatus",
 }
 SCORE_COLUMNS = {
-    "Data Quality",
-    "Marketplace Readiness",
-    "Translation Readiness",
-    "Compliance Readiness",
-    "AI Content Readiness",
-    "Overall Score",
+    "Datenqualität",
+    "Marktplatz-Reife",
+    "Übersetzungs-Reife",
+    "Compliance-Reife",
+    "KI-Content-Reife",
+    "Gesamt-Score",
+}
+
+DISPLAY_VALUE_LABELS = {
+    "readiness_status": {
+        "Ready": "Bereit",
+        "Critical": "Kritisch",
+        "Needs Review": "Prüfung nötig",
+    },
+    "review_status": {
+        "OK": "OK",
+        "Needs Review": "Prüfung nötig",
+        "Missing Data": "Daten fehlen",
+        "AI Suggestion Created": "KI-Entwurf vorhanden",
+        "Translation Missing": "Übersetzung fehlt",
+        "Compliance Check Required": "Fachprüfung nötig",
+        "Ready for Export": "Keine offenen Regelverstöße",
+        "Rejected": "Abgelehnt",
+    },
 }
 
 
@@ -199,6 +217,10 @@ def prepare_display_dataframe(dataframe, preferred_columns=None):
         display_dataframe = display_dataframe[
             preferred_existing_columns + remaining_columns
         ]
+
+    for column, labels in DISPLAY_VALUE_LABELS.items():
+        if column in display_dataframe:
+            display_dataframe[column] = display_dataframe[column].replace(labels)
 
     return display_dataframe.rename(columns=DISPLAY_COLUMN_LABELS)
 
@@ -279,8 +301,8 @@ def add_core_data_checks(issues, row, sku):
             "Missing product_name",
             "product_name",
             "Critical",
-            "Product name is missing.",
-            "Add a clear product name.",
+            "Produktname fehlt.",
+            "Eine eindeutige Produktbezeichnung ergänzen.",
         )
     elif len(str(product_name).strip()) < 10:
         add_issue(
@@ -289,8 +311,8 @@ def add_core_data_checks(issues, row, sku):
             "Short product_name",
             "product_name",
             "Warning",
-            "Product name is shorter than 10 characters.",
-            "Use a more descriptive product name.",
+            "Der Produktname hat weniger als 10 Zeichen.",
+            "Den Produktnamen aussagekräftiger formulieren.",
         )
     elif is_generic_product_name(product_name):
         add_issue(
@@ -299,8 +321,8 @@ def add_core_data_checks(issues, row, sku):
             "Generic product_name",
             "product_name",
             "Warning",
-            "Product name is too generic for marketplace use.",
-            "Add product type, brand, or key attribute to the title.",
+            "Der Produktname ist für Marktplätze zu allgemein.",
+            "Produkttyp, Marke oder ein wichtiges Merkmal im Titel ergänzen.",
         )
 
     if is_blank(description):
@@ -310,8 +332,8 @@ def add_core_data_checks(issues, row, sku):
             "Missing description",
             "description",
             "Critical",
-            "Product description is missing.",
-            "Add a helpful product description.",
+            "Produktbeschreibung fehlt.",
+            "Eine aussagekräftige Produktbeschreibung ergänzen.",
         )
     elif len(str(description).strip()) < 30:
         add_issue(
@@ -320,8 +342,8 @@ def add_core_data_checks(issues, row, sku):
             "Short description",
             "description",
             "Warning",
-            "Description is shorter than 30 characters.",
-            "Add more detail about the product.",
+            "Die Produktbeschreibung hat weniger als 30 Zeichen.",
+            "Weitere relevante Produktdetails ergänzen.",
         )
 
     if is_blank(brand):
@@ -331,8 +353,8 @@ def add_core_data_checks(issues, row, sku):
             "Missing brand",
             "brand",
             "Warning",
-            "Brand is missing.",
-            "Add the product brand.",
+            "Marke fehlt.",
+            "Die Produktmarke ergänzen.",
         )
 
     if is_blank(ean):
@@ -342,8 +364,8 @@ def add_core_data_checks(issues, row, sku):
             "Missing ean",
             "ean",
             "Critical",
-            "EAN is missing.",
-            "Add a valid product EAN.",
+            "EAN fehlt.",
+            "Eine gültige Produkt-EAN ergänzen.",
         )
     elif not is_valid_ean(ean):
         add_issue(
@@ -352,8 +374,8 @@ def add_core_data_checks(issues, row, sku):
             "Invalid ean",
             "ean",
             "Critical",
-            "EAN format looks invalid.",
-            "Add a valid 8, 12, 13, or 14 digit EAN/GTIN.",
+            "Das EAN-Format ist ungültig.",
+            "Eine gültige 8-, 12-, 13- oder 14-stellige EAN/GTIN ergänzen.",
         )
 
     if is_blank(category):
@@ -363,8 +385,8 @@ def add_core_data_checks(issues, row, sku):
             "Missing category",
             "category",
             "Critical",
-            "Product category is missing.",
-            "Add a clear product category.",
+            "Produktkategorie fehlt.",
+            "Eine eindeutige Produktkategorie ergänzen.",
         )
 
     if is_blank(manufacturer):
@@ -374,8 +396,8 @@ def add_core_data_checks(issues, row, sku):
             "Missing manufacturer",
             "manufacturer",
             "Warning",
-            "Manufacturer is missing.",
-            "Add manufacturer when available.",
+            "Hersteller fehlt.",
+            "Den Hersteller ergänzen, sofern bekannt.",
         )
 
 
@@ -390,8 +412,8 @@ def add_marketplace_checks(issues, row, sku):
             "Missing price",
             "price",
             "Warning",
-            "Product price is missing.",
-            "Add a product price before marketplace review.",
+            "Produktpreis fehlt.",
+            "Vor der Marktplatzprüfung einen Produktpreis ergänzen.",
         )
     elif not is_valid_price(price):
         add_issue(
@@ -400,8 +422,8 @@ def add_marketplace_checks(issues, row, sku):
             "Invalid price",
             "price",
             "Warning",
-            "Product price must be greater than 0.",
-            "Check and correct the product price.",
+            "Der Produktpreis muss größer als 0 sein.",
+            "Den Produktpreis prüfen und korrigieren.",
         )
 
     if not has_useful_attributes(attributes):
@@ -411,8 +433,8 @@ def add_marketplace_checks(issues, row, sku):
             "Missing attributes",
             "attributes",
             "Warning",
-            "Product attributes are missing.",
-            "Add key attributes such as color, size, material, capacity, or dimensions.",
+            "Produktmerkmale fehlen.",
+            "Wichtige Merkmale wie Farbe, Größe, Material, Kapazität oder Maße ergänzen.",
         )
 
 
@@ -433,8 +455,8 @@ def add_content_quality_checks(issues, row, sku):
                 "Generic product_name",
                 "product_name",
                 "Warning",
-                "Product name is too generic for marketplace use.",
-                "Add product type, brand, or key attribute to the title.",
+                "Der Produktname ist für Marktplätze zu allgemein.",
+                "Produkttyp, Marke oder ein wichtiges Merkmal im Titel ergänzen.",
             )
 
 
@@ -449,8 +471,8 @@ def add_translation_checks(issues, row, sku):
             "Missing translation_de",
             "translation_de",
             "Warning",
-            "German translation is missing.",
-            "Add the German product translation.",
+            "Deutsche Übersetzung fehlt.",
+            "Die deutsche Produktübersetzung ergänzen.",
         )
 
     if is_blank(translation_en):
@@ -460,8 +482,8 @@ def add_translation_checks(issues, row, sku):
             "Missing translation_en",
             "translation_en",
             "Warning",
-            "English translation is missing.",
-            "Add the English product translation.",
+            "Englische Übersetzung fehlt.",
+            "Die englische Produktübersetzung ergänzen.",
         )
 
 
@@ -476,8 +498,8 @@ def add_compliance_checks(issues, row, sku):
             "Missing warning_notes",
             "warning_notes",
             "Warning",
-            "Safety-relevant product is missing warning notes.",
-            "Add safety or usage warning notes and review compliance needs.",
+            "Bei diesem sicherheitsrelevanten Produkt fehlen Warnhinweise.",
+            "Sicherheits- oder Nutzungshinweise ergänzen und fachlich prüfen.",
         )
 
 
@@ -491,8 +513,8 @@ def add_media_checks(issues, row, sku):
             "Missing image_url",
             "image_url",
             "Info",
-            "Image URL is missing.",
-            "Add a product image URL.",
+            "Bild-URL fehlt.",
+            "Eine Produktbild-URL ergänzen.",
         )
     elif is_suspicious_image_url(image_url):
         add_issue(
@@ -501,8 +523,8 @@ def add_media_checks(issues, row, sku):
             "Image URL suspicious",
             "image_url",
             "Info",
-            "Image URL looks incomplete or non-public.",
-            "Add a complete public image URL.",
+            "Die Bild-URL wirkt unvollständig oder nicht öffentlich erreichbar.",
+            "Eine vollständige, öffentlich erreichbare Bild-URL ergänzen.",
         )
 
 
@@ -918,8 +940,8 @@ def run_app():
         products = load_product_file(file_bytes, filename)
     except (ProductInputError, OSError) as error:
         bind_dataset(st.session_state, None)
-        st.error(str(error) if isinstance(error, ProductInputError) else "The sample file could not be loaded.")
-        st.info("Correct the file and upload it again. No product decisions or exports were created.")
+        st.error(str(error) if isinstance(error, ProductInputError) else "Die Beispieldatei konnte nicht geladen werden.")
+        st.info("Korrigiere die Datei und lade sie erneut hoch. Es wurden keine Prüfentscheidungen oder Exporte erstellt.")
         return
     bind_dataset(st.session_state, dataset_fingerprint(file_bytes, data_source + ":" + filename))
 

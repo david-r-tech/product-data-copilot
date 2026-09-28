@@ -30,18 +30,18 @@ def dataset_fingerprint(content, source_name):
 def validate_product_identity(products):
     """Reject ambiguous product identity before issues or decisions are assigned."""
     if "sku" not in products:
-        raise ProductInputError("The file must contain a sku column.")
+        raise ProductInputError("Die Datei muss eine Spalte namens sku enthalten.")
     skus = products["sku"].fillna("").astype(str).str.strip()
     if skus.eq("").any():
         rows = [str(i + 2) for i, blank in enumerate(skus.eq("")) if blank]
         raise ProductInputError(
-            "Every product needs a SKU. Missing SKU in data row(s): "
-            + ", ".join(rows[:10]) + ". Correct the file and upload it again."
+            "Jeder Artikel benötigt eine SKU. Sie fehlt in den Datenzeilen: "
+            + ", ".join(rows[:10]) + ". Korrigiere die Datei und lade sie erneut hoch."
         )
     if skus.duplicated(keep=False).any():
         raise ProductInputError(
-            "SKUs must be unique. Duplicate SKUs were found; correct the file "
-            "before reviewing products."
+            "SKUs müssen eindeutig sein. Es wurden doppelte SKUs gefunden; korrigiere "
+            "die Datei vor der Produktprüfung."
         )
 
 
@@ -52,28 +52,28 @@ def load_product_file(content, filename):
     text is retained; optional absent columns are handled by the rule engine.
     """
     if not content:
-        raise ProductInputError("The file is empty. Upload a file with product rows.")
+        raise ProductInputError("Die Datei ist leer. Lade eine Datei mit Produktzeilen hoch.")
     if len(content) > MAX_FILE_BYTES:
-        raise ProductInputError("The file exceeds the local MVP limit of 10 MB.")
+        raise ProductInputError("Die Datei überschreitet die Grenze dieses lokalen MVP von 10 MB.")
     suffix = Path(filename).suffix.lower()
     if suffix == ".csv":
         rows = _read_csv_rows(content)
     elif suffix == ".xlsx":
         rows = _read_excel_rows(content)
     else:
-        raise ProductInputError("Use a CSV or XLSX file.")
+        raise ProductInputError("Verwende eine CSV- oder XLSX-Datei.")
     if not rows:
-        raise ProductInputError("The file has no header or product rows.")
+        raise ProductInputError("Die Datei enthält keine Kopfzeile oder Produktzeilen.")
     headers = [str(value).strip().lower() for value in rows[0]]
     if len(headers) > MAX_COLUMNS:
-        raise ProductInputError("Use at most 100 columns per product file.")
+        raise ProductInputError("Verwende höchstens 100 Spalten pro Produktdatei.")
     if any(not header for header in headers) or len(set(headers)) != len(headers):
-        raise ProductInputError("Column names must be non-empty and unique.")
+        raise ProductInputError("Spaltennamen müssen ausgefüllt und eindeutig sein.")
     missing = sorted(REQUIRED_COLUMNS - set(headers))
     if missing:
         raise ProductInputError(
-            "Missing required column(s): " + ", ".join(missing)
-            + ". Use the sample file as the column template."
+            "Erforderliche Spalte(n) fehlen: " + ", ".join(missing)
+            + ". Verwende die Beispieldatei als Spaltenvorlage."
         )
     records = []
     for row_number, row in enumerate(rows[1:], start=2):
@@ -81,14 +81,14 @@ def load_product_file(content, filename):
             continue
         if len(row) != len(headers):
             raise ProductInputError(
-                f"Row {row_number} has {len(row)} cells; expected {len(headers)}. "
-                "Check the delimiter and quote text containing delimiters."
+                f"Zeile {row_number} hat {len(row)} Zellen; erwartet werden {len(headers)}. "
+                "Prüfe das Trennzeichen und setze Texte mit Trennzeichen in Anführungszeichen."
             )
         records.append(row)
     if not records:
-        raise ProductInputError("The file contains headers but no product rows.")
+        raise ProductInputError("Die Datei enthält Spaltenüberschriften, aber keine Produktzeilen.")
     if len(records) > MAX_PRODUCTS:
-        raise ProductInputError("Use at most 1,000 products per file in this local MVP.")
+        raise ProductInputError("Verwende in diesem lokalen MVP höchstens 1.000 Artikel pro Datei.")
     products = pd.DataFrame(records, columns=headers, dtype=str)
     products["sku"] = products["sku"].str.strip()
     validate_product_identity(products)
@@ -99,7 +99,7 @@ def _read_csv_rows(content):
     try:
         text = content.decode("utf-8-sig")
     except UnicodeDecodeError as error:
-        raise ProductInputError("Save the CSV as UTF-8, then upload it again.") from error
+        raise ProductInputError("Speichere die CSV als UTF-8 und lade sie erneut hoch.") from error
     header_line = text.splitlines()[0] if text.splitlines() else ""
     try:
         delimiter = csv.Sniffer().sniff(header_line, delimiters=",;\t").delimiter
@@ -108,7 +108,7 @@ def _read_csv_rows(content):
     try:
         return list(csv.reader(StringIO(text, newline=""), delimiter=delimiter, strict=True))
     except csv.Error as error:
-        raise ProductInputError("The CSV is malformed. Check its quotes and delimiters.") from error
+        raise ProductInputError("Die CSV ist fehlerhaft. Prüfe Anführungszeichen und Trennzeichen.") from error
 
 
 def _read_excel_rows(content):
@@ -116,7 +116,7 @@ def _read_excel_rows(content):
     try:
         with ZipFile(BytesIO(content)) as archive:
             if sum(info.file_size for info in archive.infolist()) > MAX_UNCOMPRESSED_BYTES:
-                raise ProductInputError("The expanded workbook is too large for this local MVP.")
+                raise ProductInputError("Die entpackte Arbeitsmappe ist für dieses lokale MVP zu groß.")
         workbook = load_workbook(BytesIO(content), read_only=True, data_only=False)
         sheet = workbook.worksheets[0]
         # Do not trust inflated worksheet dimensions written by other tools.
@@ -124,10 +124,10 @@ def _read_excel_rows(content):
         rows = []
         for row in sheet.iter_rows(values_only=True):
             if len(row) > MAX_COLUMNS:
-                raise ProductInputError("Use at most 100 columns per product file.")
+                raise ProductInputError("Verwende höchstens 100 Spalten pro Produktdatei.")
             rows.append(["" if value is None else str(value) for value in row])
             if len(rows) > MAX_PRODUCTS + 1:
-                raise ProductInputError("Use at most 1,000 products per file in this local MVP.")
+                raise ProductInputError("Verwende in diesem lokalen MVP höchstens 1.000 Artikel pro Datei.")
         # XLSX rows omit trailing empty cells. Pad to the header width only.
         if rows:
             rows = [row + [""] * max(0, len(rows[0]) - len(row)) for row in rows]
@@ -135,7 +135,9 @@ def _read_excel_rows(content):
     except ProductInputError:
         raise
     except (BadZipFile, InvalidFileException, ParseError, ValueError, KeyError, IndexError, OSError) as error:
-        raise ProductInputError("The Excel file could not be read. Upload a valid, unencrypted XLSX workbook.") from error
+        raise ProductInputError(
+            "Die Excel-Datei konnte nicht gelesen werden. Lade eine gültige, unverschlüsselte XLSX-Arbeitsmappe hoch."
+        ) from error
     finally:
         if workbook is not None:
             workbook.close()

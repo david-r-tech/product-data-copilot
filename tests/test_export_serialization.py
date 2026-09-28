@@ -25,7 +25,7 @@ def test_controls_are_visible_escapes_and_long_text_is_not_silently_truncated():
     workbook = load_workbook(BytesIO(workbook_bytes({"Data": data})))
     assert workbook["Data"]["A2"].value == r"Before\u000bAfter"
     assert data.iloc[0, 0] == "Before\x0bAfter"
-    with pytest.raises(ExportError, match="32,767"):
+    with pytest.raises(ExportError, match="32.767"):
         workbook_bytes({"Data": pd.DataFrame({"text": ["x" * 32768]})})
 
 

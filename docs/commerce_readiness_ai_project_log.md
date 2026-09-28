@@ -1,5 +1,9 @@
 # Product Data Copilot - Project Log
 
+## 28 September 2026 — German UX language and workflow consistency
+
+Polished the current three-tab interface without changing its business behavior. Visible audit messages, correction steps, upload and export errors, table headings, score headings, and displayed review/readiness statuses now use concise German wording while internal issue types, status values, source columns, severities, scoring, AI behavior, approvals, and workbook contracts remain unchanged. The text workspace now states the review path from AI draft through source-data checking and human approval to approved-only export. Regression coverage verifies German presentation, stable internal identifiers, safe bad-upload handling, and the existing approval workflow. The complete offline suite passed with 196 tests; no live API request was made.
+
 ## 28 September 2026 — AI bullet contract and source transparency
 
 Creation responses are now deterministically limited to the first five German and translated bullet points, with a local review note when a provider exceeds the contract; shorter outputs remain unchanged and translation-only keeps the source bullet count. Before a paid request, the text workspace now explains which data is sent to OpenAI, shows the actual populated fields for one article through the same `product_facts()` boundary used by generation, summarizes potentially used fields for a whole list, and distinguishes translation-only inputs. Regression tests cover all three paths. The full offline suite passed with 194 tests; no live API request was made.

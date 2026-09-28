@@ -54,6 +54,10 @@ def test_sample_start_and_runtime_have_no_demo_controls():
     assert all("demo" not in button.label.lower() for button in at.button)
     assert not hasattr(app, "load_smart_suggestions_v2_demo_response")
     assert any("fiktive" in element.value for element in at.info)
+    assert any(
+        element.value == "KI-Entwurf → Quelldaten prüfen → Mensch gibt frei → nur Freigegebenes wird exportiert."
+        for element in at.info
+    )
     issues_table = next(
         element.value for element in at.dataframe
         if {"Schweregrad", "Problem", "Nächster Schritt"}.issubset(element.value.columns)
@@ -63,6 +67,38 @@ def test_sample_start_and_runtime_have_no_demo_controls():
         {"SKU", "Produkt", "Schweregrad", "Problem", "Nächster Schritt"}.issubset(table.value.columns)
         for table in at.dataframe
     )
+
+
+def test_visible_issue_messages_are_german_but_internal_identifiers_stay_stable(valid_product):
+    products = pd.DataFrame([{**valid_product, "description": "", "price": "0"}])
+    issues = app.find_product_issues(products).set_index("issue_type")
+    assert issues.loc["Missing description", "message"] == "Produktbeschreibung fehlt."
+    assert issues.loc["Missing description", "recommended_action"] == (
+        "Eine aussagekräftige Produktbeschreibung ergänzen."
+    )
+    assert issues.loc["Invalid price", "message"] == "Der Produktpreis muss größer als 0 sein."
+    assert issues.loc["Invalid price", "severity"] == "Warning"
+
+
+def test_display_labels_are_german_without_renaming_source_columns():
+    source = pd.DataFrame([{
+        "product_name": "Box", "category": "Aufbewahrung", "description": "Text",
+        "brand": "Marke", "manufacturer": "Hersteller", "attributes": "Farbe: Blau",
+        "price": "10", "severity": "Warning", "priority": "Medium",
+        "recommended_action": "Prüfen", "review_status": "Needs Review",
+        "readiness_status": "Needs Review", "overall_readiness_score": 80,
+    }])
+    original_columns = source.columns.tolist()
+    displayed = app.prepare_display_dataframe(source)
+    assert displayed.columns.tolist() == [
+        "Produkt", "Kategorie", "Beschreibung", "Marke", "Hersteller", "Merkmale",
+        "Preis", "Schweregrad", "Priorität", "Nächster Schritt", "Prüfstatus",
+        "Readiness-Status", "Gesamt-Score",
+    ]
+    assert displayed.iloc[0]["Prüfstatus"] == "Prüfung nötig"
+    assert displayed.iloc[0]["Readiness-Status"] == "Prüfung nötig"
+    assert source.columns.tolist() == original_columns
+    assert source.iloc[0]["review_status"] == "Needs Review"
 
 
 def test_explicit_supplier_attribute_conflict_appears_in_correction_list(valid_product):
@@ -209,6 +245,11 @@ def test_bad_uploads_show_an_error_without_a_traceback(content, filename):
     assert not at.exception
     assert len(at.error) == 1
     assert len(at.tabs) == 0
+    assert all(
+        english not in at.error[0].value
+        for english in ("The file", "Upload", "Missing required", "Every product", "Use a", "Row ")
+    )
+    assert any("Korrigiere die Datei" in element.value for element in at.info)
 
 
 def test_file_switch_clears_content_drafts_for_same_sku(valid_product):
@@ -247,7 +288,7 @@ def test_control_characters_and_long_cells_do_not_crash_the_app(valid_product):
     assert not at.exception
     at = start_with_rows([{**valid_product, "description": "x" * 32768}])
     assert not at.exception
-    assert any("32,767" in element.value for element in at.error)
+    assert any("32.767" in element.value for element in at.error)
 
 
 def test_critical_issues_cannot_be_averaged_into_ready(valid_product):
