@@ -6,11 +6,12 @@ The data check also flags differing explicit material, colour, and surface value
 
 The latest complete local run passed **196 automated tests** on 28 September 2026 in Python 3.14.4, including approval and export checks. Full-file and single-product flows, translation inputs, safe HTML, dataset changes, workbook contents, and the OpenAI SDK boundary are covered. During final acceptance, exactly one paid creation request for fictional `APP-001` returned German HTML and five German bullets plus English HTML and five English bullets. Every generated factual claim was manually compared with the source data, and no unsupported factual claim was found in this one controlled test. This single example does not prove reliability across products, languages, models, or future outputs. The approved-only gate was checked with fictional offline responses; its workbook contained only the approved SKU in both sheets. Microsoft Excel's visual rendering remains unverified.
 
-## Before publishing or sharing the repository
+## Current release state
 
-1. Open the approved-only text workbook and the management workbook in Microsoft Excel and inspect their visual layout. In the live app, manually perform approve → reject → approve while navigating between generated articles.
-2. The implementation is committed and pushed. Confirm that the repository still shows PRIVATE before publication. After publication, verify that its exact URL opens anonymously without signing in.
-3. Confirm that any external product description matches the current [README](../README.md).
+1. The implementation is committed and pushed.
+2. The repository is public at `https://github.com/david-r-tech/product-data-copilot`.
+3. Visual inspection of the approved-only text workbook and management workbook in Microsoft Excel remains a manual acceptance check.
+4. Any external product description should match the current [README](../README.md).
 
 Drafts last only for the Streamlit session. Each product starts one paid API request when explicitly generated, with at most one provider retry; up to 100 are processed per click. There are no accounts, database, hosted service, marketplace integrations, automatic approval, source write-back, or compliance guarantees.
 
