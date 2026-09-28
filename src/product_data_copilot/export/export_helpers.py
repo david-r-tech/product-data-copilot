@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-MANAGEMENT_EXPORT_FILENAME = "commerce_readiness_ai_management_export.xlsx"
+MANAGEMENT_EXPORT_FILENAME = "product_data_copilot_management_export.xlsx"
 
 MANAGEMENT_EXPORT_SHEETS = [
     "Management Summary",

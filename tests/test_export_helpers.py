@@ -35,7 +35,7 @@ from product_data_copilot.export.export_helpers import (  # noqa: E402
 
 
 def test_management_export_filename_is_stable():
-    assert MANAGEMENT_EXPORT_FILENAME == "commerce_readiness_ai_management_export.xlsx"
+    assert MANAGEMENT_EXPORT_FILENAME == "product_data_copilot_management_export.xlsx"
 
 
 def test_management_export_sheet_order_is_stable():
