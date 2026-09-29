@@ -1,12 +1,10 @@
 import base64
-import os
 import sys
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
-from openai import OpenAI
 
 SRC_PATH = Path(__file__).resolve().parent / "src"
 if str(SRC_PATH) not in sys.path:
@@ -22,6 +20,7 @@ from product_data_copilot.rules.validators import (  # noqa: E402
     is_valid_price,
     normalize_text as source_text,
 )
+from product_data_copilot.ai.provider import has_openai_api_key, request_content_draft  # noqa: E402
 from product_data_copilot.rules.attribute_consistency import explicit_attribute_conflicts  # noqa: E402
 from product_data_copilot.scoring.scoring_helpers import (  # noqa: E402
     readiness_status_from_score as get_readiness_status,
@@ -810,18 +809,6 @@ def get_product_option(row):
     return f"{sku} - {product_name} - Score {score}"
 
 
-def request_content_draft(prompt):
-    """One paid, JSON-constrained request for one product."""
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=45.0, max_retries=1)
-    response = client.responses.create(
-        model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
-        input=prompt,
-        max_output_tokens=3000,
-        text={"format": {"type": "json_object"}},
-    )
-    return response.output_text.strip()
-
-
 def create_management_summary(
     data_source,
     products,
@@ -1197,7 +1184,7 @@ def run_app():
     with tabs[1]:
         render_content_workspace(
             st, products, request_content_draft, workbook_bytes,
-            has_key=bool(os.getenv("OPENAI_API_KEY")),
+            has_key=has_openai_api_key(),
         )
 
 if __name__ == "__main__":

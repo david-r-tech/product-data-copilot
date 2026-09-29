@@ -28,7 +28,7 @@ def no_provider_calls(monkeypatch):
     def fail_provider(*args, **kwargs):
         raise AssertionError("Tests must not send product data to a provider")
 
-    monkeypatch.setattr(app, "OpenAI", fail_provider)
+    monkeypatch.setattr(app, "request_content_draft", fail_provider)
 
 
 def start_with_rows(rows):
