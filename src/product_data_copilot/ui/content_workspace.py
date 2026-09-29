@@ -32,7 +32,8 @@ def render_content_workspace(st, products, provider, workbook_writer, has_key):
     if mode == "create":
         st.info(
             "So entsteht der Text: Die KI liest pro Artikel die ausgefüllten Angaben deiner Tabelle "
-            "(z. B. Name, Beschreibung, Material, Farbe und weitere Merkmale). Daraus schreibt sie zuerst "
+            "aus einer festen Auswahl bekannter Produktfelder (z. B. Name, Beschreibung, Material und Farbe). "
+            "Daraus schreibt sie zuerst "
             "einen deutschen HTML-Text und bis zu fünf deutsche Bullet Points. Danach übersetzt sie "
             "den vollständigen Text und die Bullet Points in die gewählte Sprache."
         )
@@ -68,8 +69,9 @@ def render_content_workspace(st, products, provider, workbook_writer, has_key):
     by_sku = {source_identifier(row.get("sku")): row for _, row in products.iterrows()}
     if mode == "create":
         st.caption(
-            "Pro Artikel werden die SKU zur Zuordnung und die ausgefüllten Produktfelder als Faktenquelle gesendet. "
-            "EAN, Preis und Bild-URL sind ausgeschlossen; zusätzliche ausgefüllte Lieferantenspalten können enthalten sein. "
+            "Pro Artikel werden die SKU zur Zuordnung und nur ausgefüllte Felder aus einer festen Auswahl "
+            "bekannter Produktfelder und Feldnamen als Faktenquelle gesendet. Unbekannte oder zusätzliche Spalten "
+            "sowie EAN, Preis und Bild-URL sind ausgeschlossen. "
             "Die Übermittlung beginnt erst, wenn du den Erstellen-Button anklickst."
         )
         if scope == "Einzelner Artikel":

@@ -214,7 +214,7 @@ def test_content_generation_single_product_and_language(valid_product, monkeypat
 
 
 def test_content_source_transparency_matches_creation_selection(valid_product):
-    product = {**valid_product, "material_einkauf": "Aluminium", "price": "19.90",
+    product = {**valid_product, "material": "Aluminium", "internal_margin": "SECRET", "price": "19.90",
                "ean": "4006381333931", "image_url": "https://example.invalid/image.jpg"}
     at = start_with_rows([product])
     at.radio(key="content_scope").set_value("Einzelner Artikel").run()
@@ -226,7 +226,8 @@ def test_content_source_transparency_matches_creation_selection(valid_product):
     )
     sent_fields = transparency["Feld"].tolist()
     assert "sku" in sent_fields
-    assert "material_einkauf" in sent_fields
+    assert "material" in sent_fields
+    assert "internal_margin" not in sent_fields
     assert "price" not in sent_fields
     assert "ean" not in sent_fields
     assert "image_url" not in sent_fields
