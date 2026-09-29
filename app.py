@@ -11,23 +11,18 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 from product_data_copilot.rules.validators import (  # noqa: E402
-    has_useful_attributes,
     is_blank,
-    is_safety_relevant_category,
-    is_suspicious_image_url,
-    is_valid_ean,
-    is_valid_price,
     normalize_text as source_text,
 )
 from product_data_copilot.ai.provider import has_openai_api_key, request_content_draft  # noqa: E402
 from product_data_copilot.rules.product_checks import find_product_issues, prioritize_issues  # noqa: E402
-from product_data_copilot.scoring.scoring_helpers import (  # noqa: E402
-    readiness_status_from_score as get_readiness_status,
-    score_from_checks,
+from product_data_copilot.scoring.product_scoring import (  # noqa: E402
+    calculate_product_scores,
+    calculate_readiness_scores,
+    get_review_status,
 )
 from product_data_copilot.review.review_helpers import (  # noqa: E402
     ALLOWED_REVIEW_STATUSES as REVIEW_STATUS_OPTIONS,
-    derive_review_status,
     issue_to_task_type,
     severity_to_task_priority as get_task_priority,
 )
@@ -46,7 +41,6 @@ from product_data_copilot.data.product_input import (  # noqa: E402
     ProductInputError,
     dataset_fingerprint,
     load_product_file,
-    validate_product_identity,
 )
 from product_data_copilot.export.serialization import (  # noqa: E402
     ExportError,
@@ -269,145 +263,6 @@ def render_readable_dataframe(
         height=height,
         column_config=get_display_column_config(display_dataframe),
     )
-
-
-def get_review_status(product_issues, readiness_status):
-    issue_types = product_issues["issue_type"].tolist()
-    severities = product_issues["severity"].tolist()
-    return derive_review_status(issue_types, severities, readiness_status)
-
-
-def calculate_product_scores(row):
-    sku = get_value(row, "sku")
-    product_name = get_value(row, "product_name")
-    category = get_value(row, "category")
-    description = get_value(row, "description")
-    brand = get_value(row, "brand")
-    ean = get_value(row, "ean")
-    image_url = get_value(row, "image_url")
-    warning_notes = get_value(row, "warning_notes")
-    translation_de = get_value(row, "translation_de")
-    translation_en = get_value(row, "translation_en")
-    manufacturer = get_value(row, "manufacturer")
-    price = get_value(row, "price")
-    attributes = get_value(row, "attributes")
-
-    data_quality_score = score_from_checks(
-        [
-            not is_blank(sku),
-            not is_blank(product_name),
-            not is_blank(description),
-            not is_blank(brand),
-            not is_blank(category),
-            not is_blank(manufacturer),
-            not is_blank(ean) and is_valid_ean(ean),
-        ]
-    )
-
-    marketplace_readiness_score = score_from_checks(
-        [
-            not is_blank(product_name),
-            not is_blank(description),
-            not is_blank(brand),
-            not is_blank(ean) and is_valid_ean(ean),
-            not is_blank(image_url) and not is_suspicious_image_url(image_url),
-            not is_blank(category),
-            is_valid_price(price),
-            has_useful_attributes(attributes),
-        ]
-    )
-
-    translation_readiness_score = score_from_checks(
-        [
-            not is_blank(translation_de),
-            not is_blank(translation_en),
-        ]
-    )
-
-    if is_safety_relevant_category(category):
-        compliance_readiness_score = 100 if not is_blank(warning_notes) else 0
-    else:
-        compliance_readiness_score = 100
-
-    ai_content_readiness_score = score_from_checks(
-        [
-            not is_blank(product_name),
-            not is_blank(description),
-            not is_blank(brand),
-            not is_blank(description) and len(str(description).strip()) >= 30,
-            has_useful_attributes(attributes),
-            sum(
-                [
-                    not is_blank(product_name),
-                    not is_blank(description),
-                    not is_blank(brand),
-                    has_useful_attributes(attributes),
-                ]
-            )
-            >= 3,
-        ]
-    )
-
-    overall_readiness_score = round(
-        (data_quality_score * 0.35)
-        + (marketplace_readiness_score * 0.25)
-        + (translation_readiness_score * 0.15)
-        + (compliance_readiness_score * 0.15)
-        + (ai_content_readiness_score * 0.10)
-    )
-
-    return {
-        "data_quality_score": data_quality_score,
-        "marketplace_readiness_score": marketplace_readiness_score,
-        "translation_readiness_score": translation_readiness_score,
-        "compliance_readiness_score": compliance_readiness_score,
-        "ai_content_readiness_score": ai_content_readiness_score,
-        "overall_readiness_score": overall_readiness_score,
-    }
-
-
-def calculate_readiness_scores(products, issues):
-    validate_product_identity(products)
-    scores = []
-
-    for row_number, row in products.iterrows():
-        sku = get_value(row, "sku")
-
-        if is_blank(sku):
-            sku = f"Row {row_number + 1}"
-
-        product_name = get_value(row, "product_name")
-        product_issues = issues[issues["sku"] == sku]
-        product_scores = calculate_product_scores(row)
-        readiness_status = get_readiness_status(
-            product_scores["overall_readiness_score"], product_issues["severity"]
-        )
-        review_status = get_review_status(product_issues, readiness_status)
-
-        scores.append(
-            {
-                "sku": sku,
-                "product_name": product_name,
-                "data_quality_score": product_scores["data_quality_score"],
-                "marketplace_readiness_score": product_scores[
-                    "marketplace_readiness_score"
-                ],
-                "translation_readiness_score": product_scores[
-                    "translation_readiness_score"
-                ],
-                "compliance_readiness_score": product_scores[
-                    "compliance_readiness_score"
-                ],
-                "ai_content_readiness_score": product_scores[
-                    "ai_content_readiness_score"
-                ],
-                "overall_readiness_score": product_scores["overall_readiness_score"],
-                "readiness_status": readiness_status,
-                "review_status": review_status,
-            }
-        )
-
-    return pd.DataFrame(scores)
 
 
 def apply_manual_review_overrides(readiness_scores):
