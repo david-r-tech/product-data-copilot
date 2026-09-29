@@ -14,7 +14,7 @@ Start with the repository [README](../README.md) to install and run Product Data
 
 ## Engineering
 
-- [Architecture blueprint](master_product_architecture_blueprint.md): product boundaries and modular architecture direction.
-- [Codebase refactor inventory](codebase_refactor_inventory.md): responsibilities, technical risks, and extraction priorities.
+- [Architecture blueprint](master_product_architecture_blueprint.md): historical product boundaries and modular architecture direction; not the current module map.
+- [Codebase refactor inventory](codebase_refactor_inventory.md): historical pre-extraction assessment and priorities; not the current implementation inventory.
 
 Git history preserves superseded plans, QA scripts, and implementation notes that no longer describe the current product.

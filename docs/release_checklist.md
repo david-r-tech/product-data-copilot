@@ -1,4 +1,4 @@
-# Release checklist — 28 September 2026
+# Release checklist — 29 September 2026
 
 Use this checklist to verify Product Data Copilot before sharing it. The current contract is in the [README](../README.md) and [requirements traceability](requirements_traceability.md).
 
@@ -6,7 +6,8 @@ Use this checklist to verify Product Data Copilot before sharing it. The current
 
 - [x] App starts with fictional sample data; three workflow tabs are available.
 - [x] Old fixture and Quick Drafts controls are absent from the current UI.
-- [x] 196 automated tests passed on 28 September 2026 in Python 3.14.4, including generation, individual approval after whole-list creation, approved-only export, translation input, workbook safety, and an offline OpenAI SDK request.
+- [x] 231 automated tests passed on 29 September 2026 in Python 3.14.4, including extracted-module boundaries, generation, individual approval after whole-list creation, approved-only export, translation input, workbook safety, malformed responses, and offline OpenAI SDK success and failure paths.
+- [x] GitHub Actions verifies dependency consistency, compilation of `app.py` and `src`, and pytest on Windows and Ubuntu with Python 3.14.
 - [x] Exactly one paid creation request during final acceptance used fictional `APP-001` and returned German HTML with five German bullets plus English HTML with five English bullets. Every generated factual claim was manually compared with the source data, and no unsupported factual claim was found in this one controlled test. This does not prove reliability across products, languages, models, or future outputs.
 - [x] A live translation-only call returned French text and two translated source bullets.
 - [x] A live creation request completed in the browser UI before the approval gate. Its earlier text workbook contained exactly two sheets, 25 product rows, five German and five English bullets for `APP-001`, and no formula cells.
