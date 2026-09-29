@@ -21,10 +21,13 @@ from product_data_copilot.scoring.product_scoring import (  # noqa: E402
     calculate_readiness_scores,
     get_review_status,
 )
-from product_data_copilot.review.review_helpers import (  # noqa: E402
-    ALLOWED_REVIEW_STATUSES as REVIEW_STATUS_OPTIONS,
-    issue_to_task_type,
-    severity_to_task_priority as get_task_priority,
+from product_data_copilot.review.review_pipeline import (  # noqa: E402
+    allowed_manual_review_statuses,
+    apply_manual_review_overrides as apply_review_overrides,
+    create_review_tasks,
+    filter_review_tasks,
+    get_filter_options,
+    get_task_type,
 )
 from product_data_copilot.export.export_helpers import (  # noqa: E402
     MANAGEMENT_EXPORT_FILENAME,
@@ -268,76 +271,10 @@ def render_readable_dataframe(
 def apply_manual_review_overrides(readiness_scores):
     if "manual_review_status_overrides" not in st.session_state:
         st.session_state["manual_review_status_overrides"] = {}
-
-    updated_scores = readiness_scores.copy()
-
-    for sku, manual_status in st.session_state["manual_review_status_overrides"].items():
-        product_mask = updated_scores["sku"] == sku
-        if manual_status in {"OK", "Ready for Export"}:
-            product_mask &= updated_scores["readiness_status"] == "Ready"
-        updated_scores.loc[
-            product_mask,
-            "review_status",
-        ] = manual_status
-
-    return updated_scores
-
-
-def get_task_type(issue):
-    return issue_to_task_type(issue["issue_type"], issue["severity"])
-
-
-def create_review_tasks(issues, readiness_scores):
-    tasks = []
-    product_details = readiness_scores.set_index("sku")[["product_name", "review_status"]].to_dict("index")
-
-    for _, issue in issues.iterrows():
-        product = product_details.get(issue["sku"], {})
-        product_name = product.get("product_name", "")
-        review_status = product.get("review_status", "Needs Review")
-
-        tasks.append(
-            {
-                "sku": issue["sku"],
-                "product_name": product_name,
-                "issue_type": issue["issue_type"],
-                "field_name": issue["field_name"],
-                "task_type": get_task_type(issue),
-                "priority": get_task_priority(issue["severity"]),
-                "recommended_action": issue["recommended_action"],
-                "review_status": review_status,
-            }
-        )
-
-    return pd.DataFrame(
-        tasks,
-        columns=[
-            "sku",
-            "product_name",
-            "issue_type",
-            "field_name",
-            "task_type",
-            "priority",
-            "recommended_action",
-            "review_status",
-        ],
+    return apply_review_overrides(
+        readiness_scores,
+        st.session_state["manual_review_status_overrides"],
     )
-
-
-def get_filter_options(dataframe, column_name):
-    if len(dataframe) == 0 or column_name not in dataframe.columns:
-        return []
-
-    values = dataframe[column_name].dropna().astype(str).unique().tolist()
-    return sorted(values)
-
-
-def filter_review_tasks(review_tasks, selected_priorities, selected_task_types, selected_statuses):
-    return review_tasks[
-        review_tasks["priority"].isin(selected_priorities)
-        & review_tasks["task_type"].isin(selected_task_types)
-        & review_tasks["review_status"].isin(selected_statuses)
-    ].copy()
 
 
 def get_product_option(row):
@@ -635,11 +572,9 @@ def run_app():
             readiness_scores["sku"] == selected_review_sku
         ].iloc[0]
         current_manual_status = selected_review_score["review_status"]
-        allowed_manual_statuses = [
-            status for status in REVIEW_STATUS_OPTIONS
-            if selected_review_score["readiness_status"] == "Ready"
-            or status not in {"OK", "Ready for Export"}
-        ]
+        allowed_manual_statuses = allowed_manual_review_statuses(
+            selected_review_score["readiness_status"]
+        )
         status_labels = {
             "OK": "OK",
             "Needs Review": "Prüfung nötig",
