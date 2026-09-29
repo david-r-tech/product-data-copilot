@@ -9,7 +9,10 @@ permissions:
 
 jobs:
   test:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -21,6 +24,6 @@ jobs:
       - name: Check dependencies
         run: python -m pip check
       - name: Check syntax
-        run: python -m py_compile app.py
+        run: python -m compileall -q app.py src
       - name: Run tests
         run: python -m pytest -q -p no:cacheprovider
