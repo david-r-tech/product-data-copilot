@@ -3,8 +3,10 @@
 import inspect
 
 import pandas as pd
+import pytest
 
 import app
+from product_data_copilot.data.product_input import ProductInputError
 from product_data_copilot.rules.product_checks import find_product_issues
 from product_data_copilot.scoring import product_scoring
 
@@ -90,3 +92,17 @@ def test_missing_optional_columns_keep_existing_defaults():
         "ai_content_readiness_score": 17,
         "overall_readiness_score": 30,
     }
+
+
+@pytest.mark.parametrize("products", [
+    pd.DataFrame([
+        {"sku": "DUPLICATE", "product_name": "First"},
+        {"sku": "DUPLICATE", "product_name": "Second"},
+    ]),
+    pd.DataFrame([{"sku": " ", "product_name": "Blank identity"}]),
+])
+def test_readiness_pipeline_rejects_ambiguous_product_identity(products):
+    issues = pd.DataFrame(columns=["sku", "issue_type", "severity"])
+
+    with pytest.raises(ProductInputError):
+        product_scoring.calculate_readiness_scores(products, issues)

@@ -69,6 +69,16 @@ def test_creation_response_requires_matching_sku_and_keeps_five_bullets():
         normalize_content_response(json.dumps(payload), "WRONG", "create")
 
 
+@pytest.mark.parametrize(("raw_response", "message"), [
+    ("not-json", "invalid JSON"),
+    (json.dumps([{"sku": "A-1"}]), "does not match this product"),
+    (json.dumps({"sku": "A-1", "de_html": "<p>Lampe.</p>"}), "usable product text"),
+])
+def test_malformed_content_responses_fail_closed(raw_response, message):
+    with pytest.raises(ValueError, match=message):
+        normalize_content_response(raw_response, "A-1", "create")
+
+
 def test_creation_response_limits_excess_bullets_to_first_five():
     payload = {
         "sku": "A-1", "de_html": "<p>Lampe.</p>",

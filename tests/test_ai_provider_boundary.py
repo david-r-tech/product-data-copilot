@@ -6,7 +6,7 @@ import json
 import httpx
 import pytest
 from openai import OpenAI as SDKOpenAI
-from openai import AuthenticationError, OpenAIError
+from openai import APIConnectionError, AuthenticationError, OpenAIError
 
 import app
 from product_data_copilot.ai import provider
@@ -117,3 +117,32 @@ def test_invalid_api_key_fails_safely_with_offline_response(monkeypatch):
             client.close()
 
     assert len(requests) == 1
+
+
+def test_transport_failure_retries_once_and_stays_offline(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "offline-test-key")
+    requests = []
+
+    def handle(request):
+        requests.append(request)
+        raise httpx.ConnectError("Offline transport failure", request=request)
+
+    clients = []
+
+    def offline_client(**options):
+        client = SDKOpenAI(
+            **options,
+            http_client=httpx.Client(transport=httpx.MockTransport(handle)),
+        )
+        clients.append(client)
+        return client
+
+    monkeypatch.setattr(provider, "OpenAI", offline_client)
+    try:
+        with pytest.raises(APIConnectionError):
+            provider.request_content_draft("Offline transport-error test")
+    finally:
+        for client in clients:
+            client.close()
+
+    assert len(requests) == 2
