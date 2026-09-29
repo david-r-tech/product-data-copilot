@@ -9,10 +9,6 @@ SRC_PATH = Path(__file__).resolve().parent / "src"
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from product_data_copilot.rules.validators import (  # noqa: E402
-    is_blank,
-    normalize_text as source_text,
-)
 from product_data_copilot.ai.provider import has_openai_api_key, request_content_draft  # noqa: E402
 from product_data_copilot.rules.product_checks import find_product_issues, prioritize_issues  # noqa: E402
 from product_data_copilot.scoring.product_scoring import (  # noqa: E402
@@ -75,12 +71,6 @@ APP_LOGO_PATH = Path(__file__).resolve().parent / "assets" / "product_data_copil
 SAMPLE_DATA_PATH = Path(__file__).resolve().parent / "data" / "sample_products.csv"
 
 
-def get_value(row, field_name):
-    if field_name in row.index:
-        return row[field_name]
-    return ""
-
-
 def apply_manual_review_overrides(readiness_scores):
     if "manual_review_status_overrides" not in st.session_state:
         st.session_state["manual_review_status_overrides"] = {}
@@ -88,17 +78,6 @@ def apply_manual_review_overrides(readiness_scores):
         readiness_scores,
         st.session_state["manual_review_status_overrides"],
     )
-
-
-def get_product_option(row):
-    sku = row["sku"]
-    product_name = row["product_name"]
-    score = row["overall_readiness_score"]
-
-    if is_blank(product_name):
-        product_name = "Unnamed product"
-
-    return f"{sku} - {product_name} - Score {score}"
 
 
 def run_app():
