@@ -33,6 +33,10 @@ from product_data_copilot.export.export_helpers import (  # noqa: E402
     MANAGEMENT_EXPORT_FILENAME,
     MANAGEMENT_EXPORT_SHEETS,
 )
+from product_data_copilot.export.management_report import (  # noqa: E402
+    create_excel_management_export,
+    create_management_summary,
+)
 from product_data_copilot.ui.streamlit_layout import (  # noqa: E402
     render_data_input_section,
     render_data_source_notice,
@@ -286,72 +290,6 @@ def get_product_option(row):
         product_name = "Unnamed product"
 
     return f"{sku} - {product_name} - Score {score}"
-
-
-def create_management_summary(
-    data_source,
-    products,
-    issues,
-    readiness_scores,
-    review_tasks,
-):
-    ready_products = len(readiness_scores[readiness_scores["readiness_status"] == "Ready"])
-    needs_review_products = len(
-        readiness_scores[readiness_scores["readiness_status"] == "Needs Review"]
-    )
-    critical_products = len(
-        readiness_scores[readiness_scores["readiness_status"] == "Critical"]
-    )
-
-    summary_rows = [
-        {"metric": "Data source", "value": data_source},
-        {"metric": "Total products", "value": len(products)},
-        {"metric": "Total issues", "value": len(issues)},
-        {
-            "metric": "Critical issues",
-            "value": len(issues[issues["severity"] == "Critical"]),
-        },
-        {
-            "metric": "Warning issues",
-            "value": len(issues[issues["severity"] == "Warning"]),
-        },
-        {"metric": "Info issues", "value": len(issues[issues["severity"] == "Info"])},
-        {"metric": "Products affected by issues", "value": issues["sku"].nunique()},
-        {
-            "metric": "Average overall readiness score",
-            "value": round(readiness_scores["overall_readiness_score"].mean()),
-        },
-        {"metric": "Ready products", "value": ready_products},
-        {"metric": "Needs Review products", "value": needs_review_products},
-        {"metric": "Critical products", "value": critical_products},
-        {"metric": "Total review tasks", "value": len(review_tasks)},
-        {
-            "metric": "High priority tasks",
-            "value": len(review_tasks[review_tasks["priority"] == "High"]),
-        },
-        {
-            "metric": "Medium priority tasks",
-            "value": len(review_tasks[review_tasks["priority"] == "Medium"]),
-        },
-        {
-            "metric": "Low priority tasks",
-            "value": len(review_tasks[review_tasks["priority"] == "Low"]),
-        },
-    ]
-
-    return pd.DataFrame(summary_rows)
-
-
-def create_excel_management_export(
-    data_source, products, readiness_scores, issues, review_tasks,
-):
-    management_summary = create_management_summary(
-        data_source, products, issues, readiness_scores, review_tasks,
-    )
-    return workbook_bytes(dict(zip(
-        MANAGEMENT_EXPORT_SHEETS,
-        [management_summary, readiness_scores, issues, review_tasks, products],
-    )))
 
 
 def run_app():
