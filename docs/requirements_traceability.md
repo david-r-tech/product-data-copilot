@@ -21,7 +21,7 @@ The current automated suite contains **231 tests**. GitHub Actions runs dependen
 - SKU is the unique key. Ambiguous files are rejected rather than guessed.
 - Component scores prioritize review. Open issues can constrain a Ready label; manual status cannot bypass the gate.
 - Creation uses only explicitly allowlisted product fields and known aliases; unknown columns, EAN, price, and image URL are excluded. It requests a German HTML description, up to five supported bullets, and the complete selected-language translation. Translation-only mode sends only the selected text and optional bullet columns and does not add new facts.
-- AI runs only when clicked. One request is made per processed product. Completed results remain in the session; a click processes at most 100 products so large uploads can continue with another click. No output is automatically approved or published. Text approval is an explicit session-only decision per article and language.
+- AI runs only when clicked. One logical generation request is made per processed product; the provider may retry once after a retryable failure. Completed results remain in the session; a click processes at most 100 products so large uploads can continue with another click. No output is automatically approved or published. Text approval is an explicit session-only decision per article and language.
 - User-provided spreadsheet text is neutralized for formulas and control characters on export. The uploaded file is never overwritten.
 - The base audit runs locally. AI processing sends the selected product context to OpenAI using the user's local key. Users must choose suitable data and review generated claims.
 - The 1,000-row upload limit bounds this local MVP. Earlier worst-case measurements are observations, not performance guarantees for AI generation.
@@ -30,7 +30,6 @@ The current automated suite contains **231 tests**. GitHub Actions runs dependen
 
 1. Approve one text, reject another, then open both workbooks in Microsoft Excel and verify that only approved texts and their matching source rows occur in the text workbook. The revised gate passed an offline browser check with fictional responses; a live-key review remains manual.
 2. Spot-check several generated products before making broad quality claims. Live creation was checked in German/English for fictional `APP-001`, and live translation-only in French for a small fictional text; Spanish remains unverified.
-3. The implementation is committed, pushed, and publicly accessible at `https://github.com/david-r-tech/product-data-copilot`.
-4. Confirm that any external product description matches the current README and documented limitations.
+3. Confirm that any external product description matches the current README and documented limitations.
 
 Accounts, database persistence, hosting, marketplace integrations, automatic approval, and source write-back are outside the local MVP scope.

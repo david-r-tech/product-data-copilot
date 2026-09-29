@@ -8,7 +8,7 @@ The project direction is professional, maintainable, and deliberately local-firs
 
 ## Default Context
 
-For most future Codex tasks, read:
+For most future coding-agent tasks, read:
 
 1. `docs/current_context.md`
 2. `AGENTS.md`
@@ -45,7 +45,7 @@ Work only on the requested block. Do not add these without explicit approval:
 Run the checks requested by the task. Common checks:
 
 ```bash
-python -m py_compile app.py
+python -m compileall -q app.py src
 python -m pytest
 git diff --check
 git diff --name-only -- app.py src tests requirements.txt data/sample_products.csv

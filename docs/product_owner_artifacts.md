@@ -49,7 +49,7 @@ Die technische Zuordnung und Tests stehen in der [Anforderungsnachverfolgung](re
 
 ## Definition of Done für ein MVP-Inkrement
 
-Ein Inkrement ist für diesen Prototyp fertig, wenn sein Nutzerablauf verständlich beschrieben ist, die relevanten Akzeptanzkriterien automatisiert oder manuell geprüft wurden, ein Fehlerfall verständlich behandelt wird, Quell- und Exportdaten unverändert beziehungsweise sicher bleiben, README und Anforderungsnachweise den tatsächlichen Stand beschreiben und keine Zugangsdaten eingecheckt wurden. Für die Veröffentlichung kommen ein visueller Excel-Check, die Bestätigung des privaten Status vor der Freigabe und anschließend die Prüfung des GitHub-Links ohne Anmeldung hinzu.
+Ein Inkrement ist für diesen Prototyp fertig, wenn sein Nutzerablauf verständlich beschrieben ist, die relevanten Akzeptanzkriterien automatisiert oder manuell geprüft wurden, ein Fehlerfall verständlich behandelt wird, Quell- und Exportdaten unverändert beziehungsweise sicher bleiben, README und Anforderungsnachweise den tatsächlichen Stand beschreiben und keine Zugangsdaten eingecheckt wurden. Für die Veröffentlichung kommen ein visueller Excel-Check und die Prüfung hinzu, dass der öffentliche GitHub-Link ohne Anmeldung erreichbar ist.
 
 ## Messkonzept — noch keine Wirkungsbehauptung
 
